@@ -1,1 +1,1 @@
-# Pokemon-league-participation-manager
+# Pokemon-league-participation-manager (PLPM)
