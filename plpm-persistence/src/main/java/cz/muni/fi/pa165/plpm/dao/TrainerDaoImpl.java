@@ -16,7 +16,6 @@ import java.util.List;
  * @author Radoslav Cerhak
  */
 @Repository
-@Transactional
 public class TrainerDaoImpl implements TrainerDao {
 
     @PersistenceContext
