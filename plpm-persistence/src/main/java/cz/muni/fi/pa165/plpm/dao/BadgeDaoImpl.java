@@ -2,6 +2,7 @@ package cz.muni.fi.pa165.plpm.dao;
 
 import cz.muni.fi.pa165.plpm.entity.Badge;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -13,6 +14,7 @@ import java.util.Collection;
  *
  * @author Jakub Doczy
  */
+@Repository
 public class BadgeDaoImpl implements BadgeDao {
     @PersistenceContext
     private EntityManager em;
