@@ -47,18 +47,18 @@ public class Badge {
     //    this.gym = gym;
     //}
 
-
+    // fixme: add gym to equals/hash code
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Badge badge = (Badge) o;
-        return id.equals(badge.id);
+        return Objects.equals(getTrainer(), badge.getTrainer());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(getTrainer());
     }
 
     @Override
