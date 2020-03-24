@@ -20,9 +20,9 @@ public class Badge {
     @JoinColumn(name = "trainer_id")
     private Trainer trainer;
 
-    //@ManyToOne
-    //@JoinColumn(name = "gym_id")
-    //private Gym gym;
+    @ManyToOne
+    @JoinColumn(name = "gym_id")
+    private Gym gym;
 
     public Badge() {
     }
@@ -39,26 +39,26 @@ public class Badge {
         this.trainer = trainer;
     }
 
-    //public Gym getGym() {
-    //    return gym;
-    //}
+    public Gym getGym() {
+        return gym;
+    }
 
-    //public void setGym(Gym gym) {
-    //    this.gym = gym;
-    //}
+    public void setGym(Gym gym) {
+        this.gym = gym;
+    }
 
-    // fixme: add gym to equals/hash code
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Badge badge = (Badge) o;
-        return Objects.equals(getTrainer(), badge.getTrainer());
+        return Objects.equals(getTrainer(), badge.getTrainer()) &&
+                Objects.equals(getGym(), badge.getGym());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTrainer());
+        return Objects.hash(getTrainer(), getGym());
     }
 
     @Override
