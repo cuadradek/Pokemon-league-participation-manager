@@ -42,14 +42,14 @@ public class BadgeDaoImpl implements BadgeDao {
 
     @Override
     public Collection<Badge> findByTrainer(Trainer trainer) {
-        TypedQuery<Badge> query = em.createQuery("SELECT b FROM Badge b WHERE b.trainer = :trainer", Badge.class));
+        TypedQuery<Badge> query = em.createQuery("SELECT b FROM Badge b WHERE b.trainer = :trainer", Badge.class);
         query.setParameter("trainer", trainer);
         return query.getResultList();
     }
 
     @Override
     public Collection<Badge> findByGym(Gym gym) {
-        TypedQuery<Badge> query = em.createQuery("SELECT b FROM Badge b WHERE b.gym = :gym", Badge.class));
+        TypedQuery<Badge> query = em.createQuery("SELECT b FROM Badge b WHERE b.gym = :gym", Badge.class);
         query.setParameter("gym", gym);
         return query.getResultList();
     }
