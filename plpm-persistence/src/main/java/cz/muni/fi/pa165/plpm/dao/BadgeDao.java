@@ -1,6 +1,7 @@
 package cz.muni.fi.pa165.plpm.dao;
 
 import cz.muni.fi.pa165.plpm.entity.Badge;
+import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 
 import java.util.Collection;
@@ -49,13 +50,13 @@ public interface BadgeDao {
      */
     Collection<Badge> findByTrainer(Trainer trainer);
 
-    ///**
-    // * Finds all badges that were awarded for defeating gym leader from
-    // * specified gym.
-    // * @param gym Gym to which belong all badges we want to obtain.
-    // * @return collection of badges that belong to the specified gym.
-    // */
-    //Collection<Badge> findByGym(Gym gym);
+    /**
+     * Finds all badges that were awarded for defeating gym leader from
+     * specified gym.
+     * @param gym Gym to which belong all badges we want to obtain.
+     * @return collection of badges that belong to the specified gym.
+     * */
+    Collection<Badge> findByGym(Gym gym);
 
     /**
      * @return collection of all badges from database.
