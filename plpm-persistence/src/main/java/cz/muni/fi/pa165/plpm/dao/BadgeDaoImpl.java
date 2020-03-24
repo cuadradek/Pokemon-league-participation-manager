@@ -1,7 +1,9 @@
 package cz.muni.fi.pa165.plpm.dao;
 
 import cz.muni.fi.pa165.plpm.entity.Badge;
+import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -13,6 +15,7 @@ import java.util.Collection;
  *
  * @author Jakub Doczy
  */
+@Repository
 public class BadgeDaoImpl implements BadgeDao {
     @PersistenceContext
     private EntityManager em;
@@ -39,12 +42,17 @@ public class BadgeDaoImpl implements BadgeDao {
 
     @Override
     public Collection<Badge> findByTrainer(Trainer trainer) {
-        TypedQuery<Badge> query = em.createQuery("SELECT b FROM Badge b WHERE b.trainer = :trainer", Badge.class));
+        TypedQuery<Badge> query = em.createQuery("SELECT b FROM Badge b WHERE b.trainer = :trainer", Badge.class);
         query.setParameter("trainer", trainer);
         return query.getResultList();
     }
 
-    // TODO: findByGym
+    @Override
+    public Collection<Badge> findByGym(Gym gym) {
+        TypedQuery<Badge> query = em.createQuery("SELECT b FROM Badge b WHERE b.gym = :gym", Badge.class);
+        query.setParameter("gym", gym);
+        return query.getResultList();
+    }
 
     @Override
     public Collection<Badge> findAll() {
