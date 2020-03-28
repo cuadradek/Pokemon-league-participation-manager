@@ -19,7 +19,8 @@ public class Gym {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "leader_id")
+    @JoinColumn(name = "leader_id", unique = true)
+    @NotNull
     private Trainer leader;
 
     @NotNull
