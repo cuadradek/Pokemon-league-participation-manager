@@ -42,9 +42,19 @@ public class GymDaoImpl implements GymDao {
 
     @Override
     public Gym findByTrainer(Trainer trainer) {
-        TypedQuery<Gym> query = em.createQuery("select g from Gym g where g.trainer.id = :trainerId", Gym.class)
+        if (trainer == null) {
+            return null;
+        }
+
+        TypedQuery<Gym> query = em.createQuery("select g from Gym g where g.leader.id = :trainerId", Gym.class)
                 .setParameter("trainerId", trainer.getId());
-        return query.getSingleResult();
+        List<Gym> found = query.getResultList();
+
+        if (found.isEmpty()) {
+            return null;
+        }
+
+        return found.get(0);
     }
 
     @Override
