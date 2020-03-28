@@ -2,6 +2,7 @@ package cz.muni.fi.pa165.plpm.dao;
 
 import cz.muni.fi.pa165.plpm.entity.Pokemon;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,10 +11,11 @@ import java.util.List;
 
 /**
  * Implements PokemonDao
- *
+ * <p>
  * author: Veronika Loukotová
  */
 
+@Repository
 public class PokemonDaoImpl implements PokemonDao {
     @PersistenceContext
     private EntityManager em;
@@ -48,11 +50,19 @@ public class PokemonDaoImpl implements PokemonDao {
 
     @Override
     public List<Pokemon> findPokemonsByTrainer(Trainer trainer) {
-        TypedQuery<Pokemon> query = em.createQuery(
-                "SELECT p FROM Pokemon p WHERE p.trainer = :trainer",
-                Pokemon.class);
+        TypedQuery<Pokemon> query;
+        if (trainer == null) {
+            query = em.createQuery(
+                    "SELECT p FROM Pokemon p WHERE p.trainer IS NULL",
+                    Pokemon.class);
+        } else {
+            query = em.createQuery(
+                    "SELECT p FROM Pokemon p WHERE p.trainer = :trainer",
+                    Pokemon.class);
 
-        query.setParameter("trainer", trainer);
+            query.setParameter("trainer", trainer);
+        }
+
         return query.getResultList();
     }
 
