@@ -26,6 +26,7 @@ public class Trainer {
     @Column(unique = true)
     private String nickname;
 
+    @NotNull
     private String password;
 
     @NotNull
