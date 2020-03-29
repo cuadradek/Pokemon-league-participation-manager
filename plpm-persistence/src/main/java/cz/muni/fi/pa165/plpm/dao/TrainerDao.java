@@ -41,6 +41,14 @@ public interface TrainerDao {
     Trainer findTrainerById(Long id);
 
     /**
+     * Finds trainer by nickname in DB.
+     *
+     * @param nickname
+     * @return trainer or null if there is no trainer with the given nickname.
+     */
+    Trainer findTrainerByNickname(String nickname);
+
+    /**
      * Finds trainers by first name in DB.
      *
      * @param firstName
