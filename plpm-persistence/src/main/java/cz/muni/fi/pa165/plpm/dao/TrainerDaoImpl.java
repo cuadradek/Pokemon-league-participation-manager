@@ -42,6 +42,13 @@ public class TrainerDaoImpl implements TrainerDao {
     }
 
     @Override
+    public Trainer findTrainerByNickname(String nickname) {
+        TypedQuery<Trainer> query = em.createQuery("select t from Trainer t where t.nickname = :nickname ", Trainer.class);
+        query.setParameter("nickname", nickname);
+        return query.getSingleResult();
+    }
+
+    @Override
     public List<Trainer> findTrainerByFirstName(String firstName) {
         TypedQuery<Trainer> query = em.createQuery("select t from Trainer t where lower(t.firstName) like :name", Trainer.class);
         query.setParameter("name", "%" + firstName.toLowerCase() + "%");

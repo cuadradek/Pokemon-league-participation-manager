@@ -45,11 +45,13 @@ public class PokemonDaoTest extends AbstractTestNGSpringContextTests {
     public void before() {
         t1 = new Trainer();
         t1.setFirstName("Martin");
+        t1.setNickname("maaa");
         t1.setLastName("Novy");
         t1.setBirthDate(new Date());
 
         t2 = new Trainer();
         t2.setFirstName("Andrej");
+        t2.setNickname("Andy");
         t2.setLastName("Stary");
         t2.setBirthDate(new Date());
 
