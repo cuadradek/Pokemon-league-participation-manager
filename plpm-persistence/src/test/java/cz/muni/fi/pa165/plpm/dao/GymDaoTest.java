@@ -48,6 +48,7 @@ public class GymDaoTest extends AbstractTestNGSpringContextTests {
         pewterLeader.setNickname("brockyy");
         pewterLeader.setFirstName("Brock");
         pewterLeader.setLastName("Takeshi");
+        pewterLeader.setPassword("123");
         pewterLeader.setBirthDate(new Date());
 
         pewterGym = new Gym();
@@ -59,6 +60,7 @@ public class GymDaoTest extends AbstractTestNGSpringContextTests {
         kazLeader.setNickname("kkaz");
         kazLeader.setFirstName("Kaz");
         kazLeader.setLastName("Otsuka");
+        kazLeader.setPassword("123");
         kazLeader.setBirthDate(new Date());
 
         kazGym = new Gym();
@@ -70,6 +72,7 @@ public class GymDaoTest extends AbstractTestNGSpringContextTests {
         yasLeader.setNickname("yas");
         yasLeader.setFirstName("Yas");
         yasLeader.setLastName("Otsuka");
+        yasLeader.setPassword("123");
         yasLeader.setBirthDate(new Date());
 
         yasGym = new Gym();
@@ -81,6 +84,7 @@ public class GymDaoTest extends AbstractTestNGSpringContextTests {
         unassignedTrainer.setNickname("mist");
         unassignedTrainer.setFirstName("Misty");
         unassignedTrainer.setLastName("Kasumi");
+        unassignedTrainer.setPassword("123");
         unassignedTrainer.setBirthDate(new Date());
 
         trainerDao.createTrainer(pewterLeader);
