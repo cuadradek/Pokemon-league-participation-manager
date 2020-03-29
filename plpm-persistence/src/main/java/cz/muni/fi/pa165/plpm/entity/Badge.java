@@ -1,6 +1,9 @@
 package cz.muni.fi.pa165.plpm.entity;
 
+import cz.muni.fi.pa165.plpm.dao.constraints.TrainerIsNotGymLeader;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 /**
@@ -10,6 +13,7 @@ import java.util.Objects;
  * @author Jakub Doczy
  */
 @Entity
+@TrainerIsNotGymLeader
 public class Badge {
 
     @Id
@@ -17,10 +21,12 @@ public class Badge {
     private Long id;
 
     @ManyToOne
+    @NotNull
     @JoinColumn(name = "trainer_id")
     private Trainer trainer;
 
     @ManyToOne
+    @NotNull
     @JoinColumn(name = "gym_id")
     private Gym gym;
 
