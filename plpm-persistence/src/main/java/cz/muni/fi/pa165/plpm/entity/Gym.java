@@ -65,20 +65,19 @@ public class Gym {
         this.type = type;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null) return false;
+        if (!(o instanceof Gym)) return false;
         Gym gym = (Gym) o;
-        return id.equals(gym.id) &&
-                leader.equals(gym.leader) &&
-                city.equals(gym.city) &&
+        return city.equals(gym.city) &&
                 type == gym.type;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, leader, city, type);
+        return Objects.hash(city, type);
     }
-
 }
