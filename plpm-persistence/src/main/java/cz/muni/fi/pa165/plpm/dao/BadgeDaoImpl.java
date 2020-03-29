@@ -1,13 +1,17 @@
 package cz.muni.fi.pa165.plpm.dao;
 
+import cz.muni.fi.pa165.plpm.dao.constraints.TrainerIsNotGymLeader;
 import cz.muni.fi.pa165.plpm.entity.Badge;
 import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
+import org.springframework.core.Constants;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.validation.Constraint;
+import javax.validation.ConstraintViolationException;
 import java.util.Collection;
 
 /**
@@ -32,6 +36,13 @@ public class BadgeDaoImpl implements BadgeDao {
 
     @Override
     public void update(Badge badge) {
+        if (badge.getId() == null || badge.getTrainer() == null || badge.getGym() == null) {
+            throw new IllegalArgumentException("Invalid badge.");
+        }
+        if (badge.getTrainer().equals(badge.getGym().getLeader())) {
+            throw new IllegalArgumentException("Leader cannot obtain badge from his own gym.");
+        }
+
         em.merge(badge);
     }
 
