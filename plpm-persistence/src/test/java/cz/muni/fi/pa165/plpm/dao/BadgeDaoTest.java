@@ -15,7 +15,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.persistence.PersistenceException;
 import javax.validation.ConstraintViolationException;
 import java.util.Collection;
 import java.util.Date;
@@ -95,7 +94,7 @@ public class BadgeDaoTest extends AbstractTestNGSpringContextTests {
         badgeDao.create(badge1);
 
         badge2 = new Badge();
-        badge2.setGym(gym3);
+        badge2.setGym(gym1);
         badge2.setTrainer(trainer3);
         badgeDao.create(badge2);
     }
@@ -159,7 +158,7 @@ public class BadgeDaoTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(badge2, updated);
     }
 
-    @Test(expectedExceptions = ConstraintViolationException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void updateBadgeNullGym() {
         badge2.setGym(null);
         badgeDao.update(badge2);
@@ -167,14 +166,14 @@ public class BadgeDaoTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void updateBadgeTrainer() {
-        badge2.setTrainer(trainer1);
+        badge2.setTrainer(trainer2);
         badgeDao.update(badge2);
 
         Badge updated = badgeDao.findById(badge2.getId());
         Assert.assertEquals(badge2, updated);
     }
 
-    @Test(expectedExceptions = ConstraintViolationException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void updateBadgeNullTrainer() {
         badge2.setTrainer(null);
         badgeDao.update(badge2);
@@ -211,7 +210,7 @@ public class BadgeDaoTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void findByGym() {
-        Collection<Badge> found = badgeDao.findByGym(gym3);
+        Collection<Badge> found = badgeDao.findByGym(gym1);
 
         Assert.assertEquals(1, found.size());
         Assert.assertTrue(found.contains(badge2));
@@ -219,7 +218,7 @@ public class BadgeDaoTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void findByGymNoneExists() {
-        Collection<Badge> found = badgeDao.findByGym(gym1);
+        Collection<Badge> found = badgeDao.findByGym(gym3);
 
         Assert.assertEquals(0, found.size());
     }
