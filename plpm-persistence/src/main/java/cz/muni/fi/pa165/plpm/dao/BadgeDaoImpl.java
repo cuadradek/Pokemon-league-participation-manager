@@ -1,17 +1,13 @@
 package cz.muni.fi.pa165.plpm.dao;
 
-import cz.muni.fi.pa165.plpm.dao.constraints.TrainerIsNotGymLeader;
 import cz.muni.fi.pa165.plpm.entity.Badge;
 import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
-import org.springframework.core.Constants;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.validation.Constraint;
-import javax.validation.ConstraintViolationException;
 import java.util.Collection;
 
 /**
