@@ -44,6 +44,7 @@ public class GymDaoTest extends AbstractTestNGSpringContextTests {
     @BeforeMethod
     public void setup() {
         pewterLeader = new Trainer();
+        pewterLeader.setNickname("brockyy");
         pewterLeader.setFirstName("Brock");
         pewterLeader.setLastName("Takeshi");
         pewterLeader.setBirthDate(new Date());
@@ -54,6 +55,7 @@ public class GymDaoTest extends AbstractTestNGSpringContextTests {
         pewterGym.setType(PokemonType.ROCK);
 
         Trainer kazLeader = new Trainer();
+        kazLeader.setNickname("kkaz");
         kazLeader.setFirstName("Kaz");
         kazLeader.setLastName("Otsuka");
         kazLeader.setBirthDate(new Date());
@@ -64,6 +66,7 @@ public class GymDaoTest extends AbstractTestNGSpringContextTests {
         kazGym.setType(PokemonType.ELECTRIC);
 
         Trainer yasLeader = new Trainer();
+        yasLeader.setNickname("yas");
         yasLeader.setFirstName("Yas");
         yasLeader.setLastName("Otsuka");
         yasLeader.setBirthDate(new Date());
@@ -74,6 +77,7 @@ public class GymDaoTest extends AbstractTestNGSpringContextTests {
         yasGym.setType(PokemonType.BUG);
 
         unassignedTrainer = new Trainer();
+        unassignedTrainer.setNickname("mist");
         unassignedTrainer.setFirstName("Misty");
         unassignedTrainer.setLastName("Kasumi");
         unassignedTrainer.setBirthDate(new Date());

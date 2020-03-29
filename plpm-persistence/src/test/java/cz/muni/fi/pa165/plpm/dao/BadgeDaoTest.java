@@ -51,18 +51,21 @@ public class BadgeDaoTest extends AbstractTestNGSpringContextTests {
     @BeforeMethod
     public void init() {
         trainer1 = new Trainer();
+        trainer1.setNickname("roxy");
         trainer1.setFirstName("Roxanne");
         trainer1.setLastName("Tsutsuji");
         trainer1.setBirthDate(new Date());
         trainerDao.createTrainer(trainer1);
 
         trainer2 = new Trainer();
+        trainer2.setNickname("norm");
         trainer2.setFirstName("Norman");
         trainer2.setLastName("Senri");
         trainer2.setBirthDate(new Date());
         trainerDao.createTrainer(trainer2);
 
         trainer3 = new Trainer();
+        trainer3.setNickname("ashy");
         trainer3.setFirstName("Ash");
         trainer3.setLastName("Satoshi");
         trainer3.setBirthDate(new Date());
