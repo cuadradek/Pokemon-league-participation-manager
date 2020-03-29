@@ -22,6 +22,7 @@ public class Pokemon {
     private String name;
 
     @NotNull
+    @Column(unique = true)
     private String nickname;
 
     @ManyToOne
@@ -80,14 +81,11 @@ public class Pokemon {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+        if (o == null) return false;
         if (!(o instanceof Pokemon)) return false;
         Pokemon pokemon = (Pokemon) o;
-        return level == pokemon.level &&
-                Objects.equals(id, pokemon.id) &&
-                Objects.equals(name, pokemon.name) &&
-                Objects.equals(nickname, pokemon.nickname) &&
-                Objects.equals(trainer, pokemon.trainer) &&
-                type == pokemon.type;
+
+        return nickname.equals(pokemon.getNickname());
     }
 
     @Override
