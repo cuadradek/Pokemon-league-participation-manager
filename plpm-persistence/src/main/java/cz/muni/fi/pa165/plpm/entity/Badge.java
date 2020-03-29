@@ -54,12 +54,12 @@ public class Badge {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Badge badge = (Badge) o;
-        return Objects.equals(getTrainer(), badge.getTrainer()) &&
-                Objects.equals(getGym(), badge.getGym());
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (!(other instanceof Badge)) return false;
+        Badge badge = (Badge) other;
+        return getTrainer().equals(badge.getTrainer()) &&
+                getGym().equals(badge.getGym());
     }
 
     @Override
@@ -69,7 +69,7 @@ public class Badge {
 
     @Override
     public String toString() {
-        return String.format("Gym Badge id %d, from gym %s, obtained by trainer %s %s",
-                id, "placeholder", trainer.getFirstName(), trainer.getLastName());
+        return String.format("Gym Badge id %d, from gym in city %s, obtained by trainer %s %s",
+                id, gym.getCity(), trainer.getFirstName(), trainer.getLastName());
     }
 }
