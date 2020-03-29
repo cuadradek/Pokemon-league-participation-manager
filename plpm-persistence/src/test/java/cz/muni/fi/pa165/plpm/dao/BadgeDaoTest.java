@@ -54,12 +54,14 @@ public class BadgeDaoTest extends AbstractTestNGSpringContextTests {
         trainer1.setFirstName("Roxanne");
         trainer1.setLastName("Tsutsuji");
         trainer1.setBirthDate(new Date());
+        trainer1.setPassword("123");
         trainerDao.createTrainer(trainer1);
 
         trainer2 = new Trainer();
         trainer2.setNickname("norm");
         trainer2.setFirstName("Norman");
         trainer2.setLastName("Senri");
+        trainer2.setPassword("123");
         trainer2.setBirthDate(new Date());
         trainerDao.createTrainer(trainer2);
 
@@ -68,6 +70,7 @@ public class BadgeDaoTest extends AbstractTestNGSpringContextTests {
         trainer3.setFirstName("Ash");
         trainer3.setLastName("Satoshi");
         trainer3.setBirthDate(new Date());
+        trainer3.setPassword("123");
         trainerDao.createTrainer(trainer3);
 
         gym1 = new Gym();
