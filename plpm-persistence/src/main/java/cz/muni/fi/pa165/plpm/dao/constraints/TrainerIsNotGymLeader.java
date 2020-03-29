@@ -8,6 +8,9 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
+/**
+ * @author Jakub Doczy
+ */
 @Constraint(validatedBy = { BadgeValidator.class })
 @Target({ ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)

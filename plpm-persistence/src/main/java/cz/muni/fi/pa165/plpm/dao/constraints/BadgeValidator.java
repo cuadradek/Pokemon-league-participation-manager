@@ -5,6 +5,12 @@ import cz.muni.fi.pa165.plpm.entity.Badge;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+/**
+ * Validated badge - badge is only valid if it contains gym, trainer and
+ * the trainer is not leader of given gym.
+ *
+ * @author Jakub Doczu
+ */
 public class BadgeValidator implements ConstraintValidator<TrainerIsNotGymLeader, Badge> {
 
     @Override

@@ -15,6 +15,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import javax.persistence.EntityExistsException;
+import javax.persistence.PersistenceException;
 import javax.validation.ConstraintViolationException;
 import java.util.Collection;
 import java.util.Date;
@@ -129,12 +130,7 @@ public class GymDaoTest extends AbstractTestNGSpringContextTests {
         gymDao.create(ceruleanGym);
     }
 
-    @Test(expectedExceptions = EntityExistsException.class)
-    public void creatGymOnExistingEntityFails() {
-        gymDao.create(yasGym);
-    }
-
-    @Test(expectedExceptions = EntityExistsException.class)
+    @Test(expectedExceptions = PersistenceException.class)
     public void createGymDuplicateFails() {
         Gym duplicatedYasGym = new Gym();
         duplicatedYasGym.setLeader(yasGym.getLeader());
