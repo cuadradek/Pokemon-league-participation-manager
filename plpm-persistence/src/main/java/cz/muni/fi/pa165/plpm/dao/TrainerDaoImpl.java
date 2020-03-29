@@ -45,7 +45,8 @@ public class TrainerDaoImpl implements TrainerDao {
     public Trainer findTrainerByNickname(String nickname) {
         TypedQuery<Trainer> query = em.createQuery("select t from Trainer t where t.nickname = :nickname ", Trainer.class);
         query.setParameter("nickname", nickname);
-        return query.getSingleResult();
+        List<Trainer> trainers = query.getResultList();
+        return trainers.size() == 0 ? null : trainers.get(0);
     }
 
     @Override
