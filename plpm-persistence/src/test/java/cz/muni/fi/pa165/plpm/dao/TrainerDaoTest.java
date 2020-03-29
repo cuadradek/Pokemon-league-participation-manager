@@ -12,6 +12,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.persistence.NoResultException;
 import javax.validation.ConstraintViolationException;
 import java.sql.Date;
 import java.util.List;
@@ -219,5 +220,19 @@ public class TrainerDaoTest extends AbstractTestNGSpringContextTests {
         Assert.assertTrue(foundTrainers.contains(trainerRingo));
         Assert.assertTrue(foundTrainers.contains(trainerPaul));
         Assert.assertEquals(foundTrainers.size(), 3);
+    }
+
+    @Test
+    private void findTrainerByNicknameWithCorrectNickname() {
+        Trainer foundTrainer = trainerDao.findTrainerByNickname(trainerJohn.getNickname());
+
+        Assert.assertEquals(foundTrainer, trainerJohn);
+    }
+
+    @Test
+    private void findTrainerByNicknameWithIncorrectNickname() {
+        Trainer foundTrainer = trainerDao.findTrainerByNickname("incorrect");
+
+        Assert.assertNull(foundTrainer);
     }
 }
