@@ -19,6 +19,7 @@
         <relativePath/>
     </parent>
 
+
     <build>
         <pluginManagement>
             <plugins>
@@ -37,6 +38,8 @@
 
     <modules>
         <module>plpm-persistence</module>
+        <module>plpm-api</module>
+        <module>plpm-service</module>
     </modules>
 
 
