@@ -1,5 +1,8 @@
 package cz.muni.fi.pa165.plpm.dto;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.Objects;
 
@@ -7,29 +10,27 @@ import java.util.Objects;
  * @author Radoslav Cerhak
  *
  */
-public class TrainerDTO {
+public class TrainerCreateDTO {
 
-    private Long id;
-
+    @NotNull
+    @Size(min = 3, max = 25)
     private String nickname;
 
+    @NotNull
+    @Size(min = 8, max = 40)
     private String password;
 
+    @NotNull
+    @Size(min = 1, max = 40)
     private String firstName;
 
+    @NotNull
+    @Size(min = 1, max = 40)
     private String lastName;
 
+    @NotNull
+    @Past
     private Date birthDate;
-
-    private boolean isAdmin;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getNickname() {
         return nickname;
@@ -71,19 +72,11 @@ public class TrainerDTO {
         this.birthDate = birthDate;
     }
 
-    public boolean isAdmin() {
-        return isAdmin;
-    }
-
-    public void setAdmin(boolean admin) {
-        isAdmin = admin;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TrainerDTO that = (TrainerDTO) o;
+        TrainerCreateDTO that = (TrainerCreateDTO) o;
         return Objects.equals(nickname, that.nickname);
     }
 
@@ -94,14 +87,12 @@ public class TrainerDTO {
 
     @Override
     public String toString() {
-        return "TrainerDTO{" +
-                "id=" + id +
-                ", nickname='" + nickname + '\'' +
+        return "TrainerCreateDTO{" +
+                "nickname='" + nickname + '\'' +
                 ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthDate=" + birthDate +
-                ", isAdmin=" + isAdmin +
                 '}';
     }
 }
