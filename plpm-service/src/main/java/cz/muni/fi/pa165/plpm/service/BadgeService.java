@@ -5,6 +5,7 @@ import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * An interface that defines a service access to the {@link Badge} entity.
@@ -17,7 +18,11 @@ public interface BadgeService {
 
     void deleteBadge(Badge badge);
 
+    Badge getBadgeById(Long id);
+
     List<Badge> getBadgesByTrainer(Trainer trainer);
+
+    Set<Gym> getBeatenGyms(Trainer trainer);
 
     List<Badge> getBadgesByGym(Gym gym);
 
