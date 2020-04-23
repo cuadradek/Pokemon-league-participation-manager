@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Implementation of {@link BadgeDao}
@@ -48,21 +49,21 @@ public class BadgeDaoImpl implements BadgeDao {
     }
 
     @Override
-    public Collection<Badge> findByTrainer(Trainer trainer) {
+    public List<Badge> findByTrainer(Trainer trainer) {
         TypedQuery<Badge> query = em.createQuery("SELECT b FROM Badge b WHERE b.trainer = :trainer", Badge.class);
         query.setParameter("trainer", trainer);
         return query.getResultList();
     }
 
     @Override
-    public Collection<Badge> findByGym(Gym gym) {
+    public List<Badge> findByGym(Gym gym) {
         TypedQuery<Badge> query = em.createQuery("SELECT b FROM Badge b WHERE b.gym = :gym", Badge.class);
         query.setParameter("gym", gym);
         return query.getResultList();
     }
 
     @Override
-    public Collection<Badge> findAll() {
+    public List<Badge> findAll() {
         return em.createQuery("SELECT b FROM Badge b", Badge.class).getResultList();
     }
 }
