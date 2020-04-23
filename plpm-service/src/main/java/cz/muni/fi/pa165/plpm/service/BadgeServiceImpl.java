@@ -7,7 +7,7 @@ import cz.muni.fi.pa165.plpm.entity.Trainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Implementation of {@link BadgeService}.
@@ -33,17 +33,17 @@ public class BadgeServiceImpl implements BadgeService {
     }
 
     @Override
-    public Collection<Badge> getBadgesByTrainer(Trainer trainer) {
+    public List<Badge> getBadgesByTrainer(Trainer trainer) {
         return badgeDao.findByTrainer(trainer);
     }
 
     @Override
-    public Collection<Badge> getBadgesByGym(Gym gym) {
+    public List<Badge> getBadgesByGym(Gym gym) {
         return badgeDao.findByGym(gym);
     }
 
     @Override
-    public Collection<Badge> getAllBadges() {
+    public List<Badge> getAllBadges() {
         return badgeDao.findAll();
     }
 }

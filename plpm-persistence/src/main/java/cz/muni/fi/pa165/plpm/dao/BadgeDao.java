@@ -5,6 +5,7 @@ import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Gym Badge DAO
@@ -48,7 +49,7 @@ public interface BadgeDao {
      * @param trainer Pokemon trainer whose badges we want to obtain.
      * @return collection of badges that belong to the specified trainer.
      */
-    Collection<Badge> findByTrainer(Trainer trainer);
+    List<Badge> findByTrainer(Trainer trainer);
 
     /**
      * Finds all badges that were awarded for defeating gym leader from
@@ -56,11 +57,11 @@ public interface BadgeDao {
      * @param gym Gym to which belong all badges we want to obtain.
      * @return collection of badges that belong to the specified gym.
      * */
-    Collection<Badge> findByGym(Gym gym);
+    List<Badge> findByGym(Gym gym);
 
     /**
      * @return collection of all badges from database.
      */
-    Collection<Badge> findAll();
+    List<Badge> findAll();
 
 }
