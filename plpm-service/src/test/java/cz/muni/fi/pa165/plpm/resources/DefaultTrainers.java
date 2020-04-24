@@ -14,7 +14,7 @@ public class DefaultTrainers {
         trainerAsh.setNickname("Satoshi");
         trainerAsh.setBirthDate(new Date(0));
         // the most secure password in history: nbusr123
-        trainerAsh.setPassword("7751E53856859902F722F43ACC6AF7FD1A55489DAA9A57C6E370DF9372988258");
+        trainerAsh.setPassword("$2a$10$lw9RnJkD51y3wpPX.rL.9uJqDJx3UtIbGBqWYFUFdpQmV8JJJxrVW");
         return trainerAsh;
     }
 
@@ -27,7 +27,7 @@ public class DefaultTrainers {
         trainerGary.setBirthDate(new Date(0));
         trainerGary.setAdmin(true);
         //password: Correct horse battery staple
-        trainerGary.setPassword("53B2405B26A4C9F8F073ED032539F15A9CBF94ED1254D52A72CAD07B1941C1D7");
+        trainerGary.setPassword("$2a$10$mf/1ajQPmo/3iST48OcsNOSNV/jaWJ4VKVkK1lTtfg4L9hhanXmI6");
         return trainerGary;
     }
 
@@ -39,8 +39,19 @@ public class DefaultTrainers {
         trainerTracey.setNickname("Kenji");
         trainerTracey.setBirthDate(new Date(0));
         // password hunter2
-        trainerTracey.setPassword("F52FBD32B2B3B86FF88EF6C490628285F482AF15DDCB29541F94BCF526A3F6C7");
+        trainerTracey.setPassword("$2a$10$SFRU65wn5y3Iao3Cpo19Fua2g6yJ3NaYl52VolohwvcsliKGUvPFK");
         return trainerTracey;
     }
 
+    public static String getPlainPasswordAsh() {
+        return "nbusr123";
+    }
+
+    public static String getPlainPasswordGary() {
+        return "Correct horse battery staple";
+    }
+
+    public static String getPlainPasswordTracey() {
+        return "hunter2";
+    }
 }

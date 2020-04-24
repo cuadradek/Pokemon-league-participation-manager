@@ -11,6 +11,7 @@ import cz.muni.fi.pa165.plpm.entity.Trainer;
 import cz.muni.fi.pa165.plpm.enums.PokemonType;
 import cz.muni.fi.pa165.plpm.service.config.ServiceConfiguration;
 import org.hibernate.service.spi.ServiceException;
+import org.mindrot.jbcrypt.BCrypt;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -126,7 +127,7 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
     public void authenticateSuccess() {
         when(trainerDao.findTrainerById(trainerAsh.getId())).thenReturn(trainerAsh);
 
-        Assert.assertTrue(trainerService.authenticate(trainerAsh, trainerAsh.getPassword()));
+        Assert.assertTrue(trainerService.authenticate(trainerAsh, DefaultTrainers.getPlainPasswordAsh()));
     }
 
     @Test
@@ -201,25 +202,27 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void changePassword() {
-        String oldPassword = trainerAsh.getPassword();
+        String oldHashedPassword = trainerAsh.getPassword();
         String newPassword = "abc123";
 
-        Assert.assertTrue(trainerService.changePassword(trainerAsh, oldPassword, newPassword));
+        Assert.assertTrue(trainerService.changePassword(trainerAsh, DefaultTrainers.getPlainPasswordAsh(), newPassword));
         verify(trainerDao).updateTrainer(trainerAsh);
         // assert that password has changed
-        Assert.assertNotEquals(trainerAsh.getPassword(), oldPassword);
+        Assert.assertNotEquals(trainerAsh.getPassword(), oldHashedPassword);
         // assert it is encrypted
         Assert.assertNotEquals(trainerAsh.getPassword(), newPassword);
+        Assert.assertTrue(trainerService.authenticate(trainerAsh, newPassword));
+
     }
 
     @Test
     public void changePasswordFailsWhenGivenIncorrectPassword() {
-        String oldPassword = trainerAsh.getPassword();
+        String oldHashedPassword = trainerAsh.getPassword();
         String newPassword = "abc123";
 
         Assert.assertFalse(trainerService.changePassword(trainerAsh, "-", newPassword));
         // assert password remains unchanged
-        Assert.assertEquals(trainerAsh.getPassword(), oldPassword);
+        Assert.assertEquals(trainerAsh.getPassword(), oldHashedPassword);
     }
 
     @Test
