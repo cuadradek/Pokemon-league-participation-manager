@@ -26,8 +26,10 @@ import cz.muni.fi.pa165.plpm.resources.DefaultTrainers;
 import org.testng.annotations.Test;
 
 import javax.validation.ConstraintViolationException;
+import javax.validation.groups.Default;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.verify;
@@ -273,10 +275,135 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
         trainerService.deleteTrainer(newTrainer);
     }
 
+    @Test
+    public void findTrainerById() {
+        when(trainerService.findTrainerById(trainerAsh.getId())).thenReturn(trainerAsh);
+        Trainer returnedTrainer = trainerService.findTrainerById(trainerAsh.getId());
+        Assert.assertEquals(returnedTrainer, trainerAsh);
+    }
 
+    // TODO: or maybe expect exception?
+    @Test
+    public void findTrainerByNonExistingId() {
+        when(trainerService.findTrainerById(-1L)).thenReturn(null);
+        Trainer returnedTrainer = trainerService.findTrainerById(-1L);
+        Assert.assertNull(returnedTrainer);
+    }
 
+    @Test
+    public void findTrainerByNickname() {
+        when(trainerService.findTrainerByNickname(trainerAsh.getNickname())).thenReturn(trainerAsh);
+        Trainer returnedTrainer = trainerService.findTrainerByNickname(trainerAsh.getNickname());
+        Assert.assertEquals(returnedTrainer, trainerAsh);
+    }
 
+    @Test
+    public void findTrainerByNonExistingNickname() {
+        when(trainerService.findTrainerByNickname("Johny")).thenReturn(null);
+        Trainer returnedTrainer = trainerService.findTrainerByNickname("Johny");
+        Assert.assertNull(returnedTrainer);
+    }
 
+    @Test
+    public void findTrainerByFirstName() {
+        when(trainerService.findTrainerByFirstName(trainerAsh.getFirstName())).thenReturn(asList(trainerAsh));
+        List<Trainer> returnedTrainers = trainerService.findTrainerByFirstName(trainerAsh.getFirstName());
 
+        Assert.assertEquals(returnedTrainers, asList(trainerAsh));
+    }
 
+    @Test
+    public void findMultipleTrainersByFirstName() {
+        Trainer secondAsh = new Trainer();
+        secondAsh.setId(69L);
+        secondAsh.setNickname("Second Ash");
+        secondAsh.setFirstName("Ash");
+        secondAsh.setLastName("Two");
+        secondAsh.setBirthDate(new Date(1));
+        secondAsh.setPassword(DefaultTrainers.getPlainPasswordGary());
+
+        when(trainerService.findTrainerByFirstName(trainerAsh.getFirstName())).thenReturn(asList(trainerAsh, secondAsh));
+        List<Trainer> returnedTrainers = trainerService.findTrainerByFirstName(trainerAsh.getFirstName());
+
+        Assert.assertEquals(returnedTrainers, asList(trainerAsh, secondAsh));
+    }
+
+    @Test
+    public void findNoTrainersByFirstName() {
+        when(trainerService.findTrainerByFirstName("Bill")).thenReturn(new ArrayList<>());
+        List<Trainer> returnedTrainers = trainerService.findTrainerByFirstName("Bill");
+
+        Assert.assertTrue(returnedTrainers.isEmpty());
+    }
+
+    @Test
+    public void findTrainerByLastName() {
+        when(trainerService.findTrainerByLastName(trainerAsh.getLastName())).thenReturn(asList(trainerAsh));
+        List<Trainer> returnedTrainers = trainerService.findTrainerByLastName(trainerAsh.getLastName());
+
+        Assert.assertEquals(returnedTrainers, asList(trainerAsh));
+    }
+
+    @Test
+    public void findMultipleTrainersByLastName() {
+        Trainer secondKetchum = new Trainer();
+        secondKetchum.setId(69L);
+        secondKetchum.setNickname("Second Ash");
+        secondKetchum.setFirstName("Delia");
+        secondKetchum.setLastName("Ketchum");
+        secondKetchum.setBirthDate(new Date(1));
+        secondKetchum.setPassword(DefaultTrainers.getPlainPasswordGary());
+
+        when(trainerService.findTrainerByLastName(trainerAsh.getLastName())).thenReturn(asList(trainerAsh, secondKetchum));
+        List<Trainer> returnedTrainers = trainerService.findTrainerByLastName(trainerAsh.getLastName());
+
+        Assert.assertEquals(returnedTrainers, asList(trainerAsh, secondKetchum));
+    }
+
+    @Test
+    public void findNoTrainersByLastName() {
+        when(trainerService.findTrainerByLastName("Gates")).thenReturn(new ArrayList<>());
+        List<Trainer> returnedTrainers = trainerService.findTrainerByLastName("Bill");
+
+        Assert.assertTrue(returnedTrainers.isEmpty());
+    }
+
+    @Test
+    public void findAllTrainers() {
+        when(trainerService.findAllTrainers()).thenReturn(asList(trainerAsh, trainerGary, trainerTracey));
+        List<Trainer> returnedTrainers = trainerService.findAllTrainers();
+
+        Assert.assertEquals(returnedTrainers, asList(trainerAsh, trainerGary, trainerTracey));
+    }
+
+    @Test
+    public void isAdminOnAdmin() {
+        Trainer ashCopy = new Trainer();
+        ashCopy.setId(trainerAsh.getId());
+        ashCopy.setNickname(trainerAsh.getNickname());
+        ashCopy.setPassword(trainerAsh.getPassword());
+
+        when(trainerService.findTrainerById(trainerAsh.getId())).thenReturn(trainerAsh);
+
+        Assert.assertTrue(trainerService.isAdmin(ashCopy));
+    }
+
+    @Test
+    public void isAdminOnNonAdmin() {
+        Trainer garyCopy = new Trainer();
+        garyCopy.setId(trainerGary.getId());
+        garyCopy.setNickname(trainerGary.getNickname());
+        garyCopy.setPassword(trainerGary.getPassword());
+
+        when(trainerService.findTrainerById(trainerGary.getId())).thenReturn(trainerGary);
+
+        Assert.assertFalse(trainerService.isAdmin(garyCopy));
+    }
+
+    // TODO: is this possible?
+    @Test(expectedExceptions = ServiceException.class)
+    public void isAdminOnNonUser() {
+        when(trainerService.findTrainerById(newTrainer.getId())).thenReturn(null);
+        trainerService.isAdmin(newTrainer);
+    }
 }
