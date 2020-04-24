@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Set;
 
+// TODO: change exceptions to Data Access Exception
+
 /**
  *
  * @author Jakub Doczy
