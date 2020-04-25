@@ -1,7 +1,12 @@
 package cz.muni.fi.pa165.plpm.facade;
 
 import cz.muni.fi.pa165.plpm.dto.*;
+import cz.muni.fi.pa165.plpm.entity.Badge;
+import cz.muni.fi.pa165.plpm.entity.Gym;
+import cz.muni.fi.pa165.plpm.entity.Pokemon;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
+import cz.muni.fi.pa165.plpm.enums.PokemonType;
+import cz.muni.fi.pa165.plpm.resources.DefaultTrainers;
 import cz.muni.fi.pa165.plpm.service.BeanMappingService;
 import cz.muni.fi.pa165.plpm.service.TrainerService;
 import cz.muni.fi.pa165.plpm.service.config.ServiceConfiguration;
@@ -51,31 +56,9 @@ public class TrainerFacadeTest extends AbstractTestNGSpringContextTests {
 
     @BeforeMethod
     public void methodSetup(){
-        trainerAsh = new Trainer();
-        trainerAsh.setId(1L);
-        trainerAsh.setFirstName("Ash");
-        trainerAsh.setLastName("Ketchum");
-        trainerAsh.setNickname("Satoshi");
-        trainerAsh.setBirthDate(new Date(0));
-        // the most secure password in history
-        trainerAsh.setPassword("nbusr123");
-
-        trainerGary = new Trainer();
-        trainerGary.setId(2L);
-        trainerGary.setFirstName("Gary");
-        trainerGary.setLastName("Oak");
-        trainerGary.setNickname("Shigeru");
-        trainerGary.setBirthDate(new Date(0));
-        trainerGary.setAdmin(true);
-        trainerGary.setPassword("Correct horse battery staple");
-
-        trainerTracey = new Trainer();
-        trainerTracey.setId(3L);
-        trainerTracey.setFirstName("Tracey ");
-        trainerTracey.setLastName("Sketchit");
-        trainerTracey.setNickname("Kenji");
-        trainerTracey.setBirthDate(new Date(0));
-        trainerTracey.setPassword("hunter2");
+        trainerAsh = DefaultTrainers.getAsh();
+        trainerGary = DefaultTrainers.getGary();
+        trainerTracey = DefaultTrainers.getTracey();
     }
 
 
