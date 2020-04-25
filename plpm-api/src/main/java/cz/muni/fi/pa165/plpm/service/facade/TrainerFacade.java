@@ -5,6 +5,7 @@ import cz.muni.fi.pa165.plpm.dto.TrainerChangePasswordDTO;
 import cz.muni.fi.pa165.plpm.dto.TrainerCreateDTO;
 import cz.muni.fi.pa165.plpm.dto.TrainerDTO;
 import cz.muni.fi.pa165.plpm.dto.TrainerUpdateInfoDTO;
+import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 
 import java.util.List;
 
@@ -14,9 +15,9 @@ import java.util.List;
  */
 public interface TrainerFacade {
 
-    Long createTrainer(TrainerCreateDTO trainerCreateDTO);
+    Long createTrainer(TrainerCreateDTO trainerCreateDTO) throws PlpmServiceException;
 
-    void updateTrainerInfo(TrainerUpdateInfoDTO trainerUpdateInfoDTO);
+    void updateTrainerInfo(TrainerUpdateInfoDTO trainerUpdateInfoDTO) throws PlpmServiceException;
 
     boolean changePassword(TrainerChangePasswordDTO trainerChangePasswordDTO);
 

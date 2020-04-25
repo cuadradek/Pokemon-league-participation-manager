@@ -169,7 +169,7 @@ public class BadgeFacadeTest extends AbstractTestNGSpringContextTests {
         badge.setGym(gym);
 
         doAnswer(invocation -> {
-            Badge b = (Badge) invocation.getArgument(0);
+            Badge b = invocation.getArgument(0);
             b.setId(2L);
             return null;
         }).when(badgeService).createBadge(badge);

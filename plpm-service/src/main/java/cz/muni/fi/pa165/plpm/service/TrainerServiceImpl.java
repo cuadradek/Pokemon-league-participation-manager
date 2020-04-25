@@ -5,12 +5,10 @@ import cz.muni.fi.pa165.plpm.entity.Badge;
 import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Pokemon;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
-import cz.muni.fi.pa165.plpm.service.TrainerService;
-import org.hibernate.mapping.Bag;
+import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,10 +33,10 @@ public class TrainerServiceImpl implements TrainerService {
 //    private GymService gymService;
 
     @Override
-    public Trainer createTrainer(Trainer trainer) {
+    public Trainer createTrainer(Trainer trainer) throws PlpmServiceException {
         //check if nickname doesn't exist already
         if (findTrainerByNickname(trainer.getNickname()) != null) {
-            //throw
+            throw new PlpmServiceException("Nickname already exists.");
         }
 
         trainer.setPassword(BCrypt.hashpw(trainer.getPassword(), BCrypt.gensalt()));
@@ -52,13 +50,13 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public void updateTrainerInfo(Trainer trainer) {
+    public void updateTrainerInfo(Trainer trainer) throws PlpmServiceException {
         Trainer storedTrainer = findTrainerById(trainer.getId());
 
         //if nickname should be changed, check if there isn't such nickname already
         if (!storedTrainer.getNickname().equals(trainer.getNickname())) {
             if (findTrainerByNickname(trainer.getNickname()) != null) {
-                //throw
+                throw new PlpmServiceException("Nickname already exists.");
             } else storedTrainer.setNickname(trainer.getNickname());
         }
 

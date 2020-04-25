@@ -4,6 +4,7 @@ import cz.muni.fi.pa165.plpm.entity.Badge;
 import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Pokemon;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
+import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 
 import java.util.List;
 
@@ -14,11 +15,11 @@ import java.util.List;
  */
 public interface TrainerService {
 
-    Trainer createTrainer(Trainer trainer);
+    Trainer createTrainer(Trainer trainer) throws PlpmServiceException;
 
     boolean authenticate(Trainer trainer, String password);
 
-    void updateTrainerInfo(Trainer trainer);
+    void updateTrainerInfo(Trainer trainer) throws PlpmServiceException;
 
     boolean changePassword(Trainer trainer, String oldPassword, String newPassword);
 

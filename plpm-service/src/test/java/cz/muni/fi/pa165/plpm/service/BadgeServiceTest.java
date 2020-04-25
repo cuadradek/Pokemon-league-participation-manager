@@ -5,6 +5,7 @@ import cz.muni.fi.pa165.plpm.entity.Badge;
 import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 import cz.muni.fi.pa165.plpm.enums.PokemonType;
+import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import cz.muni.fi.pa165.plpm.service.config.ServiceConfiguration;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -199,7 +200,7 @@ public class BadgeServiceTest extends AbstractTestNGSpringContextTests {
     public void createBadge() {
         badge1.setId(null);
         doAnswer(invocation -> {
-            Badge b = (Badge) invocation.getArgument(0);
+            Badge b = invocation.getArgument(0);
             b.setId(1L);
             return null;
         }).when(badgeDao).create(badge1);
@@ -209,7 +210,7 @@ public class BadgeServiceTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(badge1.getId(), new Long(1L));
     }
 
-    @Test(expectedExceptions = IllegalStateException.class)
+    @Test(expectedExceptions = PlpmServiceException.class)
     public void createBadgeForTheGymLeader() {
         badge1.setId(null);
         badge1.setGym(gym1);
@@ -260,7 +261,7 @@ public class BadgeServiceTest extends AbstractTestNGSpringContextTests {
         badge2.setTrainer(trainer1);
         when(badgeDao.findByTrainer(trainer1)).thenReturn(Arrays.asList(badge1, badge2));
 
-        Set<Gym> gyms = badgeService.getBeatenGyms(trainer1);
+        badgeService.getBeatenGyms(trainer1);
     }
 
 }
