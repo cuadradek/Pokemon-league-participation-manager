@@ -10,6 +10,7 @@ import cz.muni.fi.pa165.plpm.entity.Trainer;
 import cz.muni.fi.pa165.plpm.enums.PokemonType;
 import cz.muni.fi.pa165.plpm.service.BadgeService;
 import cz.muni.fi.pa165.plpm.service.BeanMappingService;
+import cz.muni.fi.pa165.plpm.service.GymService;
 import cz.muni.fi.pa165.plpm.service.TrainerService;
 import cz.muni.fi.pa165.plpm.service.config.ServiceConfiguration;
 import cz.muni.fi.pa165.plpm.service.facade.BadgeFacade;
@@ -48,8 +49,8 @@ public class BadgeFacadeTest extends AbstractTestNGSpringContextTests {
     @Mock
     private TrainerService trainerService;
 
-//    @Mock
-//    private GymService gymService;
+    @Mock
+    private GymService gymService;
 
     @InjectMocks
     private BadgeFacade badgeFacade = new BadgeFacadeImpl();
@@ -94,10 +95,10 @@ public class BadgeFacadeTest extends AbstractTestNGSpringContextTests {
         gym.setLeader(trainer);
 
         gymDTO = new GymDTO();
-//        gymDTO.setId(1L);
-//        gymDTO.setCity("Touka City");
-//        gymDTO.setType(PokemonType.ROCK);
-//        gymDTO.setLeader(trainerDTO);
+        gymDTO.setId(1L);
+        gymDTO.setCity("Touka City");
+        gymDTO.setType(PokemonType.ROCK);
+        gymDTO.setLeader(trainerDTO);
 
         badgeDTO = new BadgeDTO();
         badgeDTO.setId(1L);
@@ -117,7 +118,7 @@ public class BadgeFacadeTest extends AbstractTestNGSpringContextTests {
         when(beanMappingService.mapTo(badgeList, BadgeDTO.class)).thenReturn(badgeDTOList);
 
         when(trainerService.findTrainerById(1L)).thenReturn(trainer);
-//        when(gymService.findById(1L)).thenReturn(gym);
+        when(gymService.findGymById(1L)).thenReturn(gym);
 
     }
 

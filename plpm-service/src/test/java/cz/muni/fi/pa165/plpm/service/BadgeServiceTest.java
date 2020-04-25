@@ -41,8 +41,8 @@ public class BadgeServiceTest extends AbstractTestNGSpringContextTests {
     @Mock
     private BadgeDao badgeDao;
 
-//    @Mock
-//    private GymService gymService;
+    @Mock
+    private GymService gymService;
 
     @Autowired
     @InjectMocks
@@ -236,7 +236,7 @@ public class BadgeServiceTest extends AbstractTestNGSpringContextTests {
     @Test
     public void getBeatenGyms() {
         when(badgeDao.findByTrainer(trainer1)).thenReturn(Collections.singletonList(badge1));
-//        when(gymService.findByTrainer(trainer)).thenReturn(gym1); //uncomment and test will pass
+        when(gymService.findGymByTrainer(trainer1)).thenReturn(gym1);
 
         Set<Gym> gyms = badgeService.getBeatenGyms(trainer1);
 
