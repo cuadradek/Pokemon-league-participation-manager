@@ -5,12 +5,10 @@ import cz.muni.fi.pa165.plpm.entity.Badge;
 import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Pokemon;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
-import cz.muni.fi.pa165.plpm.service.TrainerService;
-import org.hibernate.mapping.Bag;
+import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,20 +23,20 @@ public class TrainerServiceImpl implements TrainerService {
     @Autowired
     private TrainerDao trainerDao;
 
-//    @Autowired
-//    private BadgeService badgeService;
-//
-//    @Autowired
-//    private PokemonService pokemonService;
-//
-//    @Autowired
-//    private GymService gymService;
+    @Autowired
+    private BadgeService badgeService;
+
+    @Autowired
+    private PokemonService pokemonService;
+
+    @Autowired
+    private GymService gymService;
 
     @Override
-    public Trainer createTrainer(Trainer trainer) {
+    public Trainer createTrainer(Trainer trainer) throws PlpmServiceException {
         //check if nickname doesn't exist already
         if (findTrainerByNickname(trainer.getNickname()) != null) {
-            //throw
+            throw new PlpmServiceException("Nickname already exists.");
         }
 
         trainer.setPassword(BCrypt.hashpw(trainer.getPassword(), BCrypt.gensalt()));
@@ -52,21 +50,19 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public void updateTrainerInfo(Trainer trainer) {
+    public void updateTrainerInfo(Trainer trainer) throws PlpmServiceException {
         Trainer storedTrainer = findTrainerById(trainer.getId());
 
         //if nickname should be changed, check if there isn't such nickname already
-        if (!storedTrainer.getNickname().equals(trainer.getNickname())) {
-            if (findTrainerByNickname(trainer.getNickname()) != null) {
-                //throw
-            } else storedTrainer.setNickname(trainer.getNickname());
+        if (!storedTrainer.getNickname().equals(trainer.getNickname()) &&
+                findTrainerByNickname(trainer.getNickname()) != null) {
+            throw new PlpmServiceException("Nickname already exists.");
         }
 
-        storedTrainer.setFirstName(trainer.getFirstName());
-        storedTrainer.setLastName(trainer.getLastName());
-        storedTrainer.setBirthDate(trainer.getBirthDate());
+        //isAdmin must be set from storedTrainer, because it wasn't updated
+        trainer.setAdmin(storedTrainer.isAdmin());
 
-        trainerDao.updateTrainer(storedTrainer);
+        trainerDao.updateTrainer(trainer);
     }
 
     @Override
@@ -81,21 +77,18 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public void deleteTrainer(Trainer trainer) {
-//        List<Badge> badges = badgeService.findByTrainer(trainer);
-//        for (Badge badge : badges) {
-//            badgeService.remove(badge);
-//        }
+        List<Badge> badges = badgeService.getBadgesByTrainer(trainer);
+        for (Badge badge : badges) {
+            badgeService.deleteBadge(badge);
+        }
 
-//        List<Pokemon> pokemons = pokemonService.findByTrainer(trainer);
-//        for (Pokemon pokemon : pokemons) {
-//            pokemon.setTrainer(null);
-//            pokemonService.update(pokemon);
-//             or:
-//            pokemonService.releasePokemon(pokemon);
-//        }
+        List<Pokemon> pokemons = pokemonService.findPokemonByTrainer(trainer);
+        for (Pokemon pokemon : pokemons) {
+            pokemon.setTrainer(null);
+        }
 
-//        Gym gym = gymService.findByTrainer(trainer);
-//        gymService.remove(gym)
+        Gym gym = gymService.findGymByTrainer(trainer);
+        gymService.removeGym(gym);
 
         trainerDao.deleteTrainer(trainer);
     }

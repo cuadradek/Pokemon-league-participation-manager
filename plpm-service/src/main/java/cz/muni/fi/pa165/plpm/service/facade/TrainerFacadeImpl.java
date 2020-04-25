@@ -2,6 +2,7 @@ package cz.muni.fi.pa165.plpm.service.facade;
 
 import cz.muni.fi.pa165.plpm.dto.TrainerChangePasswordDTO;
 import cz.muni.fi.pa165.plpm.dto.TrainerUpdateInfoDTO;
+import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import cz.muni.fi.pa165.plpm.service.TrainerService;
 import cz.muni.fi.pa165.plpm.dto.TrainerAuthenticateDTO;
 import cz.muni.fi.pa165.plpm.dto.TrainerCreateDTO;
@@ -35,13 +36,13 @@ public class TrainerFacadeImpl implements TrainerFacade {
     }
 
     @Override
-    public Long createTrainer(TrainerCreateDTO trainerCreateDTO) {
+    public Long createTrainer(TrainerCreateDTO trainerCreateDTO) throws PlpmServiceException {
         return trainerService.createTrainer(beanMappingService
                 .mapTo(trainerCreateDTO, Trainer.class)).getId();
     }
 
     @Override
-    public void updateTrainerInfo(TrainerUpdateInfoDTO trainerUpdateInfoDTO) {
+    public void updateTrainerInfo(TrainerUpdateInfoDTO trainerUpdateInfoDTO) throws PlpmServiceException {
         trainerService.updateTrainerInfo(beanMappingService.mapTo(trainerUpdateInfoDTO, Trainer.class));
     }
 
