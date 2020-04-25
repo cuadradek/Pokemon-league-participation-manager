@@ -1,34 +1,30 @@
 package cz.muni.fi.pa165.plpm.dto;
 
+import cz.muni.fi.pa165.plpm.dto.TrainerDTO;
 import cz.muni.fi.pa165.plpm.enums.PokemonType;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @author Karolína Kolouchová
  */
-public class GymDTO {
+public class GymCreateDTO {
 
-    private Long id;
+    @NotNull
+    private Long trainerId;
 
-    private TrainerDTO leader;
-
+    @NotNull
     private String city;
 
+    @NotNull
     private PokemonType type;
 
-    public Long getId() {
-        return id;
+    public Long getTrainerId() {
+        return trainerId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public TrainerDTO getLeader() {
-        return leader;
-    }
-
-    public void setLeader(TrainerDTO leader) {
-        this.leader = leader;
+    public void setTrainerId(Long trainerId) {
+        this.trainerId = trainerId;
     }
 
     public String getCity() {

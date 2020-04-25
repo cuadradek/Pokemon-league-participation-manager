@@ -4,6 +4,7 @@ import cz.muni.fi.pa165.plpm.dao.BadgeDao;
 import cz.muni.fi.pa165.plpm.entity.Badge;
 import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,12 +52,12 @@ public class BadgeServiceImpl implements BadgeService {
         for (Badge badge : badges) {
             Gym gym = badge.getGym();
             if (gym.getLeader().equals(trainer)) {
-                throw new IllegalStateException("Trainer " + trainer.toString() +
+                throw new ServiceException("Trainer " + trainer.toString() +
                         " has received a badge from his own gym: " + gym.toString());
             }
 
             if (gyms.contains(badge.getGym())) {
-                throw new IllegalStateException("Trainer " + trainer.toString() +
+                throw new ServiceException("Trainer " + trainer.toString() +
                         " has received 2 or more badges from the same gym: " + gym.toString());
             }
             gyms.add(gym);

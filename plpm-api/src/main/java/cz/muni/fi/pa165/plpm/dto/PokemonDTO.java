@@ -1,42 +1,24 @@
-package cz.muni.fi.pa165.plpm.entity;
+package cz.muni.fi.pa165.plpm.dto;
 
 import cz.muni.fi.pa165.plpm.enums.PokemonType;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 /**
- * Represents a Pokémon creature.
- *
- * @author Veronika Loukotová
+ * @author: Veronika Loukotova
  */
-
-@Entity
-public class Pokemon {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class PokemonDTO {
     private Long id;
 
-    @NotNull
     private String name;
 
-    @NotNull
-    @Column(unique = true)
     private String nickname;
 
-    @ManyToOne
-    @JoinColumn(name = "trainer_id")
-    private Trainer trainer;
+    private TrainerDTO trainer;
 
     private int level = 1;
 
-    @Enumerated
-    @NotNull
     private PokemonType type;
-
-    public Pokemon() {
-    }
 
     public String getName() {
         return name;
@@ -54,11 +36,11 @@ public class Pokemon {
         this.nickname = nickname;
     }
 
-    public Trainer getTrainer() {
+    public TrainerDTO getTrainer() {
         return trainer;
     }
 
-    public void setTrainer(Trainer trainer) {
+    public void setTrainer(TrainerDTO trainer) {
         this.trainer = trainer;
     }
 
@@ -78,22 +60,26 @@ public class Pokemon {
         this.id = id;
     }
 
-    public int getLevel() { return level; }
+    public int getLevel() {
+        return this.level;
+    }
 
-    public void setLevel(int level) { this.level = level; }
+    public void setLevel(int level) {
+        this.level = level;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null) return false;
-        if (!(o instanceof Pokemon)) return false;
-        Pokemon pokemon = (Pokemon) o;
+        if (!(o instanceof PokemonDTO)) return false;
+        PokemonDTO pokemon = (PokemonDTO) o;
 
-        return nickname.equals(pokemon.getNickname());
+        return Objects.equals(nickname, pokemon.getNickname());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, nickname, trainer, level, type);
+        return Objects.hash(nickname);
     }
 }

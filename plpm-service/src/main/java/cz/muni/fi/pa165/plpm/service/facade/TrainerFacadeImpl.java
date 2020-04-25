@@ -29,6 +29,12 @@ public class TrainerFacadeImpl implements TrainerFacade {
     @Autowired
     private BeanMappingService beanMappingService;
 
+    @Autowired
+    public TrainerFacadeImpl(TrainerService trainerService, BeanMappingService beanMappingService) {
+        this.trainerService = trainerService;
+        this.beanMappingService = beanMappingService;
+    }
+
     @Override
     public Long createTrainer(TrainerCreateDTO trainerCreateDTO) throws PlpmServiceException {
         return trainerService.createTrainer(beanMappingService
