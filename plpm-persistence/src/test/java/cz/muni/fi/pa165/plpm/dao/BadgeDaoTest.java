@@ -6,6 +6,7 @@ import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 import cz.muni.fi.pa165.plpm.enums.PokemonType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -161,7 +162,7 @@ public class BadgeDaoTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(badge2, updated);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = InvalidDataAccessApiUsageException.class)
     public void updateBadgeNullGym() {
         badge2.setGym(null);
         badgeDao.update(badge2);
@@ -176,7 +177,7 @@ public class BadgeDaoTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(badge2, updated);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = InvalidDataAccessApiUsageException.class)
     public void updateBadgeNullTrainer() {
         badge2.setTrainer(null);
         badgeDao.update(badge2);

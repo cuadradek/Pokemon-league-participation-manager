@@ -3,6 +3,7 @@ package cz.muni.fi.pa165.plpm.dao;
 import cz.muni.fi.pa165.plpm.PersistenceSampleApplicationContext;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -76,7 +77,7 @@ public class TrainerDaoTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(trainerFromDb, trainerGeorge);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = InvalidDataAccessApiUsageException.class)
     private void createNullTrainer() {
         trainerDao.createTrainer(null);
     }
@@ -151,7 +152,7 @@ public class TrainerDaoTest extends AbstractTestNGSpringContextTests {
         trainerDao.updateTrainer(trainerRingo);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = InvalidDataAccessApiUsageException.class)
     private void updateNullTrainer() {
         trainerDao.updateTrainer(null);
     }
@@ -174,7 +175,7 @@ public class TrainerDaoTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(ringo, trainerRingo);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = InvalidDataAccessApiUsageException.class)
     private void findTrainerByIdWithNullId() {
         Trainer withNullId = trainerDao.findTrainerById(null);
     }

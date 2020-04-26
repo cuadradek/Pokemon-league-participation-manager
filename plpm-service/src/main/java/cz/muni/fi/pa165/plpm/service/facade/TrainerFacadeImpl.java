@@ -30,13 +30,13 @@ public class TrainerFacadeImpl implements TrainerFacade {
     private BeanMappingService beanMappingService;
 
     @Override
-    public Long createTrainer(TrainerCreateDTO trainerCreateDTO) throws PlpmServiceException {
+    public Long createTrainer(TrainerCreateDTO trainerCreateDTO) {
         return trainerService.createTrainer(beanMappingService
                 .mapTo(trainerCreateDTO, Trainer.class)).getId();
     }
 
     @Override
-    public void updateTrainerInfo(TrainerUpdateInfoDTO trainerUpdateInfoDTO) throws PlpmServiceException {
+    public void updateTrainerInfo(TrainerUpdateInfoDTO trainerUpdateInfoDTO) {
         trainerService.updateTrainerInfo(beanMappingService.mapTo(trainerUpdateInfoDTO, Trainer.class));
     }
 

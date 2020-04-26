@@ -21,10 +21,12 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -205,7 +207,7 @@ public class BadgeServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void createBadge() throws PlpmServiceException {
+    public void createBadge() {
         badge1.setId(null);
         doAnswer(invocation -> {
             Badge b = invocation.getArgument(0);
@@ -219,7 +221,7 @@ public class BadgeServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(expectedExceptions = PlpmServiceException.class)
-    public void createBadgeForTheGymLeader() throws PlpmServiceException {
+    public void createBadgeForTheGymLeader() {
         badge1.setId(null);
         badge1.setGym(gym1);
         badge1.setTrainer(badge1.getGym().getLeader());
@@ -228,8 +230,16 @@ public class BadgeServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(expectedExceptions = DataAccessException.class)
-    public void createBadgeWithExistingId() throws PlpmServiceException {
+    public void createBadgeWithExistingId() {
         doThrow(new DataAccessException("Badge has id") {}).when(badgeDao).create(badge1);
+
+        badgeService.createBadge(badge1);
+    }
+
+    @Test(expectedExceptions = PlpmServiceException.class)
+    public void createBadgeWithNullTrainer() {
+        badge1.setTrainer(null);
+        doThrow(new ConstraintViolationException(new HashSet<>()) {}).when(badgeDao).create(badge1);
 
         badgeService.createBadge(badge1);
     }
@@ -242,7 +252,7 @@ public class BadgeServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void getBeatenGyms() throws PlpmServiceException {
+    public void getBeatenGyms() {
         when(badgeDao.findByTrainer(trainer1)).thenReturn(Collections.singletonList(badge1));
         when(gymService.findGymByTrainer(trainer1)).thenReturn(gym1);
 
@@ -254,7 +264,7 @@ public class BadgeServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(expectedExceptions = PlpmServiceException.class)
-    public void getBeatenGymsBadgeFromOwnGym() throws PlpmServiceException {
+    public void getBeatenGymsBadgeFromOwnGym() {
         badge1.setGym(gym1);
         when(badgeDao.findByTrainer(trainer1)).thenReturn(Collections.singletonList(badge1));
 
@@ -262,7 +272,7 @@ public class BadgeServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(expectedExceptions = PlpmServiceException.class)
-    public void getBeatenGymsTwoBadgesFromTheSameGym() throws PlpmServiceException {
+    public void getBeatenGymsTwoBadgesFromTheSameGym() {
         badge1.setGym(gym1);
         badge2.setGym(gym1);
         badge1.setTrainer(trainer1);

@@ -15,9 +15,9 @@ import java.util.List;
  */
 public interface TrainerFacade {
 
-    Long createTrainer(TrainerCreateDTO trainerCreateDTO) throws PlpmServiceException;
+    Long createTrainer(TrainerCreateDTO trainerCreateDTO);
 
-    void updateTrainerInfo(TrainerUpdateInfoDTO trainerUpdateInfoDTO) throws PlpmServiceException;
+    void updateTrainerInfo(TrainerUpdateInfoDTO trainerUpdateInfoDTO);
 
     boolean changePassword(TrainerChangePasswordDTO trainerChangePasswordDTO);
 

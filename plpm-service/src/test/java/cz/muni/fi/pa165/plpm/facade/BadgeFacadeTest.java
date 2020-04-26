@@ -36,6 +36,9 @@ import java.util.Set;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author Radoslav Cerhak
+ */
 @ContextConfiguration(classes = ServiceConfiguration.class)
 public class BadgeFacadeTest extends AbstractTestNGSpringContextTests {
 
@@ -159,7 +162,7 @@ public class BadgeFacadeTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void createBadge() throws PlpmServiceException {
+    public void createBadge() {
         BadgeCreateDTO badgeCreateDTO = new BadgeCreateDTO();
         badgeCreateDTO.setGym(1L);
         badgeCreateDTO.setTrainerId(1L);
@@ -180,7 +183,7 @@ public class BadgeFacadeTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void getBeatenGyms() throws PlpmServiceException {
+    public void getBeatenGyms() {
         Set<Gym> gyms = new HashSet<>(Collections.singletonList(gym));
         when(badgeService.getBeatenGyms(trainer)).thenReturn(gyms);
         when(beanMappingService.mapTo(gyms, GymDTO.class)).thenReturn(Collections.singletonList(gymDTO));
