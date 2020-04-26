@@ -36,6 +36,9 @@ import java.util.Set;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
+/**
+ * @author Radoslav Cerhak
+ */
 @ContextConfiguration(classes = ServiceConfiguration.class)
 public class BadgeFacadeTest extends AbstractTestNGSpringContextTests {
 

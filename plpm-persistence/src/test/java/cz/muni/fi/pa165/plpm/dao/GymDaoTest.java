@@ -5,6 +5,8 @@ import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 import cz.muni.fi.pa165.plpm.enums.PokemonType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -134,7 +136,7 @@ public class GymDaoTest extends AbstractTestNGSpringContextTests {
         gymDao.create(ceruleanGym);
     }
 
-    @Test(expectedExceptions = PersistenceException.class)
+    @Test(expectedExceptions = JpaSystemException.class)
     public void createGymDuplicateFails() {
         Gym duplicatedYasGym = new Gym();
         duplicatedYasGym.setLeader(yasGym.getLeader());
@@ -229,7 +231,7 @@ public class GymDaoTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(pewterGym, foundGym);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test(expectedExceptions = InvalidDataAccessApiUsageException.class)
     public void updateRemovedGymFails() {
         gymDao.remove(pewterGym);
         gymDao.update(pewterGym);
