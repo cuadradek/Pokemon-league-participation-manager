@@ -102,7 +102,7 @@ public class GymFacadeTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void createGymWithValidArguments() throws PlpmServiceException {
+    public void createGymWithValidArguments() {
         Long gymSetId = 2L;
         gym.setId(null);
 
@@ -118,7 +118,7 @@ public class GymFacadeTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
-    public void createGymWithInvalidTrainer() throws PlpmServiceException {
+    public void createGymWithInvalidTrainer() {
         when(trainerService.findTrainerById(1L)).thenReturn(null);
 
         Long createdGymId = gymFacade.createGym(gymCreateDTO);
@@ -131,7 +131,7 @@ public class GymFacadeTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void updateGym() throws PlpmServiceException {
+    public void updateGym() {
         gymFacade.updateGym(gymDTO);
         verify(gymService).updateGym(gym);
     }
