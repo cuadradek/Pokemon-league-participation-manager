@@ -8,6 +8,7 @@ import cz.muni.fi.pa165.plpm.entity.Badge;
 import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 import cz.muni.fi.pa165.plpm.enums.PokemonType;
+import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import cz.muni.fi.pa165.plpm.service.BadgeService;
 import cz.muni.fi.pa165.plpm.service.BeanMappingService;
 import cz.muni.fi.pa165.plpm.service.GymService;
@@ -18,7 +19,6 @@ import cz.muni.fi.pa165.plpm.service.facade.BadgeFacadeImpl;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
@@ -26,8 +26,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.inject.Inject;
-import java.util.Arrays;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -160,7 +159,7 @@ public class BadgeFacadeTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void createBadge() {
+    public void createBadge() throws PlpmServiceException {
         BadgeCreateDTO badgeCreateDTO = new BadgeCreateDTO();
         badgeCreateDTO.setGym(1L);
         badgeCreateDTO.setTrainerId(1L);
@@ -181,7 +180,7 @@ public class BadgeFacadeTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void getBeatenGyms() {
+    public void getBeatenGyms() throws PlpmServiceException {
         Set<Gym> gyms = new HashSet<>(Collections.singletonList(gym));
         when(badgeService.getBeatenGyms(trainer)).thenReturn(gyms);
         when(beanMappingService.mapTo(gyms, GymDTO.class)).thenReturn(Collections.singletonList(gymDTO));
