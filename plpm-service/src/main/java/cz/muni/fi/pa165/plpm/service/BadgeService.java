@@ -3,6 +3,7 @@ package cz.muni.fi.pa165.plpm.service;
 import cz.muni.fi.pa165.plpm.entity.Badge;
 import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
+import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 
 import java.util.List;
 import java.util.Set;
@@ -14,7 +15,7 @@ import java.util.Set;
  */
 public interface BadgeService {
 
-    void createBadge(Badge badge);
+    void createBadge(Badge badge) throws PlpmServiceException;
 
     void deleteBadge(Badge badge);
 
@@ -22,7 +23,7 @@ public interface BadgeService {
 
     List<Badge> getBadgesByTrainer(Trainer trainer);
 
-    Set<Gym> getBeatenGyms(Trainer trainer);
+    Set<Gym> getBeatenGyms(Trainer trainer) throws PlpmServiceException;
 
     List<Badge> getBadgesByGym(Gym gym);
 

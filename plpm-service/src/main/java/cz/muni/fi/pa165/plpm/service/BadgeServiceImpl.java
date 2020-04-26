@@ -4,10 +4,12 @@ import cz.muni.fi.pa165.plpm.dao.BadgeDao;
 import cz.muni.fi.pa165.plpm.entity.Badge;
 import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
+import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ConstraintViolationException;
 import java.util.*;
 
 /**
@@ -21,12 +23,16 @@ public class BadgeServiceImpl implements BadgeService {
     @Autowired
     private BadgeDao badgeDao;
 
-    //@Autowired
-    //private GymService gymService;
+    @Autowired
+    private GymService gymService;
 
     @Override
-    public void createBadge(Badge badge) {
-        badgeDao.create(badge);
+    public void createBadge(Badge badge) throws PlpmServiceException {
+        try {
+            badgeDao.create(badge);
+        } catch (ConstraintViolationException daoException) {
+            throw new PlpmServiceException("Failed to create badge " + badge.toString(), daoException);
+        }
     }
 
     @Override
@@ -45,26 +51,25 @@ public class BadgeServiceImpl implements BadgeService {
     }
 
     @Override
-    public Set<Gym> getBeatenGyms(Trainer trainer) {
+    public Set<Gym> getBeatenGyms(Trainer trainer) throws PlpmServiceException {
         List<Badge> badges = getBadgesByTrainer(trainer);
         Set<Gym> gyms = new HashSet<>();
 
         for (Badge badge : badges) {
             Gym gym = badge.getGym();
             if (gym.getLeader().equals(trainer)) {
-                throw new ServiceException("Trainer " + trainer.toString() +
+                throw new PlpmServiceException("Trainer " + trainer.toString() +
                         " has received a badge from his own gym: " + gym.toString());
             }
 
             if (gyms.contains(badge.getGym())) {
-                throw new ServiceException("Trainer " + trainer.toString() +
+                throw new PlpmServiceException("Trainer " + trainer.toString() +
                         " has received 2 or more badges from the same gym: " + gym.toString());
             }
             gyms.add(gym);
         }
 
-        //Gym trainersGym = gymService.findByTrainer(trainer);
-        Gym trainersGym = null;
+        Gym trainersGym = gymService.findGymByTrainer(trainer);
         if (trainersGym != null) {
             gyms.add(trainersGym);
         }
