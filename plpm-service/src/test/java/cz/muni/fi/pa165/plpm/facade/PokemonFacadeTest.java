@@ -134,7 +134,7 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void createPokemon() throws PlpmServiceException {
+    public void createPokemon() {
         when(beanMappingService.mapTo(pokemonCreate1, Pokemon.class)).thenReturn(pokemon1);
         when(pokemonServiceMock.createPokemon(pokemon1)).then(
                 call -> { Pokemon pokemon = call.getArgument(0);
@@ -148,7 +148,7 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void changeTrainer() throws PlpmServiceException {
+    public void changeTrainer() {
         pokemon1.setId(13L);
         pokemon1ChangeTrainer.setId(13L);
         Pokemon updatedPokemon = new Pokemon();
@@ -166,7 +166,7 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void changeLevel() throws PlpmServiceException {
+    public void changeLevel() {
         pokemon1.setId(13L);
         PokemonChangeLevelDTO changeLevel = new PokemonChangeLevelDTO();
         changeLevel.setId(13L);

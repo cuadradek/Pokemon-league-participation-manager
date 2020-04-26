@@ -17,6 +17,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.validation.ConstraintViolationException;
 import java.util.*;
 
 import static org.mockito.Mockito.*;
@@ -81,7 +82,7 @@ public class PokemonServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void createPokemon() throws PlpmServiceException {
+    public void createPokemon() {
         doAnswer(invocation -> {
             Pokemon p = invocation.getArgument(0);
             p.setId(1L);
@@ -93,14 +94,22 @@ public class PokemonServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(expectedExceptions = PlpmServiceException.class)
-    public void createPokemonExistingNickname() throws PlpmServiceException {
+    public void createPokemonExistingNickname() {
         pokemon1.setNickname(pokemon2.getNickname());
         when(pokemonDaoMock.findByNickname(pokemon1.getNickname())).thenReturn(Collections.singletonList(pokemon2));
         pokemonService.createPokemon(pokemon1);
     }
 
+    @Test(expectedExceptions = PlpmServiceException.class)
+    public void createPokemonNullNameCatchConstraintViolation() {
+        pokemon1.setName(null);
+        when(pokemonDaoMock.findByNickname(pokemon1.getNickname())).thenReturn(Collections.emptyList());
+        doThrow(ConstraintViolationException.class).when(pokemonDaoMock).create(pokemon1);
+        pokemonService.createPokemon(pokemon1);
+    }
+
     @Test
-    public void updatePokemonInfo() throws PlpmServiceException {
+    public void updatePokemonInfo() {
         pokemon1.setId(1L);
         pokemon2.setId(1L);
         when(pokemonDaoMock.findById(pokemon2.getId())).thenReturn(pokemon1);
@@ -113,7 +122,7 @@ public class PokemonServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(expectedExceptions = PlpmServiceException.class)
-    public void updateNonexistingPokemon() throws PlpmServiceException {
+    public void updateNonexistingPokemon() {
         pokemon2.setId(1L);
         when(pokemonDaoMock.findById(pokemon2.getId())).thenReturn(null);
         when(pokemonDaoMock.findByNickname(pokemon2.getNickname())).thenReturn(Collections.emptyList());
@@ -122,7 +131,7 @@ public class PokemonServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(expectedExceptions = PlpmServiceException.class)
-    public void updatePokemonWithExistingNickname() throws PlpmServiceException {
+    public void updatePokemonWithExistingNickname() {
         pokemon1.setId(1L);
         pokemon2.setId(2L);
         Pokemon updatePokemon = new Pokemon();
@@ -140,7 +149,7 @@ public class PokemonServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test()
-    public void updatePokemonNoChangeNickname() throws PlpmServiceException {
+    public void updatePokemonNoChangeNickname() {
         pokemon1.setId(1L);
         Pokemon updatePokemon = new Pokemon();
         updatePokemon.setId(pokemon1.getId());

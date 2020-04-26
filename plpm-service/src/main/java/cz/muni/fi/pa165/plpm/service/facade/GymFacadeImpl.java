@@ -2,11 +2,8 @@ package cz.muni.fi.pa165.plpm.service.facade;
 
 import cz.muni.fi.pa165.plpm.dto.GymCreateDTO;
 import cz.muni.fi.pa165.plpm.dto.GymDTO;
-import cz.muni.fi.pa165.plpm.dto.TrainerAuthenticateDTO;
-import cz.muni.fi.pa165.plpm.dto.TrainerDTO;
 import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
-import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import cz.muni.fi.pa165.plpm.service.BeanMappingService;
 import cz.muni.fi.pa165.plpm.service.GymService;
 import cz.muni.fi.pa165.plpm.service.TrainerService;
@@ -33,7 +30,7 @@ public class GymFacadeImpl implements GymFacade {
     private BeanMappingService beanMappingService;
 
     @Override
-    public Long createGym(GymCreateDTO gymCreateDTO) throws PlpmServiceException {
+    public Long createGym(GymCreateDTO gymCreateDTO) {
         Trainer trainer = trainerService.findTrainerById(gymCreateDTO.getTrainerId());
         if (trainer == null) {
             throw new IllegalStateException("Couldn't create gym - trainer with id " + gymCreateDTO.getTrainerId() + " doesn't exist");
@@ -53,7 +50,7 @@ public class GymFacadeImpl implements GymFacade {
     }
 
     @Override
-    public void updateGym(GymDTO gymDTO) throws PlpmServiceException {
+    public void updateGym(GymDTO gymDTO) {
         gymService.updateGym(beanMappingService.mapTo(gymDTO, Gym.class));
     }
 
