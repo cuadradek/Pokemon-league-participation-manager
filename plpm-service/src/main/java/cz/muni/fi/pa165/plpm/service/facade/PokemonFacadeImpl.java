@@ -29,15 +29,15 @@ public class PokemonFacadeImpl implements PokemonFacade {
     private BeanMappingService beanMappingService;
 
     @Override
-    public Long createPokemon(PokemonCreateDTO pokemonCreateDTO) throws PlpmServiceException {
+    public Long createPokemon(PokemonCreateDTO pokemonCreateDTO) {
         return pokemonService.createPokemon(beanMappingService
                 .mapTo(pokemonCreateDTO, Pokemon.class)).getId();
     }
 
     @Override
-    public void changeTrainer(PokemonChangeTrainerDTO pokemonChangeTrainerDTO) throws PlpmServiceException {
+    public void changeTrainer(PokemonChangeTrainerDTO pokemonChangeTrainerDTO) {
         Pokemon pokemon = pokemonService.findPokemonById(pokemonChangeTrainerDTO.getId());
-        if(pokemon == null){
+        if (pokemon == null) {
             throw new PlpmServiceException("Pokemon with id " + pokemonChangeTrainerDTO.getId() + " doesn't exist.");
         }
         pokemon.setTrainer(beanMappingService.mapTo(pokemonChangeTrainerDTO.getTrainer(), Trainer.class));
@@ -45,9 +45,9 @@ public class PokemonFacadeImpl implements PokemonFacade {
     }
 
     @Override
-    public void changeLevel(PokemonChangeLevelDTO pokemonChangeLevelDTO) throws PlpmServiceException {
+    public void changeLevel(PokemonChangeLevelDTO pokemonChangeLevelDTO) {
         Pokemon pokemon = pokemonService.findPokemonById(pokemonChangeLevelDTO.getId());
-        if(pokemon == null){
+        if (pokemon == null) {
             throw new PlpmServiceException("Pokemon with id " + pokemonChangeLevelDTO.getId() + " doesn't exist.");
         }
         pokemon.setLevel(pokemonChangeLevelDTO.getLevel());
@@ -81,7 +81,7 @@ public class PokemonFacadeImpl implements PokemonFacade {
     public List<PokemonDTO> getPokemonByTrainer(TrainerDTO trainerDTO) {
         return beanMappingService
                 .mapTo(pokemonService
-                .findPokemonByTrainer(beanMappingService.mapTo(trainerDTO, Trainer.class)), PokemonDTO.class);
+                        .findPokemonByTrainer(beanMappingService.mapTo(trainerDTO, Trainer.class)), PokemonDTO.class);
     }
 
     @Override

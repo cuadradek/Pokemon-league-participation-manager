@@ -1,17 +1,17 @@
 package cz.muni.fi.pa165.plpm.service;
 
-import java.util.List;
 import cz.muni.fi.pa165.plpm.entity.Pokemon;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
-import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
+
+import java.util.List;
 
 /**
  * @author: Veronika Loukotova
  */
 public interface PokemonService {
-    Pokemon createPokemon(Pokemon pokemon) throws PlpmServiceException;
+    Pokemon createPokemon(Pokemon pokemon);
 
-    void updatePokemonInfo(Pokemon pokemon) throws PlpmServiceException;
+    void updatePokemonInfo(Pokemon pokemon);
 
     void deletePokemon(Pokemon pokemon);
 

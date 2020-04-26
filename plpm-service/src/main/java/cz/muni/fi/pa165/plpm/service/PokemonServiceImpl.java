@@ -1,12 +1,14 @@
 package cz.muni.fi.pa165.plpm.service;
 
-import java.util.List;
 import cz.muni.fi.pa165.plpm.dao.PokemonDao;
 import cz.muni.fi.pa165.plpm.entity.Pokemon;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.validation.ConstraintViolationException;
+import java.util.List;
 
 /**
  * @author: Veronika Loukotova
@@ -17,21 +19,25 @@ public class PokemonServiceImpl implements PokemonService {
     private PokemonDao pokemonDao;
 
     @Override
-    public Pokemon createPokemon(Pokemon pokemon) throws PlpmServiceException {
-        if(!pokemonDao.findByNickname(pokemon.getNickname()).isEmpty()){
+    public Pokemon createPokemon(Pokemon pokemon) {
+        if (!pokemonDao.findByNickname(pokemon.getNickname()).isEmpty()) {
             throw new PlpmServiceException("Pokemon with same nickname already exists.");
         }
-        pokemonDao.create(pokemon);
+        try {
+            pokemonDao.create(pokemon);
+        } catch (ConstraintViolationException ex) {
+            throw new PlpmServiceException("Pokemon creation failed.", ex);
+        }
         return pokemon;
     }
 
     @Override
-    public void updatePokemonInfo(Pokemon pokemon) throws PlpmServiceException {
+    public void updatePokemonInfo(Pokemon pokemon) {
         Pokemon foundPokemon = pokemonDao.findById(pokemon.getId());
-        if(foundPokemon == null){
+        if (foundPokemon == null) {
             throw new PlpmServiceException("Cannot update Pokemon which doesn't exist.");
         }
-        if(foundPokemon.getNickname() != pokemon.getNickname() && !pokemonDao.findByNickname(pokemon.getNickname()).isEmpty()){
+        if (foundPokemon.getNickname() != pokemon.getNickname() && !pokemonDao.findByNickname(pokemon.getNickname()).isEmpty()) {
             throw new PlpmServiceException("Cannot update Pokemon " + pokemon.getId() + ", Pokemon with same nickname already exists.");
         }
         foundPokemon.setLevel(pokemon.getLevel());
@@ -39,7 +45,12 @@ public class PokemonServiceImpl implements PokemonService {
         foundPokemon.setName(pokemon.getName());
         foundPokemon.setNickname(pokemon.getNickname());
         foundPokemon.setType(pokemon.getType());
-        pokemonDao.update(foundPokemon);
+
+        try {
+            pokemonDao.update(foundPokemon);
+        } catch (ConstraintViolationException ex) {
+            throw new PlpmServiceException("Pokemon update failed.", ex);
+        }
     }
 
     @Override
