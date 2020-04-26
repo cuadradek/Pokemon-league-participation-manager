@@ -166,7 +166,7 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void changeLevel() throws PlpmServiceException {
+    public void changeLevel() {
         pokemon1.setId(13L);
         PokemonChangeLevelDTO changeLevel = new PokemonChangeLevelDTO();
         changeLevel.setId(13L);
