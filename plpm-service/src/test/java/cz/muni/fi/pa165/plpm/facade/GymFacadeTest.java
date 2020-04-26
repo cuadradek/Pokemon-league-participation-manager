@@ -6,6 +6,7 @@ import cz.muni.fi.pa165.plpm.dto.TrainerDTO;
 import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 import cz.muni.fi.pa165.plpm.enums.PokemonType;
+import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import cz.muni.fi.pa165.plpm.service.BeanMappingService;
 import cz.muni.fi.pa165.plpm.service.GymService;
 import cz.muni.fi.pa165.plpm.service.TrainerService;
@@ -101,7 +102,7 @@ public class GymFacadeTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void createGymWithValidArguments() {
+    public void createGymWithValidArguments() throws PlpmServiceException {
         Long gymSetId = 2L;
         gym.setId(null);
 
@@ -117,7 +118,7 @@ public class GymFacadeTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
-    public void createGymWithInvalidTrainer() {
+    public void createGymWithInvalidTrainer() throws PlpmServiceException {
         when(trainerService.findTrainerById(1L)).thenReturn(null);
 
         Long createdGymId = gymFacade.createGym(gymCreateDTO);
@@ -130,7 +131,7 @@ public class GymFacadeTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void updateGym() {
+    public void updateGym() throws PlpmServiceException {
         gymFacade.updateGym(gymDTO);
         verify(gymService).updateGym(gym);
     }

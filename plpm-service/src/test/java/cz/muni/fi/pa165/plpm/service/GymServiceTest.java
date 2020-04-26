@@ -97,7 +97,7 @@ public class GymServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void createGym() {
+    public void createGym() throws PlpmServiceException {
         when(gymDao.findByTrainer(trainer1)).thenReturn(null);
 
         gymService.createGym(gym1);
@@ -105,7 +105,7 @@ public class GymServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(expectedExceptions = PlpmServiceException.class)
-    public void createGymWithTrainerOfAnotherGym() {
+    public void createGymWithTrainerOfAnotherGym() throws PlpmServiceException {
         when(gymDao.findByTrainer(trainer1)).thenReturn(gym2);
 
         gymService.createGym(gym1);
@@ -124,7 +124,7 @@ public class GymServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void updateGym() {
+    public void updateGym() throws PlpmServiceException {
         when(gymDao.findByTrainer(trainer1)).thenReturn(null);
 
         gymService.updateGym(gym1);
@@ -133,7 +133,7 @@ public class GymServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(expectedExceptions = PlpmServiceException.class)
-    public void updateGymWithLeaderOfAnotherGym(){
+    public void updateGymWithLeaderOfAnotherGym() throws PlpmServiceException {
         when(gymDao.findByTrainer(trainer1)).thenReturn(gym2);
 
         gymService.updateGym(gym1);
