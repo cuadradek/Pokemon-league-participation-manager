@@ -8,14 +8,12 @@ import cz.muni.fi.pa165.plpm.service.BeanMappingService;
 import cz.muni.fi.pa165.plpm.service.PokemonService;
 import cz.muni.fi.pa165.plpm.service.config.ServiceConfiguration;
 import cz.muni.fi.pa165.plpm.service.facade.PokemonFacade;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
+import cz.muni.fi.pa165.plpm.service.facade.PokemonFacadeImpl;
+import org.mockito.*;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -38,9 +36,8 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
     @Mock
     private BeanMappingService beanMappingService;
 
-    @Autowired
     @InjectMocks
-    private PokemonFacade pokemonFacade;
+    private PokemonFacade pokemonFacade = new PokemonFacadeImpl();
 
     private Pokemon pokemon1;
 
@@ -129,6 +126,12 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
         pokemon1ChangeTrainer.setTrainer(trainer1DTO);
     }
 
+    @AfterMethod
+    public void reset() {
+        Mockito.reset(pokemonServiceMock);
+        Mockito.reset(beanMappingService);
+    }
+
     @Test
     public void createPokemon() {
         when(beanMappingService.mapTo(pokemonCreate1, Pokemon.class)).thenReturn(pokemon1);
@@ -198,11 +201,10 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
     @Test
     public void findPokemonsByName() {
         when(pokemonServiceMock.findPokemonByName(pokemon2.getName())).thenReturn(Collections.singletonList(pokemon2));
-        when(beanMappingService.mapTo(pokemon2, PokemonDTO.class)).thenReturn(pokemonDTO);
+        when(beanMappingService.mapTo(Collections.singletonList(pokemon2), PokemonDTO.class)).thenReturn(Collections.singletonList(pokemonDTO));
 
         List<PokemonDTO> found = pokemonFacade.getPokemonByName(pokemon2.getName());
 
-        verify(pokemonServiceMock).findPokemonByName(pokemon2.getName());
         Assert.assertEquals(1, found.size());
         Assert.assertTrue(found.contains(pokemonDTO));
     }
@@ -210,11 +212,10 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
     @Test
     public void findPokemonsByNickname() {
         when(pokemonServiceMock.findPokemonByNickname(pokemon2.getNickname())).thenReturn(Collections.singletonList(pokemon2));
-        when(beanMappingService.mapTo(pokemon2, PokemonDTO.class)).thenReturn(pokemonDTO);
+        when(beanMappingService.mapTo(Collections.singletonList(pokemon2), PokemonDTO.class)).thenReturn(Collections.singletonList(pokemonDTO));
 
         List<PokemonDTO> found = pokemonFacade.getPokemonByNickname(pokemon2.getNickname());
 
-        verify(pokemonServiceMock).findPokemonByNickname(pokemon2.getNickname());
         Assert.assertEquals(1, found.size());
         Assert.assertTrue(found.contains(pokemonDTO));
     }
@@ -222,12 +223,11 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
     @Test
     public void findPokemonsByTrainer() {
         when(pokemonServiceMock.findPokemonByTrainer(trainer2)).thenReturn(Collections.singletonList(pokemon2));
-        when(beanMappingService.mapTo(pokemon2, PokemonDTO.class)).thenReturn(pokemonDTO);
-        when(beanMappingService.mapTo(trainer2, Trainer.class)).thenReturn(trainer2);
+        when(beanMappingService.mapTo(Collections.singletonList(pokemon2), PokemonDTO.class)).thenReturn(Collections.singletonList(pokemonDTO));
+        when(beanMappingService.mapTo(trainer2DTO, Trainer.class)).thenReturn(trainer2);
 
         List<PokemonDTO> found = pokemonFacade.getPokemonByTrainer(trainer2DTO);
 
-        verify(pokemonServiceMock).findPokemonByTrainer(trainer2);
         Assert.assertEquals(1, found.size());
         Assert.assertTrue(found.contains(pokemonDTO));
     }
