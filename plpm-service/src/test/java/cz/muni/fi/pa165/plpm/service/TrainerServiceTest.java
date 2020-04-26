@@ -1,8 +1,5 @@
 package cz.muni.fi.pa165.plpm.service;
 
-import cz.muni.fi.pa165.plpm.dao.BadgeDao;
-import cz.muni.fi.pa165.plpm.dao.GymDao;
-import cz.muni.fi.pa165.plpm.dao.PokemonDao;
 import cz.muni.fi.pa165.plpm.dao.TrainerDao;
 import cz.muni.fi.pa165.plpm.entity.Badge;
 import cz.muni.fi.pa165.plpm.entity.Gym;
@@ -12,22 +9,21 @@ import cz.muni.fi.pa165.plpm.enums.PokemonType;
 import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import cz.muni.fi.pa165.plpm.service.config.ServiceConfiguration;
 import org.hibernate.service.spi.ServiceException;
-import org.mindrot.jbcrypt.BCrypt;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 
 import cz.muni.fi.pa165.plpm.resources.DefaultTrainers;
 import org.testng.annotations.Test;
 
-import javax.validation.ConstraintViolationException;
-import javax.validation.groups.Default;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +33,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
+ * Tests of {@link TrainerServiceImpl}.
  *
  * @author Jakub Doczy
  */
@@ -105,6 +102,14 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
         ashesPewterBadge.setGym(pewterGym);
         ashesPewterBadge.setTrainer(trainerAsh);
         ashesPewterBadge.setId(11L);
+    }
+
+    @AfterMethod
+    public void reset() {
+        Mockito.reset(gymService);
+        Mockito.reset(pokemonService);
+        Mockito.reset(badgeService);
+        Mockito.reset(trainerDao);
     }
 
     @Test
@@ -245,8 +250,7 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
 
         verify(trainerDao).deleteTrainer(trainerAsh);
         verify(badgeService).deleteBadge(ashesPewterBadge);
-        ashesPikachu.setTrainer(null); // trainer removed
-        verify(pokemonService).updatePokemonInfo(ashesPikachu);
+        Assert.assertNull(ashesPikachu.getTrainer());
     }
 
     @Test
@@ -261,31 +265,11 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
         verify(gymService).removeGym(pewterGym);
     }
 
-    // TODO: is this possible?
-    @Test(expectedExceptions = ServiceException.class)
-    public void deleteNonExistingTrainerFails() {
-        newTrainer.setId(-1L);
-
-        when(badgeService.getBadgesByTrainer(trainerGary)).thenReturn(new ArrayList<>());
-        when(pokemonService.findPokemonByTrainer(trainerGary)).thenReturn(new ArrayList<>());
-        when(gymService.findGymByTrainer(trainerAsh)).thenReturn(null);
-
-        trainerService.deleteTrainer(newTrainer);
-    }
-
     @Test
     public void findTrainerById() {
         when(trainerService.findTrainerById(trainerAsh.getId())).thenReturn(trainerAsh);
         Trainer returnedTrainer = trainerService.findTrainerById(trainerAsh.getId());
         Assert.assertEquals(returnedTrainer, trainerAsh);
-    }
-
-    // TODO: or maybe expect exception?
-    @Test
-    public void findTrainerByNonExistingId() {
-        when(trainerService.findTrainerById(-1L)).thenReturn(null);
-        Trainer returnedTrainer = trainerService.findTrainerById(-1L);
-        Assert.assertNull(returnedTrainer);
     }
 
     @Test
@@ -398,10 +382,4 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
         Assert.assertFalse(trainerService.isAdmin(garyCopy));
     }
 
-    // TODO: is this possible?
-    @Test(expectedExceptions = ServiceException.class)
-    public void isAdminOnNonUser() {
-        when(trainerService.findTrainerById(newTrainer.getId())).thenReturn(null);
-        trainerService.isAdmin(newTrainer);
-    }
 }

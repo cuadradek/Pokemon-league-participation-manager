@@ -28,6 +28,19 @@ public class BadgeServiceImpl implements BadgeService {
 
     @Override
     public void createBadge(Badge badge) throws PlpmServiceException {
+        if (badge.getTrainer() == null) {
+            throw new PlpmServiceException("Failed to create badge, trainer is null");
+        }
+        if (badge.getGym() == null) {
+            throw new PlpmServiceException("Failed to create badge, gym is null");
+        }
+        if (badge.getTrainer().equals(badge.getGym().getLeader())) {
+            throw new PlpmServiceException("Failed to create badge, gym leader (" +
+                    badge.getTrainer().getNickname() +
+                    ") should not receive badge from his own gym " +
+                    badge.getGym().toString());
+        }
+
         try {
             badgeDao.create(badge);
         } catch (ConstraintViolationException daoException) {
