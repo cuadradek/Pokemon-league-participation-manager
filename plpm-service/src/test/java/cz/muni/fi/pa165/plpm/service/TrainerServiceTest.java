@@ -24,13 +24,13 @@ import org.testng.annotations.BeforeMethod;
 import cz.muni.fi.pa165.plpm.resources.DefaultTrainers;
 import org.testng.annotations.Test;
 
+import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests of {@link TrainerServiceImpl}.
@@ -113,7 +113,7 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void createTrainer() throws PlpmServiceException {
+    public void createTrainer() {
         when(trainerDao.findTrainerByNickname(newTrainer.getNickname())).thenReturn(null);
         trainerService.createTrainer(newTrainer);
 
@@ -124,8 +124,15 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(expectedExceptions = PlpmServiceException.class)
-    public void createOnExistingTrainerFails() throws PlpmServiceException {
+    public void createOnExistingTrainerFails() {
         when(trainerDao.findTrainerByNickname(trainerAsh.getNickname())).thenReturn(trainerAsh);
+        trainerService.createTrainer(trainerAsh);
+    }
+
+    @Test(expectedExceptions = PlpmServiceException.class)
+    public void createTrainerDAOFails() {
+        when(trainerDao.findTrainerByNickname(trainerAsh.getNickname())).thenReturn(trainerAsh);
+        doThrow(ConstraintViolationException.class).when(trainerDao).createTrainer(trainerAsh);
         trainerService.createTrainer(trainerAsh);
     }
 
@@ -142,7 +149,7 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void updateName() throws PlpmServiceException {
+    public void updateName() {
         Trainer changedTrainer = new Trainer();
         changedTrainer.setId(trainerAsh.getId());
         changedTrainer.setBirthDate(trainerAsh.getBirthDate());
@@ -160,7 +167,7 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void updateNickname() throws PlpmServiceException {
+    public void updateNickname() {
         Trainer changedTrainer = new Trainer();
         changedTrainer.setId(trainerAsh.getId());
         changedTrainer.setBirthDate(trainerAsh.getBirthDate());
@@ -179,7 +186,7 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(expectedExceptions = PlpmServiceException.class)
-    public void updateInfoWithInvalidIdFails() throws PlpmServiceException {
+    public void updateInfoWithInvalidIdFails() {
         newTrainer.setId(-1L);
 
         when(trainerDao.findTrainerById(-1L)).thenReturn(null);
@@ -189,7 +196,7 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(expectedExceptions = PlpmServiceException.class)
-    public void updateInfoWithConflictingNicknameFails() throws PlpmServiceException {
+    public void updateInfoWithConflictingNicknameFails() {
         Trainer changedTrainer = new Trainer();
         changedTrainer.setId(trainerAsh.getId());
         changedTrainer.setBirthDate(new Date(100));
@@ -202,6 +209,20 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
         when(trainerDao.findTrainerByNickname("Gary")).thenReturn(trainerGary);
 
         trainerService.updateTrainerInfo(newTrainer);
+    }
+
+    @Test(expectedExceptions = PlpmServiceException.class)
+    public void updateInfoDAOFails() {
+        Trainer changedTrainer = new Trainer();
+        changedTrainer.setId(trainerAsh.getId());
+        changedTrainer.setNickname("Gary");
+        changedTrainer.setPassword(trainerAsh.getPassword());
+
+        when(trainerDao.findTrainerById(trainerAsh.getId())).thenReturn(trainerAsh);
+        when(trainerDao.findTrainerByNickname("Gary")).thenReturn(null);
+        doThrow(ConstraintViolationException.class).when(trainerDao).updateTrainer(changedTrainer);
+
+        trainerService.updateTrainerInfo(changedTrainer);
     }
 
     @Test

@@ -2,10 +2,10 @@ package cz.muni.fi.pa165.plpm.facade;
 
 import cz.muni.fi.pa165.plpm.dto.*;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
-import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import cz.muni.fi.pa165.plpm.resources.DefaultTrainers;
 import cz.muni.fi.pa165.plpm.service.BeanMappingService;
 import cz.muni.fi.pa165.plpm.service.TrainerService;
+import cz.muni.fi.pa165.plpm.service.TrainerServiceImpl;
 import cz.muni.fi.pa165.plpm.service.config.ServiceConfiguration;
 import cz.muni.fi.pa165.plpm.service.facade.TrainerFacade;
 import cz.muni.fi.pa165.plpm.service.facade.TrainerFacadeImpl;
@@ -13,7 +13,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
@@ -27,6 +26,7 @@ import static org.mockito.Mockito.*;
 import java.util.List;
 
 /**
+ * Tests of {@link TrainerFacade}.
  *
  * @author Jakub Doczy
  */
@@ -107,7 +107,7 @@ public class TrainerFacadeTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void createTrainer() throws PlpmServiceException {
+    public void createTrainer() {
         when(trainerService.createTrainer(trainerAsh)).then(
                 call -> { Trainer trainer = call.getArgument(0);
                     trainer.setId(1337L);
@@ -119,7 +119,7 @@ public class TrainerFacadeTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void updateTrainerInfo() throws PlpmServiceException {
+    public void updateTrainerInfo() {
         trainerFacade.updateTrainerInfo(trainerAshUpdateInfoDTO);
         verify(trainerService).updateTrainerInfo(trainerAsh);
     }

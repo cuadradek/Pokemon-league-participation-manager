@@ -5,7 +5,6 @@ import cz.muni.fi.pa165.plpm.entity.Badge;
 import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
-import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +26,7 @@ public class BadgeServiceImpl implements BadgeService {
     private GymService gymService;
 
     @Override
-    public void createBadge(Badge badge) throws PlpmServiceException {
+    public void createBadge(Badge badge) {
         if (badge.getTrainer() == null) {
             throw new PlpmServiceException("Failed to create badge, trainer is null");
         }
@@ -64,7 +63,7 @@ public class BadgeServiceImpl implements BadgeService {
     }
 
     @Override
-    public Set<Gym> getBeatenGyms(Trainer trainer) throws PlpmServiceException {
+    public Set<Gym> getBeatenGyms(Trainer trainer) {
         List<Badge> badges = getBadgesByTrainer(trainer);
         Set<Gym> gyms = new HashSet<>();
 
