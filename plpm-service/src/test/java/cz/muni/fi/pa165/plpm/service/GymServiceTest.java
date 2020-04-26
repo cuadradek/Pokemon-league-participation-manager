@@ -142,7 +142,7 @@ public class GymServiceTest extends AbstractTestNGSpringContextTests {
     @Test(expectedExceptions = PlpmServiceException.class)
     public void updateGymDaoException() {
         when(gymDao.findByTrainer(trainer1)).thenReturn(null);
-        doThrow(ConstraintViolationException.class).when(gymDao).create(gym1);
+        doThrow(ConstraintViolationException.class).when(gymDao).update(gym1);
 
         gymService.updateGym(gym1);
     }
