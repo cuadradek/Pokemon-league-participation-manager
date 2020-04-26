@@ -25,7 +25,7 @@ public class PokemonChangeLevelDTO {
         return level;
     }
 
-    public void setLevel() {
+    public void setLevel(int level) {
         this.level = level;
     }
 

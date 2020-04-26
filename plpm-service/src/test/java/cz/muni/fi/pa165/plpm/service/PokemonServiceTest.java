@@ -81,7 +81,7 @@ public class PokemonServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void createPokemon() {
+    public void createPokemon() throws PlpmServiceException {
         doAnswer(invocation -> {
             Pokemon p = invocation.getArgument(0);
             p.setId(1L);
@@ -93,14 +93,14 @@ public class PokemonServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(expectedExceptions = PlpmServiceException.class)
-    public void createPokemonExistingNickname() {
+    public void createPokemonExistingNickname() throws PlpmServiceException {
         pokemon1.setNickname(pokemon2.getNickname());
         when(pokemonDaoMock.findByNickname(pokemon1.getNickname())).thenReturn(Collections.singletonList(pokemon2));
         pokemonService.createPokemon(pokemon1);
     }
 
     @Test
-    public void updatePokemonInfo() {
+    public void updatePokemonInfo() throws PlpmServiceException {
         pokemon1.setId(1L);
         pokemon2.setId(1L);
         when(pokemonDaoMock.findById(pokemon2.getId())).thenReturn(pokemon1);
@@ -112,8 +112,8 @@ public class PokemonServiceTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(pokemon2, pokemon1);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void updateNonexistingPokemon() {
+    @Test(expectedExceptions = PlpmServiceException.class)
+    public void updateNonexistingPokemon() throws PlpmServiceException {
         pokemon2.setId(1L);
         when(pokemonDaoMock.findById(pokemon2.getId())).thenReturn(null);
         when(pokemonDaoMock.findByNickname(pokemon2.getNickname())).thenReturn(Collections.emptyList());
@@ -122,7 +122,7 @@ public class PokemonServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(expectedExceptions = PlpmServiceException.class)
-    public void updatePokemonWithExistingNickname() {
+    public void updatePokemonWithExistingNickname() throws PlpmServiceException {
         pokemon1.setId(1L);
         pokemon2.setId(1L);
         pokemon2.setNickname(pokemon1.getNickname());
@@ -133,7 +133,7 @@ public class PokemonServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test()
-    public void updatePokemonNoChangeNickname() {
+    public void updatePokemonNoChangeNickname() throws PlpmServiceException {
         pokemon1.setId(1L);
         Pokemon updatePokemon = new Pokemon();
         updatePokemon.setId(pokemon1.getId());

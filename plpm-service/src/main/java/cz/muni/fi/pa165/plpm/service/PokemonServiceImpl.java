@@ -4,6 +4,7 @@ import java.util.List;
 import cz.muni.fi.pa165.plpm.dao.PokemonDao;
 import cz.muni.fi.pa165.plpm.entity.Pokemon;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
+import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,22 +17,22 @@ public class PokemonServiceImpl implements PokemonService {
     private PokemonDao pokemonDao;
 
     @Override
-    public Pokemon createPokemon(Pokemon pokemon) {
-        if(pokemonDao.findByNickname(pokemon.getNickname()) == null){
-            throw new IllegalArgumentException("Pokemon with same nickname already exists.");
+    public Pokemon createPokemon(Pokemon pokemon) throws PlpmServiceException {
+        if(!pokemonDao.findByNickname(pokemon.getNickname()).isEmpty()){
+            throw new PlpmServiceException("Pokemon with same nickname already exists.");
         }
         pokemonDao.create(pokemon);
         return pokemon;
     }
 
     @Override
-    public void updatePokemonInfo(Pokemon pokemon) {
+    public void updatePokemonInfo(Pokemon pokemon) throws PlpmServiceException {
         Pokemon foundPokemon = pokemonDao.findById(pokemon.getId());
         if(foundPokemon == null){
-            throw new IllegalArgumentException("Cannot update Pokemon which doesn't exist.");
+            throw new PlpmServiceException("Cannot update Pokemon which doesn't exist.");
         }
-        if(!pokemonDao.findByNickname(pokemon.getNickname()).isEmpty()){
-            throw new IllegalArgumentException("Cannot update Pokemon " + pokemon.getId() + ", Pokemon with same nickname already exists.");
+        if(foundPokemon.getNickname() != pokemon.getNickname() && !pokemonDao.findByNickname(pokemon.getNickname()).isEmpty()){
+            throw new PlpmServiceException("Cannot update Pokemon " + pokemon.getId() + ", Pokemon with same nickname already exists.");
         }
         foundPokemon.setLevel(pokemon.getLevel());
         foundPokemon.setTrainer(pokemon.getTrainer());

@@ -3,6 +3,7 @@ package cz.muni.fi.pa165.plpm.service.facade;
 import cz.muni.fi.pa165.plpm.dto.*;
 import cz.muni.fi.pa165.plpm.entity.Pokemon;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
+import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import cz.muni.fi.pa165.plpm.service.BeanMappingService;
 import cz.muni.fi.pa165.plpm.service.PokemonService;
 import cz.muni.fi.pa165.plpm.service.TrainerService;
@@ -28,26 +29,26 @@ public class PokemonFacadeImpl implements PokemonFacade {
     private BeanMappingService beanMappingService;
 
     @Override
-    public Long createPokemon(PokemonCreateDTO pokemonCreateDTO) {
+    public Long createPokemon(PokemonCreateDTO pokemonCreateDTO) throws PlpmServiceException {
         return pokemonService.createPokemon(beanMappingService
                 .mapTo(pokemonCreateDTO, Pokemon.class)).getId();
     }
 
     @Override
-    public void changeTrainer(PokemonChangeTrainerDTO pokemonChangeTrainerDTO) {
+    public void changeTrainer(PokemonChangeTrainerDTO pokemonChangeTrainerDTO) throws PlpmServiceException {
         Pokemon pokemon = pokemonService.findPokemonById(pokemonChangeTrainerDTO.getId());
         if(pokemon == null){
-            throw new IllegalArgumentException("Pokemon with id " + pokemonChangeTrainerDTO.getId() + " doesn't exist.");
+            throw new PlpmServiceException("Pokemon with id " + pokemonChangeTrainerDTO.getId() + " doesn't exist.");
         }
         pokemon.setTrainer(beanMappingService.mapTo(pokemonChangeTrainerDTO.getTrainer(), Trainer.class));
         pokemonService.updatePokemonInfo(pokemon);
     }
 
     @Override
-    public void changeLevel(PokemonChangeLevelDTO pokemonChangeLevelDTO) {
+    public void changeLevel(PokemonChangeLevelDTO pokemonChangeLevelDTO) throws PlpmServiceException {
         Pokemon pokemon = pokemonService.findPokemonById(pokemonChangeLevelDTO.getId());
         if(pokemon == null){
-            throw new IllegalArgumentException("Pokemon with id " + pokemonChangeLevelDTO.getId() + " doesn't exist.");
+            throw new PlpmServiceException("Pokemon with id " + pokemonChangeLevelDTO.getId() + " doesn't exist.");
         }
         pokemon.setLevel(pokemonChangeLevelDTO.getLevel());
         pokemonService.updatePokemonInfo(pokemon);
