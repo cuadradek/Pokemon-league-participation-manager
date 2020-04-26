@@ -4,6 +4,7 @@ import cz.muni.fi.pa165.plpm.dao.GymDao;
 import cz.muni.fi.pa165.plpm.entity.Badge;
 import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
+import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,10 +25,10 @@ public class GymServiceImpl implements GymService {
     private BadgeService badgeService;
 
     @Override
-    public void createGym(Gym gym) {
+    public void createGym(Gym gym) throws PlpmServiceException {
         Gym foundGym = gymDao.findByTrainer(gym.getLeader());
         if (foundGym != null) {
-            throw new IllegalArgumentException("Trainer is already leader of another gym.");
+            throw new PlpmServiceException("Trainer is already leader of another gym.");
         }
         gymDao.create(gym);
     }
@@ -42,10 +43,10 @@ public class GymServiceImpl implements GymService {
     }
 
     @Override
-    public void updateGym(Gym gym) {
+    public void updateGym(Gym gym) throws PlpmServiceException {
         Gym foundGym = gymDao.findByTrainer(gym.getLeader());
         if (foundGym != null && !foundGym.getId().equals(gym.getId())) {
-            throw new IllegalArgumentException("New gym leader is already leader of another gym.");
+            throw new PlpmServiceException("New gym leader is already leader of another gym.");
         }
         gymDao.update(gym);
     }
