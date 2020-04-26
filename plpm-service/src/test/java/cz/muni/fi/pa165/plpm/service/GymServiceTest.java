@@ -111,6 +111,13 @@ public class GymServiceTest extends AbstractTestNGSpringContextTests {
         gymService.createGym(gym1);
     }
 
+    @Test(expectedExceptions = PlpmServiceException.class)
+    public void createGymDaoException(){
+        when(gymDao.findByTrainer(trainer1)).thenReturn(null);
+
+        gymService.createGym(gym1);
+    }
+
     @Test
     public void removeGym() {
         when(badgeService.getBadgesByGym(gym1)).thenReturn(Arrays.asList(badge1, badge2));
@@ -130,6 +137,13 @@ public class GymServiceTest extends AbstractTestNGSpringContextTests {
         gymService.updateGym(gym1);
 
         verify(gymDao).update(gym1);
+    }
+
+    @Test(expectedExceptions = PlpmServiceException.class)
+    public void updateGymDaoException() {
+        when(gymDao.findByTrainer(trainer1)).thenReturn(null);
+
+        gymService.updateGym(gym1);
     }
 
     @Test(expectedExceptions = PlpmServiceException.class)
