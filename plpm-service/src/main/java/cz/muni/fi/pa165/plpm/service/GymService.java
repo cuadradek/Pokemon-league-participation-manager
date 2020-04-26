@@ -2,6 +2,7 @@ package cz.muni.fi.pa165.plpm.service;
 
 import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
+import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 
 import java.util.List;
 
@@ -12,11 +13,11 @@ import java.util.List;
  */
 public interface GymService {
 
-    void createGym(Gym gym);
+    void createGym(Gym gym) throws PlpmServiceException;
 
     void removeGym(Gym gym);
 
-    void updateGym(Gym gym);
+    void updateGym(Gym gym) throws PlpmServiceException;
 
     Gym findGymById(Long id);
 
