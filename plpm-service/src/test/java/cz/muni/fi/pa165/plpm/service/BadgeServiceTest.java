@@ -9,12 +9,14 @@ import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import cz.muni.fi.pa165.plpm.service.config.ServiceConfiguration;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -62,6 +64,12 @@ public class BadgeServiceTest extends AbstractTestNGSpringContextTests {
     @BeforeClass
     public void setup() {
         MockitoAnnotations.initMocks(this);
+    }
+
+    @AfterMethod
+    public void reset() {
+        Mockito.reset(badgeDao);
+        Mockito.reset(gymService);
     }
 
 
@@ -197,7 +205,7 @@ public class BadgeServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void createBadge() {
+    public void createBadge() throws PlpmServiceException {
         badge1.setId(null);
         doAnswer(invocation -> {
             Badge b = invocation.getArgument(0);
@@ -211,7 +219,7 @@ public class BadgeServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(expectedExceptions = PlpmServiceException.class)
-    public void createBadgeForTheGymLeader() {
+    public void createBadgeForTheGymLeader() throws PlpmServiceException {
         badge1.setId(null);
         badge1.setGym(gym1);
         badge1.setTrainer(badge1.getGym().getLeader());
@@ -220,7 +228,7 @@ public class BadgeServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(expectedExceptions = DataAccessException.class)
-    public void createBadgeWithExistingId() {
+    public void createBadgeWithExistingId() throws PlpmServiceException {
         doThrow(new DataAccessException("Badge has id") {}).when(badgeDao).create(badge1);
 
         badgeService.createBadge(badge1);
@@ -234,7 +242,7 @@ public class BadgeServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void getBeatenGyms() {
+    public void getBeatenGyms() throws PlpmServiceException {
         when(badgeDao.findByTrainer(trainer1)).thenReturn(Collections.singletonList(badge1));
         when(gymService.findGymByTrainer(trainer1)).thenReturn(gym1);
 
@@ -245,16 +253,16 @@ public class BadgeServiceTest extends AbstractTestNGSpringContextTests {
         Assert.assertTrue(gyms.contains(gym2));
     }
 
-    @Test(expectedExceptions = IllegalStateException.class)
-    public void getBeatenGymsBadgeFromOwnGym() {
+    @Test(expectedExceptions = PlpmServiceException.class)
+    public void getBeatenGymsBadgeFromOwnGym() throws PlpmServiceException {
         badge1.setGym(gym1);
         when(badgeDao.findByTrainer(trainer1)).thenReturn(Collections.singletonList(badge1));
 
         badgeService.getBeatenGyms(trainer1);
     }
 
-    @Test(expectedExceptions = IllegalStateException.class)
-    public void getBeatenGymsTwoBadgesFromTheSameGym() {
+    @Test(expectedExceptions = PlpmServiceException.class)
+    public void getBeatenGymsTwoBadgesFromTheSameGym() throws PlpmServiceException {
         badge1.setGym(gym1);
         badge2.setGym(gym1);
         badge1.setTrainer(trainer1);

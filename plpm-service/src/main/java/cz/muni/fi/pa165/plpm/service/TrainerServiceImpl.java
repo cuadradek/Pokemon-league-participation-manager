@@ -53,6 +53,9 @@ public class TrainerServiceImpl implements TrainerService {
     public void updateTrainerInfo(Trainer trainer) throws PlpmServiceException {
         Trainer storedTrainer = findTrainerById(trainer.getId());
 
+        if (storedTrainer == null)
+            throw new PlpmServiceException("Trainer doesn't exist.");
+
         //if nickname should be changed, check if there isn't such nickname already
         if (!storedTrainer.getNickname().equals(trainer.getNickname()) &&
                 findTrainerByNickname(trainer.getNickname()) != null) {
@@ -77,6 +80,9 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public void deleteTrainer(Trainer trainer) {
+        Gym gym = gymService.findGymByTrainer(trainer);
+        gymService.removeGym(gym);
+
         List<Badge> badges = badgeService.getBadgesByTrainer(trainer);
         for (Badge badge : badges) {
             badgeService.deleteBadge(badge);
@@ -87,8 +93,6 @@ public class TrainerServiceImpl implements TrainerService {
             pokemon.setTrainer(null);
         }
 
-        Gym gym = gymService.findGymByTrainer(trainer);
-        gymService.removeGym(gym);
 
         trainerDao.deleteTrainer(trainer);
     }
