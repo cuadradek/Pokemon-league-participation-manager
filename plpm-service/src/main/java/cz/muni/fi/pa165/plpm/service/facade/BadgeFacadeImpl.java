@@ -18,16 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Set;
 
-// TODO: change exceptions to Data Access Exception
-
 /**
+ * Implementation of {@link BadgeFacade}.
  *
  * @author Jakub Doczy
  */
 @Service
 @Transactional
 public class BadgeFacadeImpl implements BadgeFacade {
-
 
     @Autowired
     private BeanMappingService beanMappingService;
