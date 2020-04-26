@@ -15,7 +15,7 @@ import java.util.Set;
  */
 public interface BadgeService {
 
-    void createBadge(Badge badge) throws PlpmServiceException;
+    void createBadge(Badge badge);
 
     void deleteBadge(Badge badge);
 
@@ -23,7 +23,7 @@ public interface BadgeService {
 
     List<Badge> getBadgesByTrainer(Trainer trainer);
 
-    Set<Gym> getBeatenGyms(Trainer trainer) throws PlpmServiceException;
+    Set<Gym> getBeatenGyms(Trainer trainer);
 
     List<Badge> getBadgesByGym(Gym gym);
 
