@@ -23,7 +23,7 @@ public class PokemonChangeTrainerDTO {
 
     public TrainerDTO getTrainer() { return trainer; }
 
-    public void setTrainer() { this.trainer = trainer; }
+    public void setTrainer(TrainerDTO trainer) { this.trainer = trainer; }
 
     @Override
     public boolean equals(Object o) {

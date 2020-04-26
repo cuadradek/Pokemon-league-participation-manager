@@ -4,6 +4,7 @@ import cz.muni.fi.pa165.plpm.dto.*;
 import cz.muni.fi.pa165.plpm.entity.Pokemon;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 import cz.muni.fi.pa165.plpm.enums.PokemonType;
+import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import cz.muni.fi.pa165.plpm.service.BeanMappingService;
 import cz.muni.fi.pa165.plpm.service.PokemonService;
 import cz.muni.fi.pa165.plpm.service.config.ServiceConfiguration;
@@ -133,7 +134,7 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void createPokemon() {
+    public void createPokemon() throws PlpmServiceException {
         when(beanMappingService.mapTo(pokemonCreate1, Pokemon.class)).thenReturn(pokemon1);
         when(pokemonServiceMock.createPokemon(pokemon1)).then(
                 call -> { Pokemon pokemon = call.getArgument(0);
@@ -147,7 +148,7 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void changeTrainer() {
+    public void changeTrainer() throws PlpmServiceException {
         pokemon1.setId(13L);
         pokemon1ChangeTrainer.setId(13L);
         Pokemon updatedPokemon = new Pokemon();
@@ -165,7 +166,7 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void changeLevel() {
+    public void changeLevel() throws PlpmServiceException {
         pokemon1.setId(13L);
         PokemonChangeLevelDTO changeLevel = new PokemonChangeLevelDTO();
         changeLevel.setId(13L);
