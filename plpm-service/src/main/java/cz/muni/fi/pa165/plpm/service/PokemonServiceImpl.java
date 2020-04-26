@@ -5,10 +5,12 @@ import cz.muni.fi.pa165.plpm.dao.PokemonDao;
 import cz.muni.fi.pa165.plpm.entity.Pokemon;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author: Veronika Loukotova
  */
+@Service
 public class PokemonServiceImpl implements PokemonService {
     @Autowired
     private PokemonDao pokemonDao;
