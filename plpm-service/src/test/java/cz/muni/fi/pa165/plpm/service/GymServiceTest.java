@@ -18,14 +18,13 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.lang.reflect.Array;
+import javax.validation.ConstraintViolationException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Veronika Loukotova
@@ -112,8 +111,9 @@ public class GymServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test(expectedExceptions = PlpmServiceException.class)
-    public void createGymDaoException(){
+    public void createGymDaoException() {
         when(gymDao.findByTrainer(trainer1)).thenReturn(null);
+        doThrow(ConstraintViolationException.class).when(gymDao).create(gym1);
 
         gymService.createGym(gym1);
     }
@@ -142,6 +142,7 @@ public class GymServiceTest extends AbstractTestNGSpringContextTests {
     @Test(expectedExceptions = PlpmServiceException.class)
     public void updateGymDaoException() {
         when(gymDao.findByTrainer(trainer1)).thenReturn(null);
+        doThrow(ConstraintViolationException.class).when(gymDao).create(gym1);
 
         gymService.updateGym(gym1);
     }
@@ -154,7 +155,7 @@ public class GymServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void findGymById(){
+    public void findGymById() {
         when(gymDao.findById(gym1.getId())).thenReturn(gym1);
 
         Gym foundGym = gymService.findGymById(gym1.getId());
@@ -163,7 +164,7 @@ public class GymServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void findGymByTrainer(){
+    public void findGymByTrainer() {
         when(gymDao.findByTrainer(trainer1)).thenReturn(gym1);
 
         Gym foundGym = gymService.findGymByTrainer(trainer1);
@@ -172,7 +173,7 @@ public class GymServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void findGymByCity(){
+    public void findGymByCity() {
         when(gymDao.findByCity(gym1.getCity())).thenReturn(Collections.singletonList(gym1));
 
         List<Gym> foundGyms = gymService.findGymsByCity(gym1.getCity());
@@ -181,7 +182,7 @@ public class GymServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void findAllGyms(){
+    public void findAllGyms() {
         when(gymDao.findAll()).thenReturn(Arrays.asList(gym1, gym2));
 
         List<Gym> foundGyms = gymService.findAllGyms();
