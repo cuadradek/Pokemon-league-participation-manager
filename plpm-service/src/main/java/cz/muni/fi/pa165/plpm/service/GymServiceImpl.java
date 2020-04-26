@@ -8,6 +8,7 @@ import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 /**
@@ -25,12 +26,16 @@ public class GymServiceImpl implements GymService {
     private BadgeService badgeService;
 
     @Override
-    public void createGym(Gym gym) throws PlpmServiceException {
+    public void createGym(Gym gym) {
         Gym foundGym = gymDao.findByTrainer(gym.getLeader());
         if (foundGym != null) {
             throw new PlpmServiceException("Trainer is already leader of another gym.");
         }
-        gymDao.create(gym);
+        try {
+            gymDao.create(gym);
+        } catch (ConstraintViolationException e) {
+            throw new PlpmServiceException("Couldn't create gym" + gym, e);
+        }
     }
 
     @Override
@@ -43,12 +48,16 @@ public class GymServiceImpl implements GymService {
     }
 
     @Override
-    public void updateGym(Gym gym) throws PlpmServiceException {
+    public void updateGym(Gym gym) {
         Gym foundGym = gymDao.findByTrainer(gym.getLeader());
         if (foundGym != null && !foundGym.getId().equals(gym.getId())) {
             throw new PlpmServiceException("New gym leader is already leader of another gym.");
         }
-        gymDao.update(gym);
+        try {
+            gymDao.update(gym);
+        } catch (ConstraintViolationException e) {
+            throw new PlpmServiceException("Couldn't update gym" + gym, e);
+        }
     }
 
     @Override

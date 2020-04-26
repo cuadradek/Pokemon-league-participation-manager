@@ -2,7 +2,6 @@ package cz.muni.fi.pa165.plpm.service.facade;
 
 import cz.muni.fi.pa165.plpm.dto.GymCreateDTO;
 import cz.muni.fi.pa165.plpm.dto.GymDTO;
-import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 
 import java.util.List;
 
@@ -13,11 +12,11 @@ import java.util.List;
  */
 public interface GymFacade {
 
-    Long createGym(GymCreateDTO gym) throws PlpmServiceException;
+    Long createGym(GymCreateDTO gym);
 
     void removeGym(GymDTO gym);
 
-    void updateGym(GymDTO gym) throws PlpmServiceException;
+    void updateGym(GymDTO gym);
 
     GymDTO findGymById(Long id);
 
