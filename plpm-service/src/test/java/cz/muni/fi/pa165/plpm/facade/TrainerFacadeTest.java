@@ -1,17 +1,16 @@
 package cz.muni.fi.pa165.plpm.facade;
 
 import cz.muni.fi.pa165.plpm.dto.*;
-import cz.muni.fi.pa165.plpm.entity.Badge;
-import cz.muni.fi.pa165.plpm.entity.Gym;
-import cz.muni.fi.pa165.plpm.entity.Pokemon;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
-import cz.muni.fi.pa165.plpm.enums.PokemonType;
+import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import cz.muni.fi.pa165.plpm.resources.DefaultTrainers;
 import cz.muni.fi.pa165.plpm.service.BeanMappingService;
 import cz.muni.fi.pa165.plpm.service.TrainerService;
 import cz.muni.fi.pa165.plpm.service.config.ServiceConfiguration;
 import cz.muni.fi.pa165.plpm.service.facade.TrainerFacade;
 import cz.muni.fi.pa165.plpm.service.facade.TrainerFacadeImpl;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +22,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static java.util.Arrays.asList;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,21 +34,27 @@ import java.util.List;
 public class TrainerFacadeTest extends AbstractTestNGSpringContextTests {
 
     @Mock
-    private TrainerService trainerServiceMock;
+    private TrainerService trainerService;
 
-    @Autowired
+    @Mock
     private BeanMappingService beanMappingService;
 
-    private TrainerFacade trainerFacade;
+    @InjectMocks
+    private TrainerFacade trainerFacade = new TrainerFacadeImpl();
 
     private Trainer trainerAsh;
     private Trainer trainerGary;
     private Trainer trainerTracey;
 
+    private TrainerDTO trainerAshDTO;
+    private TrainerCreateDTO trainerAshCreateDTO;
+    private TrainerUpdateInfoDTO trainerAshUpdateInfoDTO;
+    private TrainerChangePasswordDTO trainerAshChangePasswordDTO;
+    private TrainerAuthenticateDTO trainerAshAuthenticateDTO;
+
     @BeforeClass
     public void classSetup(){
         MockitoAnnotations.initMocks(this);
-        this.trainerFacade = new TrainerFacadeImpl(trainerServiceMock, beanMappingService);
     }
 
     @BeforeMethod
@@ -59,54 +62,91 @@ public class TrainerFacadeTest extends AbstractTestNGSpringContextTests {
         trainerAsh = DefaultTrainers.getAsh();
         trainerGary = DefaultTrainers.getGary();
         trainerTracey = DefaultTrainers.getTracey();
+
+        trainerAshDTO = new TrainerDTO();
+        trainerAshDTO.setId(trainerAsh.getId());
+        trainerAshDTO.setNickname(trainerAsh.getNickname());
+        trainerAshDTO.setFirstName(trainerAsh.getFirstName());
+        trainerAshDTO.setLastName(trainerAsh.getLastName());
+        trainerAshDTO.setBirthDate(trainerAsh.getBirthDate());
+        trainerAshDTO.setPassword(trainerAsh.getPassword());
+
+        trainerAshCreateDTO = new TrainerCreateDTO();
+        trainerAshCreateDTO.setNickname(trainerAsh.getNickname());
+        trainerAshCreateDTO.setFirstName(trainerAsh.getFirstName());
+        trainerAshCreateDTO.setLastName(trainerAsh.getLastName());
+        trainerAshCreateDTO.setBirthDate(trainerAsh.getBirthDate());
+        trainerAshCreateDTO.setPassword(trainerAsh.getPassword());
+
+        trainerAshUpdateInfoDTO = new TrainerUpdateInfoDTO();
+        trainerAshUpdateInfoDTO.setId(trainerAsh.getId());
+        trainerAshUpdateInfoDTO.setNickname(trainerAsh.getNickname());
+        trainerAshUpdateInfoDTO.setFirstName(trainerAsh.getFirstName());
+        trainerAshUpdateInfoDTO.setLastName(trainerAsh.getLastName());
+        trainerAshUpdateInfoDTO.setBirthDate(trainerAsh.getBirthDate());
+
+        trainerAshChangePasswordDTO = new TrainerChangePasswordDTO();
+        trainerAshChangePasswordDTO.setId(trainerAsh.getId());
+        trainerAshChangePasswordDTO.setOldPassword(DefaultTrainers.getPlainPasswordAsh());
+        trainerAshChangePasswordDTO.setNewPassword("123456");
+
+        trainerAshAuthenticateDTO = new TrainerAuthenticateDTO();
+        trainerAshAuthenticateDTO.setNickname(trainerAsh.getNickname());
+        trainerAshAuthenticateDTO.setPassword(DefaultTrainers.getPlainPasswordAsh());
+
+        when(beanMappingService.mapTo(trainerAsh, TrainerDTO.class)).thenReturn(trainerAshDTO);
+        when(beanMappingService.mapTo(trainerAshDTO, Trainer.class)).thenReturn(trainerAsh);
+        when(beanMappingService.mapTo(trainerAsh, TrainerAuthenticateDTO.class)).thenReturn(trainerAshAuthenticateDTO);
+        when(beanMappingService.mapTo(trainerAshAuthenticateDTO, Trainer.class)).thenReturn(trainerAsh);
+        when(beanMappingService.mapTo(trainerAsh, TrainerChangePasswordDTO.class)).thenReturn(trainerAshChangePasswordDTO);
+        when(beanMappingService.mapTo(trainerAshChangePasswordDTO, Trainer.class)).thenReturn(trainerAsh);
+        when(beanMappingService.mapTo(trainerAsh, TrainerUpdateInfoDTO.class)).thenReturn(trainerAshUpdateInfoDTO);
+        when(beanMappingService.mapTo(trainerAshUpdateInfoDTO, Trainer.class)).thenReturn(trainerAsh);
+        when(beanMappingService.mapTo(trainerAsh, TrainerCreateDTO.class)).thenReturn(trainerAshCreateDTO);
+        when(beanMappingService.mapTo(trainerAshCreateDTO, Trainer.class)).thenReturn(trainerAsh);
     }
 
-
     @Test
-    public void createTrainer() {
-        TrainerCreateDTO trainerCreateDTO = beanMappingService.mapTo(trainerAsh, TrainerCreateDTO.class);
-
-        when(trainerServiceMock.createTrainer(trainerAsh)).then(
+    public void createTrainer() throws PlpmServiceException {
+        when(trainerService.createTrainer(trainerAsh)).then(
                 call -> { Trainer trainer = call.getArgument(0);
                     trainer.setId(1337L);
                     return trainer;
                 });
 
-        Long trainerId = trainerFacade.createTrainer(trainerCreateDTO);
+        Long trainerId = trainerFacade.createTrainer(trainerAshCreateDTO);
         Assert.assertEquals(trainerId.longValue(), 1337);
     }
 
     @Test
-    public void updateTrainerInfo() {
-        TrainerUpdateInfoDTO trainerUpdateInfoDTO = beanMappingService.mapTo(trainerAsh, TrainerUpdateInfoDTO.class);
-
-        trainerFacade.updateTrainerInfo(trainerUpdateInfoDTO);
-        verify(trainerServiceMock).updateTrainerInfo(trainerAsh);
+    public void updateTrainerInfo() throws PlpmServiceException {
+        trainerFacade.updateTrainerInfo(trainerAshUpdateInfoDTO);
+        verify(trainerService).updateTrainerInfo(trainerAsh);
     }
 
     @Test
     public void changePassword() {
-        TrainerChangePasswordDTO trainerChangePasswordDTO = beanMappingService.mapTo(trainerAsh, TrainerChangePasswordDTO.class);
-        trainerChangePasswordDTO.setOldPassword(trainerAsh.getPassword());
-        trainerChangePasswordDTO.setNewPassword("CHUCK NORRIS");
+        trainerAshChangePasswordDTO.setNewPassword("CHUCK NORRIS");
 
-        when(trainerServiceMock.findTrainerById(trainerAsh.getId())).thenReturn(trainerAsh);
+        when(trainerService.findTrainerById(trainerAsh.getId())).thenReturn(trainerAsh);
 
-        trainerFacade.changePassword(trainerChangePasswordDTO);
-        verify(trainerServiceMock).changePassword(trainerAsh, trainerAsh.getPassword(), "CHUCK NORRIS");
+        trainerFacade.changePassword(trainerAshChangePasswordDTO);
+        verify(trainerService).changePassword(trainerAsh, DefaultTrainers.getPlainPasswordAsh(), "CHUCK NORRIS");
     }
 
     @Test
     public void deleteTrainer() {
-        when(trainerServiceMock.findTrainerById(trainerAsh.getId())).thenReturn(trainerAsh);
+        ArgumentCaptor<Trainer> trainerCaptor = ArgumentCaptor.forClass(Trainer.class);
+        when(trainerService.findTrainerById(trainerAsh.getId())).thenReturn(trainerAsh);
 
         trainerFacade.deleteTrainer(trainerAsh.getId());
-        verify(trainerServiceMock).deleteTrainer(trainerAsh);
+        verify(trainerService, times(1)).deleteTrainer(trainerCaptor.capture());
+        Assert.assertEquals(trainerCaptor.getValue().getId(), trainerAsh.getId());
     }
 
     @Test
     public void findTrainerById() {
-        when(trainerServiceMock.findTrainerById(trainerAsh.getId())).thenReturn(trainerAsh);
+        when(trainerService.findTrainerById(trainerAsh.getId())).thenReturn(trainerAsh);
 
         TrainerDTO returnedTrainerDTO = trainerFacade.findTrainerById(trainerAsh.getId());
         Trainer returnedTrainer = beanMappingService.mapTo(returnedTrainerDTO, Trainer.class);
@@ -116,7 +156,7 @@ public class TrainerFacadeTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void findTrainerByNickname() {
-        when(trainerServiceMock.findTrainerByNickname(trainerAsh.getNickname())).thenReturn(trainerAsh);
+        when(trainerService.findTrainerByNickname(trainerAsh.getNickname())).thenReturn(trainerAsh);
 
         TrainerDTO returnedTrainerDTO = trainerFacade.findTrainerByNickname(trainerAsh.getNickname());
         Trainer returnedTrainer = beanMappingService.mapTo(returnedTrainerDTO, Trainer.class);
@@ -126,72 +166,82 @@ public class TrainerFacadeTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void findTrainerByFirstName() {
-        when(trainerServiceMock.findTrainerByFirstName(trainerAsh.getFirstName())).thenReturn(asList(trainerAsh));
+        when(trainerService.findTrainerByFirstName(trainerAsh.getFirstName())).thenReturn(asList(trainerAsh));
+        when(beanMappingService.mapTo(asList(trainerAsh), TrainerDTO.class)).thenReturn(asList(trainerAshDTO));
 
         List<TrainerDTO> returnedTrainerDTOs = trainerFacade.findTrainerByFirstName(trainerAsh.getFirstName());
-        List<Trainer> returnedTrainers = beanMappingService.mapTo(returnedTrainerDTOs, Trainer.class);
 
-        Assert.assertEquals(returnedTrainers.size(), 1);
-        Assert.assertTrue(returnedTrainers.contains(trainerAsh));
+        Assert.assertEquals(returnedTrainerDTOs.size(), 1);
+        Assert.assertTrue(returnedTrainerDTOs.contains(trainerAshDTO));
     }
 
     @Test
     public void findTrainerByLastName() {
-        when(trainerServiceMock.findTrainerByLastName(trainerAsh.getLastName())).thenReturn(asList(trainerAsh));
+        when(trainerService.findTrainerByLastName(trainerAsh.getLastName())).thenReturn(asList(trainerAsh));
+        when(beanMappingService.mapTo(asList(trainerAsh), TrainerDTO.class)).thenReturn(asList(trainerAshDTO));
 
         List<TrainerDTO> returnedTrainerDTOs = trainerFacade.findTrainerByLastName(trainerAsh.getLastName());
-        List<Trainer> returnedTrainers = beanMappingService.mapTo(returnedTrainerDTOs, Trainer.class);
 
-        Assert.assertEquals(returnedTrainers.size(), 1);
-        Assert.assertTrue(returnedTrainers.contains(trainerAsh));
+        Assert.assertEquals(returnedTrainerDTOs.size(), 1);
+        Assert.assertTrue(returnedTrainerDTOs.contains(trainerAshDTO));
     }
 
     @Test
     public void findAllTrainers() {
-        when(trainerServiceMock.findAllTrainers()).thenReturn(asList(trainerAsh, trainerGary, trainerTracey));
+        TrainerDTO garyMockDTO = new TrainerDTO();
+        garyMockDTO.setId(trainerGary.getId());
+        TrainerDTO traceyMockDTO = new TrainerDTO();
+        traceyMockDTO.setId(trainerTracey.getId());
+
+        List<Trainer> trainers = asList(trainerAsh, trainerGary, trainerTracey);
+        List<TrainerDTO> trainerDTOS = asList(trainerAshDTO, garyMockDTO, traceyMockDTO);
+
+        when(beanMappingService.mapTo(trainers, TrainerDTO.class)).thenReturn(trainerDTOS);
+        when(trainerService.findAllTrainers()).thenReturn(trainers);
 
         List<TrainerDTO> returnedTrainerDTOs = trainerFacade.findAllTrainers();
-        List<Trainer> returnedTrainers = beanMappingService.mapTo(returnedTrainerDTOs, Trainer.class);
 
-        Assert.assertEquals(returnedTrainers.size(), 3);
-        Assert.assertTrue(returnedTrainers.contains(trainerAsh));
-        Assert.assertTrue(returnedTrainers.contains(trainerGary));
-        Assert.assertTrue(returnedTrainers.contains(trainerTracey));
+        Assert.assertEquals(returnedTrainerDTOs, asList(trainerAshDTO, garyMockDTO, traceyMockDTO));
     }
 
     @Test
     public void authenticate() {
-        TrainerAuthenticateDTO trainerAuthenticateDTO = beanMappingService.mapTo(trainerAsh, TrainerAuthenticateDTO.class);
+        when(trainerService.findTrainerByNickname(trainerAsh.getNickname())).thenReturn(trainerAsh);
+        when(trainerService.authenticate(trainerAsh, DefaultTrainers.getPlainPasswordAsh())).thenReturn(true);
 
-        when(trainerServiceMock.findTrainerByNickname(trainerAsh.getNickname())).thenReturn(trainerAsh);
-        when(trainerServiceMock.authenticate(trainerAsh, trainerAsh.getPassword())).thenReturn(true);
-
-        Assert.assertTrue(trainerFacade.authenticate(trainerAuthenticateDTO));
-        verify(trainerServiceMock).authenticate(trainerAsh, trainerAsh.getPassword());
+        Assert.assertTrue(trainerFacade.authenticate(trainerAshAuthenticateDTO));
+        verify(trainerService).authenticate(trainerAsh, DefaultTrainers.getPlainPasswordAsh());
     }
 
     @Test
     public void unsuccessfulAuthenticate() {
-        TrainerAuthenticateDTO trainerAuthenticateDTO = beanMappingService.mapTo(trainerAsh, TrainerAuthenticateDTO.class);
-        trainerAuthenticateDTO.setPassword("invalid password");
+        trainerAshAuthenticateDTO.setPassword("invalid password");
 
-        when(trainerServiceMock.findTrainerByNickname(trainerAsh.getNickname())).thenReturn(trainerGary);
-        when(trainerServiceMock.authenticate(trainerAsh, "invalid password")).thenReturn(false);
+        when(trainerService.findTrainerByNickname(trainerAsh.getNickname())).thenReturn(trainerAsh);
+        when(trainerService.authenticate(trainerAsh, "invalid password")).thenReturn(false);
 
-        Assert.assertFalse(trainerFacade.authenticate(trainerAuthenticateDTO));
+        Assert.assertFalse(trainerFacade.authenticate(trainerAshAuthenticateDTO));
     }
 
     @Test
     public void isAdmin() {
-        TrainerDTO trainerDTO = beanMappingService.mapTo(trainerAsh, TrainerDTO.class);
-        when(trainerServiceMock.isAdmin(trainerAsh)).thenReturn(true);
-        Assert.assertTrue(trainerFacade.isAdmin(trainerDTO));
+        when(trainerService.isAdmin(trainerAsh)).thenReturn(true);
+
+        Assert.assertTrue(trainerFacade.isAdmin(trainerAshDTO));
     }
 
     @Test
     public void isNotAdmin() {
-        TrainerDTO trainerDTO = beanMappingService.mapTo(trainerGary, TrainerDTO.class);
-        when(trainerServiceMock.isAdmin(trainerGary)).thenReturn(false);
-        Assert.assertFalse(trainerFacade.isAdmin(trainerDTO));
+        TrainerDTO trainerGaryDTO = new TrainerDTO();
+        trainerGaryDTO.setId(trainerGary.getId());
+        trainerGaryDTO.setNickname(trainerGary.getNickname());
+        trainerGaryDTO.setFirstName(trainerGary.getFirstName());
+        trainerGaryDTO.setLastName(trainerGary.getLastName());
+        trainerGaryDTO.setPassword(trainerGary.getPassword());
+        trainerGaryDTO.setBirthDate(trainerGary.getBirthDate());
+        trainerGaryDTO.setAdmin(trainerGary.isAdmin());
+
+        when(trainerService.isAdmin(trainerGary)).thenReturn(false);
+        Assert.assertFalse(trainerFacade.isAdmin(trainerGaryDTO));
     }
 }

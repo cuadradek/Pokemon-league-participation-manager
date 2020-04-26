@@ -9,6 +9,7 @@ import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Pokemon;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 import cz.muni.fi.pa165.plpm.enums.PokemonType;
+import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import cz.muni.fi.pa165.plpm.service.config.ServiceConfiguration;
 import org.hibernate.service.spi.ServiceException;
 import org.mindrot.jbcrypt.BCrypt;
@@ -46,13 +47,13 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
     private TrainerDao trainerDao;
 
     @Mock
-    private BadgeDao badgeDao;
+    private BadgeService badgeService;
 
     @Mock
-    private PokemonDao pokemonDao;
+    private PokemonService pokemonService;
 
     @Mock
-    private GymDao gymDao;
+    private GymService gymService;
 
     @Autowired
     @InjectMocks
@@ -107,7 +108,7 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void createTrainer() {
+    public void createTrainer() throws PlpmServiceException {
         when(trainerDao.findTrainerByNickname(newTrainer.getNickname())).thenReturn(null);
         trainerService.createTrainer(newTrainer);
 
@@ -117,18 +118,15 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
         verify(trainerDao).createTrainer(newTrainer);
     }
 
-    @Test(expectedExceptions = ServiceException.class)
-    public void createOnExistingTrainerFails() {
+    @Test(expectedExceptions = PlpmServiceException.class)
+    public void createOnExistingTrainerFails() throws PlpmServiceException {
         when(trainerDao.findTrainerByNickname(trainerAsh.getNickname())).thenReturn(trainerAsh);
         trainerService.createTrainer(trainerAsh);
     }
 
-    // TODO: create user with invalid password? Or is it handled by facade layer?
-
     @Test
     public void authenticateSuccess() {
         when(trainerDao.findTrainerById(trainerAsh.getId())).thenReturn(trainerAsh);
-
         Assert.assertTrue(trainerService.authenticate(trainerAsh, DefaultTrainers.getPlainPasswordAsh()));
     }
 
@@ -139,7 +137,7 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void updateName() {
+    public void updateName() throws PlpmServiceException {
         Trainer changedTrainer = new Trainer();
         changedTrainer.setId(trainerAsh.getId());
         changedTrainer.setBirthDate(trainerAsh.getBirthDate());
@@ -153,18 +151,18 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
 
         trainerService.updateTrainerInfo(changedTrainer);
 
-        verify(trainerDao).updateTrainer(trainerAsh);
-        Assert.assertEquals(trainerAsh, changedTrainer);
+        verify(trainerDao).updateTrainer(changedTrainer);
     }
 
     @Test
-    public void updateAllTrainerInfo() {
+    public void updateNickname() throws PlpmServiceException {
         Trainer changedTrainer = new Trainer();
         changedTrainer.setId(trainerAsh.getId());
-        changedTrainer.setBirthDate(new Date(100));
-        changedTrainer.setFirstName("Jessie");
-        changedTrainer.setLastName("Musashi");
+        changedTrainer.setBirthDate(trainerAsh.getBirthDate());
+        changedTrainer.setFirstName(trainerAsh.getFirstName());
+        changedTrainer.setLastName(trainerAsh.getLastName());
         changedTrainer.setNickname("Rocket");
+        changedTrainer.setAdmin(trainerAsh.isAdmin());
         changedTrainer.setPassword(trainerAsh.getPassword());
 
         when(trainerDao.findTrainerById(trainerAsh.getId())).thenReturn(trainerAsh);
@@ -172,12 +170,11 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
 
         trainerService.updateTrainerInfo(changedTrainer);
 
-        verify(trainerDao).updateTrainer(trainerAsh);
-        Assert.assertEquals(trainerAsh, changedTrainer);
+        verify(trainerDao).updateTrainer(changedTrainer);
     }
 
-    @Test(expectedExceptions = ServiceException.class)
-    public void updateInfoWithInvalidIdFails() {
+    @Test(expectedExceptions = PlpmServiceException.class)
+    public void updateInfoWithInvalidIdFails() throws PlpmServiceException {
         newTrainer.setId(-1L);
 
         when(trainerDao.findTrainerById(-1L)).thenReturn(null);
@@ -186,8 +183,8 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
         trainerService.updateTrainerInfo(newTrainer);
     }
 
-    @Test(expectedExceptions = ServiceException.class)
-    public void updateInfoWithConflictingNicknameFails() {
+    @Test(expectedExceptions = PlpmServiceException.class)
+    public void updateInfoWithConflictingNicknameFails() throws PlpmServiceException {
         Trainer changedTrainer = new Trainer();
         changedTrainer.setId(trainerAsh.getId());
         changedTrainer.setBirthDate(new Date(100));
@@ -229,9 +226,9 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void deleteTrainerSimple() {
-        when(badgeDao.findByTrainer(trainerGary)).thenReturn(new ArrayList<>());
-        when(pokemonDao.findPokemonsByTrainer(trainerGary)).thenReturn(new ArrayList<>());
-        when(gymDao.findByTrainer(trainerGary)).thenReturn(null);
+        when(badgeService.getBadgesByTrainer(trainerGary)).thenReturn(new ArrayList<>());
+        when(pokemonService.findPokemonByTrainer(trainerGary)).thenReturn(new ArrayList<>());
+        when(gymService.findGymByTrainer(trainerGary)).thenReturn(null);
 
         trainerService.deleteTrainer(trainerGary);
 
@@ -240,27 +237,28 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void deleteTrainerWithBadgeAndPokemon() {
-        when(badgeDao.findByTrainer(trainerAsh)).thenReturn(asList(ashesPewterBadge));
-        when(pokemonDao.findPokemonsByTrainer(trainerAsh)).thenReturn(asList(ashesPikachu));
-        when(gymDao.findByTrainer(trainerAsh)).thenReturn(null);
+        when(badgeService.getBadgesByTrainer(trainerAsh)).thenReturn(asList(ashesPewterBadge));
+        when(pokemonService.findPokemonByTrainer(trainerAsh)).thenReturn(asList(ashesPikachu));
+        when(gymService.findGymByTrainer(trainerAsh)).thenReturn(null);
 
         trainerService.deleteTrainer(trainerAsh);
 
         verify(trainerDao).deleteTrainer(trainerAsh);
-        verify(badgeDao).remove(ashesPewterBadge);
-        verify(pokemonDao).remove(ashesPikachu);
+        verify(badgeService).deleteBadge(ashesPewterBadge);
+        ashesPikachu.setTrainer(null); // trainer removed
+        verify(pokemonService).updatePokemonInfo(ashesPikachu);
     }
 
     @Test
     public void deleteGymLeader() {
-        when(badgeDao.findByTrainer(trainerTracey)).thenReturn(new ArrayList<>());
-        when(pokemonDao.findPokemonsByTrainer(trainerTracey)).thenReturn(new ArrayList<>());
-        when(gymDao.findByTrainer(trainerTracey)).thenReturn(pewterGym);
+        when(badgeService.getBadgesByTrainer(trainerAsh)).thenReturn(new ArrayList<>());
+        when(pokemonService.findPokemonByTrainer(trainerAsh)).thenReturn(new ArrayList<>());
+        when(gymService.findGymByTrainer(trainerAsh)).thenReturn(pewterGym);
 
-        trainerService.deleteTrainer(trainerTracey);
+        trainerService.deleteTrainer(trainerAsh);
 
-        verify(trainerDao).deleteTrainer(trainerTracey);
-        verify(gymDao).remove(pewterGym);
+        verify(trainerDao).deleteTrainer(trainerAsh);
+        verify(gymService).removeGym(pewterGym);
     }
 
     // TODO: is this possible?
@@ -268,9 +266,9 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
     public void deleteNonExistingTrainerFails() {
         newTrainer.setId(-1L);
 
-        when(badgeDao.findByTrainer(newTrainer)).thenReturn(new ArrayList<>());
-        when(pokemonDao.findPokemonsByTrainer(newTrainer)).thenReturn(new ArrayList<>());
-        when(gymDao.findByTrainer(newTrainer)).thenReturn(null);
+        when(badgeService.getBadgesByTrainer(trainerGary)).thenReturn(new ArrayList<>());
+        when(pokemonService.findPokemonByTrainer(trainerGary)).thenReturn(new ArrayList<>());
+        when(gymService.findGymByTrainer(trainerAsh)).thenReturn(null);
 
         trainerService.deleteTrainer(newTrainer);
     }

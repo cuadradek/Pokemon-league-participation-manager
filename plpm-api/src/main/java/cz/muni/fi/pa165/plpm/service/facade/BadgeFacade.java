@@ -15,9 +15,6 @@ public interface BadgeFacade {
 
     Long createBadge(BadgeCreateDTO badgeCreateDTO);
 
-    // prabably not needed since it is handled by service
-    //void deleteBadge(Long id);
-
     BadgeDTO getBadgeById(Long id);
 
     List<BadgeDTO> getBadgesByTrainerId(Long trainerId);
