@@ -10,6 +10,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 /**
@@ -33,14 +34,18 @@ public class TrainerServiceImpl implements TrainerService {
     private GymService gymService;
 
     @Override
-    public Trainer createTrainer(Trainer trainer) throws PlpmServiceException {
+    public Trainer createTrainer(Trainer trainer) {
         //check if nickname doesn't exist already
         if (findTrainerByNickname(trainer.getNickname()) != null) {
             throw new PlpmServiceException("Nickname already exists.");
         }
 
         trainer.setPassword(BCrypt.hashpw(trainer.getPassword(), BCrypt.gensalt()));
-        trainerDao.createTrainer(trainer);
+        try {
+            trainerDao.createTrainer(trainer);
+        } catch (ConstraintViolationException ex) {
+            throw new PlpmServiceException("Constraint violation.");
+        }
         return trainer;
     }
 
@@ -50,7 +55,7 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public void updateTrainerInfo(Trainer trainer) throws PlpmServiceException {
+    public void updateTrainerInfo(Trainer trainer) {
         Trainer storedTrainer = findTrainerById(trainer.getId());
 
         if (storedTrainer == null)
@@ -65,7 +70,11 @@ public class TrainerServiceImpl implements TrainerService {
         //isAdmin must be set from storedTrainer, because it wasn't updated
         trainer.setAdmin(storedTrainer.isAdmin());
 
-        trainerDao.updateTrainer(trainer);
+        try {
+            trainerDao.updateTrainer(trainer);
+        } catch (ConstraintViolationException ex) {
+            throw new PlpmServiceException("Constraint violation.");
+        }
     }
 
     @Override

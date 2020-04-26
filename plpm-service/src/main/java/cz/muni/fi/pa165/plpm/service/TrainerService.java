@@ -15,11 +15,11 @@ import java.util.List;
  */
 public interface TrainerService {
 
-    Trainer createTrainer(Trainer trainer) throws PlpmServiceException;
+    Trainer createTrainer(Trainer trainer);
 
     boolean authenticate(Trainer trainer, String password);
 
-    void updateTrainerInfo(Trainer trainer) throws PlpmServiceException;
+    void updateTrainerInfo(Trainer trainer);
 
     boolean changePassword(Trainer trainer, String oldPassword, String newPassword);
 
