@@ -1,0 +1,7 @@
+<configuration debug="false">
+
+    <root level="warn"/>
+
+    <logger name="org.hibernate.tool.hbm2ddl.SchemaExport" level="off" />
+    <logger name="org.hibernate.engine.jdbc.spi.SqlExceptionHelper" level="off" />
+</configuration>
