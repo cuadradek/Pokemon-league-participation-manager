@@ -1,8 +1,10 @@
 package cz.muni.fi.pa165.plpm.web.controllers;
 
 import cz.muni.fi.pa165.plpm.dto.TrainerAuthenticateDTO;
+import cz.muni.fi.pa165.plpm.dto.TrainerChangePasswordDTO;
 import cz.muni.fi.pa165.plpm.dto.TrainerCreateDTO;
 import cz.muni.fi.pa165.plpm.dto.TrainerDTO;
+import cz.muni.fi.pa165.plpm.dto.TrainerUpdateInfoDTO;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import cz.muni.fi.pa165.plpm.service.config.ServiceConfiguration;
@@ -164,5 +166,95 @@ public class TrainerController {
 
         redirectAttributes.addFlashAttribute("alert_success", "Successful registration. You can login now.");
         return "redirect:" + uriBuilder.path("/trainer/login").toUriString();
+    }
+
+    @GetMapping("/edit")
+    public String editSelf(Model model) {
+        TrainerChangePasswordDTO passwordForm = new TrainerChangePasswordDTO();
+        passwordForm.setId(1L); //TODO
+        model.addAttribute("passwordForm", passwordForm);
+
+        return edit(model, 1L); //TODO get id of logged in user
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editAnotherUser(@PathVariable long id, Model model) {
+        model.addAttribute("editAnother", true);
+
+        return edit(model, id);
+    }
+
+    private String edit(Model model, long id) {
+        TrainerUpdateInfoDTO editForm = new TrainerUpdateInfoDTO();
+        TrainerDTO trainerDTO = trainerFacade.findTrainerById(id);
+        editForm.setId(trainerDTO.getId());
+        editForm.setBirthDate(trainerDTO.getBirthDate());
+        editForm.setFirstName(trainerDTO.getFirstName());
+        editForm.setLastName(trainerDTO.getLastName());
+        editForm.setNickname(trainerDTO.getNickname());
+        model.addAttribute("editForm", editForm);
+        return "trainer/edit";
+    }
+
+    @PostMapping(value = {"/edit", "/edit/{id}"})
+    public String edit(@Valid @ModelAttribute("editForm") TrainerUpdateInfoDTO editForm,
+                       BindingResult bindingResult,
+                       @PathVariable(required = false) Long id,
+                       Model model,
+                       RedirectAttributes redirectAttributes,
+                       UriComponentsBuilder uriBuilder) {
+        if (id != null) model.addAttribute("editAnother", true);
+
+        if (bindingResult.hasErrors()) {
+            for (FieldError fe : bindingResult.getFieldErrors()) {
+                model.addAttribute(fe.getField() + "_error", true);
+            }
+            return "trainer/edit";
+        }
+
+        try {
+            trainerFacade.updateTrainerInfo(editForm);
+        } catch (PlpmServiceException ex) {
+            bindingResult.addError(new FieldError("trainer", "nickname", ex.getMessage()));
+            model.addAttribute("nickname_error", true);
+            return "trainer/edit";
+        }
+
+        redirectAttributes.addFlashAttribute("alert_success", "Successful update.");
+        return "redirect:" + uriBuilder.path("/trainer/edit" + (id == null ? "" : ("/" + id))).toUriString();
+    }
+
+
+
+    @GetMapping("/change-password")
+    public String changePassword(Model model) {
+        TrainerChangePasswordDTO passwordForm = new TrainerChangePasswordDTO();
+        passwordForm.setId(1L); //TODO
+        model.addAttribute("passwordForm", passwordForm);
+        return "trainer/change-password";
+    }
+
+    @PostMapping("/change-password")
+    public String changePassword(@Valid @ModelAttribute("passwordForm") TrainerChangePasswordDTO passwordForm,
+                                 BindingResult bindingResult,
+                                 Model model,
+                                 RedirectAttributes redirectAttributes,
+                                 UriComponentsBuilder uriBuilder) {
+
+        if (bindingResult.hasErrors()) {
+            for (FieldError fe : bindingResult.getFieldErrors()) {
+                model.addAttribute(fe.getField() + "_error", true);
+                return "trainer/change-password";
+            }
+        }
+
+        if (!trainerFacade.changePassword(passwordForm)) {
+            bindingResult.addError(new FieldError("trainer", "oldPassword", "Password is incorrect."));
+            model.addAttribute("oldPassword_error", true);
+            return "trainer/change-password";
+        }
+
+        redirectAttributes.addFlashAttribute("alert_success", "Successful update.");
+        return "redirect:" + uriBuilder.path("/trainer/change-password").toUriString();
     }
 }

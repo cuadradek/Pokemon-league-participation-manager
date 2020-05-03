@@ -67,8 +67,9 @@ public class TrainerServiceImpl implements TrainerService {
             throw new PlpmServiceException("Nickname already exists.");
         }
 
-        //isAdmin must be set from storedTrainer, because it wasn't updated
+        //isAdmin and password must be set from storedTrainer, because it wasn't updated
         trainer.setAdmin(storedTrainer.isAdmin());
+        trainer.setPassword(storedTrainer.getPassword());
 
         try {
             trainerDao.updateTrainer(trainer);
