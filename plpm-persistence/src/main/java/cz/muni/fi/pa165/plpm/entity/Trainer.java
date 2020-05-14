@@ -118,4 +118,61 @@ public class Trainer {
     public int hashCode() {
         return Objects.hash(nickname);
     }
+
+    public static class Builder {
+        private String nickname;
+        private String password;
+        private String firstName;
+        private String lastName;
+        private Date birthDate;
+        private boolean isAdmin;
+
+        public Builder nickname(String nickname) {
+            this.nickname = nickname;
+            return this;
+        }
+
+        public Builder password(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public Builder firstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public Builder lastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public Builder birthDate(Date birthDate) {
+            this.birthDate = birthDate;
+            return this;
+        }
+
+        public Builder isAdmin(boolean isAdmin) {
+            this.isAdmin = isAdmin;
+            return this;
+        }
+
+        public Trainer build() {
+            return new Trainer(this);
+        }
+    }
+
+    private Trainer(Builder builder) {
+        if (builder.nickname == null || builder.password == null ||
+                builder.lastName == null || builder.firstName == null ||
+                builder.birthDate == null) {
+            throw new IllegalArgumentException("Cannot build trainer entity with missing required parameter.");
+        }
+        this.nickname = builder.nickname;
+        this.password = builder.password;
+        this.firstName = builder.firstName;
+        this.lastName = builder.lastName;
+        this.birthDate = builder.birthDate;
+        this.isAdmin = builder.isAdmin;
+    }
 }

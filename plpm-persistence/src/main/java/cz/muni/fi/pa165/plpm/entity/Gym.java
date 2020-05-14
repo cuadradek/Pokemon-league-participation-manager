@@ -80,4 +80,40 @@ public class Gym {
     public int hashCode() {
         return Objects.hash(city, type);
     }
+
+    public static class Builder {
+        private Trainer leader;
+        private String city;
+        private PokemonType type;
+
+        public Builder leader(Trainer leader) {
+            this.leader = leader;
+            return this;
+        }
+
+        public Builder city(String city) {
+            this.city = city;
+            return this;
+        }
+
+        public Builder type(PokemonType type) {
+            this.type = type;
+            return this;
+        }
+
+        public Gym build() {
+            return new Gym(this);
+        }
+    }
+
+    private Gym(Builder builder) {
+        if (builder.leader == null || builder.city == null ||
+                builder.type == null) {
+            throw new IllegalArgumentException("Cannot build gym entity with missing required parameter.");
+        }
+
+        this.leader = builder.leader;
+        this.city = builder.city;
+        this.type = builder.type;
+    }
 }
