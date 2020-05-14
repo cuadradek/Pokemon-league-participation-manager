@@ -96,4 +96,55 @@ public class Pokemon {
     public int hashCode() {
         return Objects.hash(id, name, nickname, trainer, level, type);
     }
+
+    public static class Builder {
+        private String name;
+        private String nickname;
+        private Trainer trainer;
+        private PokemonType type;
+        // optional
+        private int level = 1;
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder nickname(String nickname) {
+            this.nickname = nickname;
+            return this;
+        }
+
+        public Builder trainer(Trainer trainer) {
+            this.trainer = trainer;
+            return this;
+        }
+
+        public Builder type(PokemonType type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder level(int level) {
+            this.level = level;
+            return this;
+        }
+
+        public Pokemon build() {
+            return new Pokemon(this);
+        }
+    }
+
+    private Pokemon(Builder builder) {
+        if (builder.name == null || builder.nickname == null || builder.type == null) {
+            throw new IllegalArgumentException("Cannot build pokemon entity with missing required parameter.");
+        }
+
+        this.name = builder.name;
+        this.nickname = builder.nickname;
+        this.trainer = builder.trainer;
+        this.type = builder.type;
+        this.level = builder.level;
+    }
+
 }
