@@ -33,6 +33,11 @@ public class Badge {
     public Badge() {
     }
 
+    public Badge(Trainer trainer, Gym gym) {
+        this.trainer = trainer;
+        this.gym = gym;
+    }
+
     public Long getId() {
         return id;
     }
