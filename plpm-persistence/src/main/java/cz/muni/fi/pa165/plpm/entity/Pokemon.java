@@ -136,8 +136,7 @@ public class Pokemon {
     }
 
     private Pokemon(Builder builder) {
-        if (builder.name == null || builder.nickname == null ||
-                builder.trainer == null || builder.type == null) {
+        if (builder.name == null || builder.nickname == null || builder.type == null) {
             throw new IllegalArgumentException("Cannot build pokemon entity with missing required parameter.");
         }
 
