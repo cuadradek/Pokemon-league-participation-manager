@@ -1,0 +1,16 @@
+/* Cascading Style Sheet (CSS) */
+
+span.error {
+    background-color: yellow;
+    color: red;
+    font-weight: bold;
+}
+
+input.error {
+    background-color: yellow;
+}
+
+body {
+    font-family: Helvetica, sans-serif;
+    background-color: azure;
+}
