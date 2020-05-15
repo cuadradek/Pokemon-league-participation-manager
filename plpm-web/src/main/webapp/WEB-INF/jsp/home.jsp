@@ -16,11 +16,8 @@
 --%>
 <fmt:message key="navigation.personalpage" var="title"/>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<my:pagetemplate title="Wellcome to PLPM">
+<my:pagetemplate title="Welcome to PLPM">
     <jsp:attribute name="body">
         Hello world!
-    <!my:a href="/trainer/login">Login<!/my:a><!br>
-    <!my:a href="/trainer/register">Register<!/my:a><!br>
-    <!my:a href="/trainer/list">List<!/my:a><!br>
 </jsp:attribute>
 </my:pagetemplate>
