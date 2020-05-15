@@ -1,5 +1,11 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core_1_1" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="utf-8" trimDirectiveWhitespaces="false" session="false" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="my" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
+
 
 <%--
   Created by IntelliJ IDEA.
@@ -8,22 +14,13 @@
   Time: 13:28
   To change this template use File | Settings | File Templates.
 --%>
+<fmt:message key="navigation.personalpage" var="title"/>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Title</title>
-</head>
-<body>
-<c:if test="${not empty alert_success}">
-    <div class="alert alert-success" role="alert"><c:out value="${alert_success}"/></div>
-</c:if>
-<c:if test="${not empty alert_warning}">
-    <div class="alert alert-warning" role="alert"><c:out value="${alert_warning}"/></div>
-</c:if>
-Hello world!<br>
-Available pages:<br>
-<my:a href="/trainer/login">Login</my:a><br>
-<my:a href="/trainer/register">Register</my:a><br>
-<my:a href="/trainer/list">List</my:a><br>
-</body>
-</html>
+<my:pagetemplate title="Wellcome to PLPM">
+    <jsp:attribute name="body">
+        Hello world!
+    <!my:a href="/trainer/login">Login<!/my:a><!br>
+    <!my:a href="/trainer/register">Register<!/my:a><!br>
+    <!my:a href="/trainer/list">List<!/my:a><!br>
+</jsp:attribute>
+</my:pagetemplate>
