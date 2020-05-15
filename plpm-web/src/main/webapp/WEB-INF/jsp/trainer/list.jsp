@@ -39,7 +39,6 @@
                                 <sec:authorize access="hasRole('ROLE_ADMIN')">
                                     <my:a href="/trainer/edit/${trainer.id}" class="btn btn-primary">Edit</my:a>
                                 </sec:authorize>
-                                <my:a href="/trainer/edit/${trainer.id}" class="btn btn-primary">Edit</my:a>
                             </div>
             </td>
         </tr>
