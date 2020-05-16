@@ -8,6 +8,7 @@ import cz.muni.fi.pa165.plpm.entity.Trainer;
 import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
@@ -40,7 +41,7 @@ public class TrainerServiceImpl implements TrainerService {
             throw new PlpmServiceException("Nickname already exists.");
         }
 
-        trainer.setPassword(BCrypt.hashpw(trainer.getPassword(), BCrypt.gensalt()));
+        trainer.setPassword(new BCryptPasswordEncoder().encode(trainer.getPassword()));
         try {
             trainerDao.createTrainer(trainer);
         } catch (ConstraintViolationException ex) {
