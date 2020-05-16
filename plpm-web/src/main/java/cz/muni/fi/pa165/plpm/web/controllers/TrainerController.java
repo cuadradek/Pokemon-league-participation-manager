@@ -1,5 +1,6 @@
 package cz.muni.fi.pa165.plpm.web.controllers;
 
+import cz.muni.fi.pa165.plpm.dto.BadgeDTO;
 import cz.muni.fi.pa165.plpm.dto.TrainerAuthenticateDTO;
 import cz.muni.fi.pa165.plpm.dto.TrainerChangePasswordDTO;
 import cz.muni.fi.pa165.plpm.dto.TrainerCreateDTO;
