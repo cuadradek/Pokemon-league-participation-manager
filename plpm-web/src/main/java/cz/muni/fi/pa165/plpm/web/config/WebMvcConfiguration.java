@@ -21,7 +21,7 @@ import javax.validation.Validator;
 
 @EnableWebMvc
 @Configuration
-@Import(SampleDataConfiguration.class)
+@Import({SecurityConfig.class, SampleDataConfiguration.class})
 @ComponentScan(basePackages = "cz.muni.fi.pa165.plpm.web.controllers")
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
