@@ -2,16 +2,8 @@
 <%@ taglib tagdir="/WEB-INF/tags" prefix="my" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<%--TODO: this will be change once page template is created --%>
-
-<html>
-<head>
-    <title>Register</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-</head>
-<body>
+<my:pagetemplate title="Register">
+    <jsp:attribute name="body">
 
 <form:form method="post" action="${pageContext.request.contextPath}/trainer/register"
            modelAttribute="trainerForm" cssClass="form-horizontal">
@@ -59,6 +51,5 @@
 
     <button class="btn btn-primary" type="submit">Register</button>
 </form:form>
-
-</body>
-</html>
+    </jsp:attribute>
+</my:pagetemplate>

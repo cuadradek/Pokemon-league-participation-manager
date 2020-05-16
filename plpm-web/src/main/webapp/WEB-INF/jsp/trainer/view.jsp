@@ -2,28 +2,22 @@
 <%@ taglib tagdir="/WEB-INF/tags" prefix="my" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Title</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
-</head>
-<body>
-<table class="table">
-    <caption>Trainer info</caption>
+<my:pagetemplate title="Trainer info">
+    <jsp:attribute name="body">
+<table style="width: 50%" class="table">
     <tbody>
         <tr><th>Id</th><td>${trainer.id}</td></tr>
         <tr><th>Nickname</th><td><c:out value="${trainer.nickname}"/></td></tr>
         <tr><th>First name</th><td><c:out value="${trainer.firstName}"/></td></tr>
         <tr><th>Last name</th><td><c:out value="${trainer.lastName}"/></td></tr>
         <tr><th>Birth date</th><td><fmt:formatDate value="${trainer.birthDate}" pattern="yyyy-MM-dd"/></td></tr>
-        <tr><th>Gym</th><td><my:a href="/gym/view/${gym.id}">${gym.id}</my:a></td></tr>
+        <tr><th>Gym</th><td><my:a href="/gym/view/${gym.id}">${gym.city}</my:a></td></tr>
     </tbody>
 </table>
 
+<h2>Pokemons</h2>
 <table class="table">
-    <caption>Pokemons</caption>
     <thead>
     <tr>
         <th>Id</th>
@@ -49,20 +43,22 @@
     </tbody>
 </table>
 
-<table class="table">
-    <caption>Beaten Gyms</caption>
+<h2>Badges</h2>
+<table style="width: 50%" class="table">
     <thead>
     <tr>
-        <th>Id</th>
+        <th>Badge id</th>
+        <th>Gym</th>
     </tr>
     </thead>
     <tbody>
     <c:forEach items="${badges}" var="badge">
         <tr>
-            <td><my:a href="/gym/view/${gym.id}">${gym.id}</my:a></td>
+            <td>${badge.id}</td>
+            <td><my:a href="/gym/view/${badge.gym.id}">${badge.gym.city}</my:a></td>
         </tr>
     </c:forEach>
     </tbody>
 </table>
-</body>
-</html>
+    </jsp:attribute>
+</my:pagetemplate>
