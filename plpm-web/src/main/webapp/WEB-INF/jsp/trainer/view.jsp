@@ -8,12 +8,30 @@
     <jsp:attribute name="body">
         <c:choose>
             <c:when test="${not empty viewSelf}">
-               <my:a href="/trainer/edit" class="btn btn-primary">Edit</my:a>
-               <my:a href="/trainer/change-password" class="btn btn-primary">Change password</my:a>
+<%--               <my:a href="/trainer/edit" class="btn btn-primary">Edit</my:a>--%>
+                <p>
+                    <my:a href="/trainer/edit" class="btn btn-success">
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                        Edit
+                    </my:a>
+                </p>
+                <p>
+                    <my:a href="/trainer/change-password" class="btn btn-success">
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                        Change password
+                    </my:a>
+                </p>
+<%--               <my:a href="/trainer/change-password" class="btn btn-primary">Change password</my:a>--%>
             </c:when>
             <c:otherwise>
                 <sec:authorize access="hasRole('ROLE_ADMIN')">
-                    <my:a href="/trainer/edit/${trainer.id}" class="btn btn-primary">Edit</my:a>
+                    <p>
+                    <my:a href="/trainer/edit/${trainer.id}" class="btn btn-success">
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                        Edit
+                    </my:a>
+                    </p>
+<%--                    <my:a href="/trainer/edit/${trainer.id}" class="btn btn-primary">Edit</my:a>--%>
                 </sec:authorize>
             </c:otherwise>
         </c:choose>
@@ -38,6 +56,7 @@
                 <th>Name</th>
                 <th>Level</th>
                 <th>Type</th>
+                <th>Detail</th>
             </tr>
             </thead>
             <tbody>
@@ -49,7 +68,10 @@
                     <td><c:out value="${pokemon.level}"/></td>
                     <td><c:out value="${pokemon.type}"/></td>
                     <td>
-                        <my:a href="/pokemon/view/${pokemon.id}" class="btn btn-primary">Detail</my:a>
+<%--                        <my:a href="/pokemon/view/${pokemon.id}" class="btn btn-primary">Detail</my:a>--%>
+                        <form method="get" action="${pageContext.request.contextPath}/pokemon/view/${pokemon.id}">
+                            <button class="btn"><i class="fa fa-eye"></i></button>
+                        </form>
                     </td>
                 </tr>
             </c:forEach>

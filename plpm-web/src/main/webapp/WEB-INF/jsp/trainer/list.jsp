@@ -17,6 +17,7 @@
                 <th>First name</th>
                 <th>Last name</th>
                 <th>Birth date</th>
+                <th>Detail</th>
             </tr>
             </thead>
             <tbody>
@@ -28,13 +29,11 @@
                     <td><c:out value="${trainer.lastName}"/></td>
                     <td><fmt:formatDate value="${trainer.birthDate}" pattern="yyyy-MM-dd"/></td>
                     <td>
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                                <my:a href="/trainer/view/${trainer.id}" class="btn btn-primary">Detail</my:a>
-                                <sec:authorize access="hasRole('ROLE_ADMIN')">
-                                    <my:a href="/trainer/edit/${trainer.id}" class="btn btn-primary">Edit</my:a>
-                                </sec:authorize>
-                            </div>
-                     </td>
+<%--                        <my:a href="/trainer/view/${trainer.id}" class="btn"><i class="fa fa-eye"></my:a>--%>
+                        <form method="get" action="${pageContext.request.contextPath}/trainer/view/${trainer.id}">
+                            <button class="btn"><i class="fa fa-eye"></i></button>
+                        </form>
+                    </td>
                 </tr>
             </c:forEach>
             </tbody>
