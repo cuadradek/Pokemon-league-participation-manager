@@ -5,21 +5,24 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<c:set var="titletext" value="Edit gym"/>
-<c:set var="keytext" value="navigation.gym.edit"/>
+
+<c:set var="key" value="navigation.gym.edit"/>
 <c:if test="${empty editForm.id}">
-    <c:set var="titletext" value="Create gym"/>
-    <c:set var="keytext" value="navigation.gym.create"/>
+    <c:set var="key" value="navigation.gym.create"/>
 </c:if>
 
-<fmt:message key="${keytext}" var="title"/>
+<fmt:message key="${key}" var="title"/>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<my:pagetemplate title="${titletext}">
+<my:pagetemplate title="${title}">
     <jsp:attribute name="body">
         <p>
-        <my:a href="/gym/list" class="btn btn-basic" role="button"><fmt:message key="gym.tolist"/></my:a>
+            <my:a href="/gym/list" class="btn details-button" role="button">
+			    <span class="fa fa-undo" aria-hidden="true"></span>
+                <fmt:message key="gym.tolist"/></my:a>
         <c:if test="${not empty editForm.id}">
-            <my:a href="/gym/view/${editForm.id}" class="btn btn-basic" role="button"><fmt:message key="gym.detail"/></my:a>
+            <my:a href="/gym/view/${editForm.id}" class="btn details-button" role="button">
+			    <span class="fa fa-eye" aria-hidden="true"></span>
+                <fmt:message key="action.detail"/></my:a>
         </c:if>
         </p>
 
@@ -54,7 +57,10 @@
             </div>
         </div>
 
-        <button class="btn btn-success" type="submit">Save</button>
+        <button class="btn create-button" type="submit">
+            <span class="fa fa-floppy-o" aria-hidden="true"></span>
+            <fmt:message key="action.save"/>
+        </button>
     </form:form>
     </jsp:attribute>
 </my:pagetemplate>
