@@ -4,31 +4,29 @@
 <%@ taglib tagdir="/WEB-INF/tags" prefix="my" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core_1_1" %>
+<%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <my:pagetemplate title="Login">
     <jsp:attribute name="body">
 
-<form:form method="post" action="${pageContext.request.contextPath}/trainer/login"
-           modelAttribute="loginForm" cssClass="form-horizontal">
+<form:form method="post" action="${pageContext.request.contextPath}/login"
+           cssClass="form-horizontal">
 
-
-    <div class="form-group ${nickname_error?'has-error':''}">
-        <form:label path="nickname" cssClass="col-sm-2 control-label">Nickname</form:label>
+    <div class="form-group">
+        <label cssClass="col-sm-2 control-label"><f:message key="trainer.nickname"/></label>
         <div class="col-sm-10">
-            <form:input path="nickname" cssClass="form-control"/>
-            <form:errors path="nickname" cssClass="help-block"/>
+            <input name="nickname" id="nickname" cssClass="form-control"/>
         </div>
     </div>
 
-    <div class="form-group ${password_error?'has-error':''}">
-        <form:label path="nickname" cssClass="col-sm-2 control-label">Password</form:label>
+    <div class="form-group">
+        <label cssClass="col-sm-2 control-label"><f:message key="trainer.password"/></label>
         <div class="col-sm-10">
-            <form:password path="password" cssClass="form-control"/>
-            <form:errors path="password" cssClass="help-block"/>
+            <input type="password" name="password" id="password" cssClass="form-control"/>
         </div>
     </div>
 
-    <button class="btn btn-primary" type="submit">Login</button>
+    <button class="btn btn-primary" type="submit"><f:message key="navigation.login"/></button>
 </form:form>
 
     </jsp:attribute>

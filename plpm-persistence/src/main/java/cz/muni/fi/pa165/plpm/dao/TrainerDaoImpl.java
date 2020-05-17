@@ -33,7 +33,7 @@ public class TrainerDaoImpl implements TrainerDao {
 
     @Override
     public void deleteTrainer(Trainer trainer) {
-        em.remove(trainer);
+        em.remove(em.merge(trainer));
     }
 
     @Override

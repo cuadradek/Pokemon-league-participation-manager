@@ -28,7 +28,7 @@ public class BadgeDaoImpl implements BadgeDao {
 
     @Override
     public void remove(Badge badge) {
-        em.remove(badge);
+        em.remove(em.merge(badge));
     }
 
     @Override

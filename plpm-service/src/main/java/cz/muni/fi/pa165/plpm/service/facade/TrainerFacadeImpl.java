@@ -50,9 +50,7 @@ public class TrainerFacadeImpl implements TrainerFacade {
 
     @Override
     public void deleteTrainer(Long id) {
-        Trainer trainer = new Trainer();
-        trainer.setId(id);
-        trainerService.deleteTrainer(trainer);
+        trainerService.deleteTrainer(beanMappingService.mapTo(findTrainerById(id), Trainer.class));
     }
 
     @Override
