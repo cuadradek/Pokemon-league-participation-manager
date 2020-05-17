@@ -17,9 +17,10 @@
         <!-- Gym leader can only award badges from his own gym (and can't take them back) -->
         <c:if test="${not empty creator}">
             <p>
-                <form method="get" action="${pageContext.request.contextPath}/badge/create">
-                    <button class="btn create-button"><i class="glyphicon glyphicon-plus"> <fmt:message key="action.create"/></i></button>
-                </form>
+                <my:a href="/badge/create" class="btn create-button">
+			        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+			        <fmt:message key="action.create"/>
+		        </my:a>
             </p>
         </c:if>
 
