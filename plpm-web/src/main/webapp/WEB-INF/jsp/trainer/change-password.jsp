@@ -30,7 +30,7 @@
                 </div>
             </div>
 
-            <button class="btn btn-primary" type="submit"><f:message key="trainer.changepassword"/></button>
+            <button class="btn details-button" type="submit"><f:message key="trainer.changepassword"/></button>
         </form:form>
 
     </jsp:attribute>

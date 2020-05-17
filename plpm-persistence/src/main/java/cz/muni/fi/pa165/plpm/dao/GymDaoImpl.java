@@ -27,7 +27,7 @@ public class GymDaoImpl implements GymDao {
 
     @Override
     public void remove(Gym gym) {
-        em.remove(gym);
+        em.remove(em.merge(gym));
     }
 
     @Override

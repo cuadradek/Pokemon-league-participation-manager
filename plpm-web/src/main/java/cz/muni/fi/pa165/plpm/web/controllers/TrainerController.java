@@ -96,7 +96,7 @@ public class TrainerController {
         trainerFacade.deleteTrainer(id);
         redirectAttributes.addFlashAttribute("alert_success", "Trainer was deleted.");
 
-        return "redirect:" + uriBuilder.path("/trainer/view").toUriString();
+        return "redirect:" + uriBuilder.path("/trainer/list").toUriString();
     }
 
 //    @GetMapping("/login")

@@ -12,13 +12,13 @@
         <c:choose>
             <c:when test="${not empty viewSelf}">
                 <p>
-                    <my:a href="/trainer/edit" class="btn btn-success">
+                    <my:a href="/trainer/edit" class="btn detail-button">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                        <f:message key="trainer.edit"/>
+                        <f:message key="action.edit"/>
                     </my:a>
                 </p>
                 <p>
-                    <my:a href="/trainer/change-password" class="btn btn-success">
+                    <my:a href="/trainer/change-password" class="btn detail-button">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                         <f:message key="trainer.changepassword"/>
                     </my:a>
@@ -28,9 +28,9 @@
             <c:otherwise>
                 <sec:authorize access="hasRole('ROLE_ADMIN')">
                     <p>
-                    <my:a href="/trainer/edit/${trainer.id}" class="btn btn-success">
+                    <my:a href="/trainer/edit/${trainer.id}" class="btn detail-button">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                        <f:message key="trainer.edit"/>
+                        <f:message key="action.edit"/>
                     </my:a>
                     </p>
 <%--                    <my:a href="/trainer/edit/${trainer.id}" class="btn btn-primary">Edit</my:a>--%>
@@ -70,10 +70,10 @@
                     <td><c:out value="${pokemon.level}"/></td>
                     <td><c:out value="${pokemon.type}"/></td>
                     <td>
-<%--                        <my:a href="/pokemon/view/${pokemon.id}" class="btn btn-primary">Detail</my:a>--%>
-                        <form method="get" action="${pageContext.request.contextPath}/pokemon/view/${pokemon.id}">
-                            <button class="btn"><i class="fa fa-eye"></i></button>
-                        </form>
+                        <my:a href="/pokemon/view/${pokemon.id}" class="btn details-button">
+                            <span class="fa fa-eye" aria-hidden="true"></span>
+                            <fmt:message key="action.detail"/>
+                        </my:a>
                     </td>
                 </tr>
             </c:forEach>

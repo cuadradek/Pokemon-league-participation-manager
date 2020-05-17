@@ -51,7 +51,7 @@
             </div>
         </div>
 
-        <button class="btn btn-primary" type="submit"><f:message key="trainer.edit"/></button>
+        <button class="btn details-button" type="submit"><f:message key="action.edit"/></button>
     </form:form>
 </jsp:attribute>
 </my:pagetemplate>

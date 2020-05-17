@@ -52,7 +52,7 @@
         </div>
     </div>
 
-    <button class="btn btn-primary" type="submit"><f:message key="trainer.register"/></button>
+    <button class="btn create-button" type="submit"><f:message key="action.register"/></button>
 </form:form>
     </jsp:attribute>
 </my:pagetemplate>
