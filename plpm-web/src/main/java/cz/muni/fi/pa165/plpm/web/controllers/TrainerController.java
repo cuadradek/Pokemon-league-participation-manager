@@ -63,17 +63,30 @@ public class TrainerController {
         return "trainer/list";
     }
 
+    @GetMapping("/view")
+    public String view(Model model, Principal principal) {
+        TrainerDTO trainerDTO = trainerFacade.findTrainerByNickname(principal.getName());
+
+        model.addAttribute("viewSelf", true);
+
+        return view(trainerDTO, model);
+    }
+
     @GetMapping("/view/{id}")
     public String view(@PathVariable long id, Model model, Principal principal) {
         TrainerDTO trainerDTO = trainerFacade.findTrainerById(id);
 
-        model.addAttribute("trainer", trainerDTO);
-        model.addAttribute("gym", gymFacade.findGymByTrainer(id));
-        model.addAttribute("pokemons", pokemonFacade.getPokemonByTrainer(trainerDTO));
-        model.addAttribute("badges", badgeFacade.getBadgesByTrainerId(id));
-
         if (principal.getName().equals(trainerDTO.getNickname()))
             model.addAttribute("viewSelf", true);
+
+        return view(trainerDTO, model);
+    }
+
+    private String view(TrainerDTO trainerDTO, Model model) {
+        model.addAttribute("trainer", trainerDTO);
+        model.addAttribute("gym", gymFacade.findGymByTrainer(trainerDTO.getId()));
+        model.addAttribute("pokemons", pokemonFacade.getPokemonByTrainer(trainerDTO));
+        model.addAttribute("badges", badgeFacade.getBadgesByTrainerId(trainerDTO.getId()));
 
         return "trainer/view";
     }
@@ -86,34 +99,34 @@ public class TrainerController {
         return "redirect:" + uriBuilder.path("/trainer/view").toUriString();
     }
 
-    @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("loginForm", new TrainerAuthenticateDTO());
-        return "trainer/login";
-    }
-
-    @PostMapping("/login")
-    public String login(@Valid @ModelAttribute("loginForm") TrainerAuthenticateDTO loginForm,
-                        BindingResult bindingResult,
-                        Model model,
-                        UriComponentsBuilder uriBuilder,
-                        RedirectAttributes redirectAttributes) {
-        model.addAttribute("loginForm", new TrainerAuthenticateDTO());
-        if (bindingResult.hasErrors()) {
-            for (FieldError fe : bindingResult.getFieldErrors()) {
-                model.addAttribute(fe.getField() + "_error", true);
-            }
-            return "trainer/login";
-        }
-
-        if (trainerFacade.authenticate(loginForm)) {
-            redirectAttributes.addFlashAttribute("alert_success", "Successful login.");
-            return "redirect:" + uriBuilder.path("/").toUriString();
-        } else {
-            model.addAttribute("alert_warning", "Unsuccessful login.");
-            return "trainer/login";
-        }
-    }
+//    @GetMapping("/login")
+//    public String login(Model model) {
+//        model.addAttribute("loginForm", new TrainerAuthenticateDTO());
+//        return "trainer/login";
+//    }
+//
+//    @PostMapping("/login")
+//    public String login(@Valid @ModelAttribute("loginForm") TrainerAuthenticateDTO loginForm,
+//                        BindingResult bindingResult,
+//                        Model model,
+//                        UriComponentsBuilder uriBuilder,
+//                        RedirectAttributes redirectAttributes) {
+//        model.addAttribute("loginForm", new TrainerAuthenticateDTO());
+//        if (bindingResult.hasErrors()) {
+//            for (FieldError fe : bindingResult.getFieldErrors()) {
+//                model.addAttribute(fe.getField() + "_error", true);
+//            }
+//            return "trainer/login";
+//        }
+//
+//        if (trainerFacade.authenticate(loginForm)) {
+//            redirectAttributes.addFlashAttribute("alert_success", "Successful login.");
+//            return "redirect:" + uriBuilder.path("/").toUriString();
+//        } else {
+//            model.addAttribute("alert_warning", "Unsuccessful login.");
+//            return "trainer/login";
+//        }
+//    }
 
     @GetMapping("/register")
     public String register(Model model) {
@@ -144,7 +157,7 @@ public class TrainerController {
         }
 
         redirectAttributes.addFlashAttribute("alert_success", "Successful registration. You can login now.");
-        return "redirect:" + uriBuilder.path("/trainer/login").toUriString();
+        return "redirect:" + uriBuilder.path("/login").toUriString();
     }
 
     @GetMapping("/edit")
