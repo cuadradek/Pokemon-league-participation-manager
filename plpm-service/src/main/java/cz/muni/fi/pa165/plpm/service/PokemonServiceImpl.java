@@ -37,7 +37,8 @@ public class PokemonServiceImpl implements PokemonService {
         if (foundPokemon == null) {
             throw new PlpmServiceException("Cannot update Pokemon which doesn't exist.");
         }
-        if (foundPokemon.getNickname() != pokemon.getNickname() && !pokemonDao.findByNickname(pokemon.getNickname()).isEmpty()) {
+        if (!foundPokemon.getNickname().equals(pokemon.getNickname()) &&
+                !findPokemonByNickname(pokemon.getNickname()).isEmpty()) {
             throw new PlpmServiceException("Cannot update Pokemon " + pokemon.getId() + ", Pokemon with same nickname already exists.");
         }
         foundPokemon.setLevel(pokemon.getLevel());

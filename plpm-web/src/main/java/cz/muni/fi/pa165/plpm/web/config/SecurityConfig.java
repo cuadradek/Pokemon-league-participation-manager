@@ -33,11 +33,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-//                .antMatchers("/").authenticated()
-                .antMatchers("/trainer/edit/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/trainer/edit/*").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/pokemon/edit/*").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/badge/edit/**").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/badge/delete/**").access("hasRole('ROLE_ADMIN')")
                 .and().formLogin()
                 .and().logout().logoutUrl("/logout").logoutSuccessUrl("/")
+                .invalidateHttpSession(true)
                 .and().csrf().disable();
     }
 }

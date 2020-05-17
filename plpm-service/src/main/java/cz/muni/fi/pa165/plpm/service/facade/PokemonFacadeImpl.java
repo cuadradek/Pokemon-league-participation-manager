@@ -1,6 +1,7 @@
 package cz.muni.fi.pa165.plpm.service.facade;
 
 import cz.muni.fi.pa165.plpm.dto.*;
+import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Pokemon;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
@@ -52,6 +53,11 @@ public class PokemonFacadeImpl implements PokemonFacade {
         }
         pokemon.setLevel(pokemonChangeLevelDTO.getLevel());
         pokemonService.updatePokemonInfo(pokemon);
+    }
+
+    @Override
+    public void updatePokemon(PokemonDTO pokemonDTO) {
+        pokemonService.updatePokemonInfo(beanMappingService.mapTo(pokemonDTO, Pokemon.class));
     }
 
     @Override
