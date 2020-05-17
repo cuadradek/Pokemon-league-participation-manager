@@ -45,7 +45,7 @@
 			                    <fmt:message key="action.detail"/>
 		                    </my:a>
                             <!-- TODO: try to hide from non admin -->
-                            <my:a href="/badge/delete/${badge.id}" class="btn delete-button">
+                            <my:a href="/badge/delete/${badge.id}" class="btn delete-button" type="submit">
 			                    <span class="fa fa-trash" aria-hidden="true"></span>
 			                    <fmt:message key="action.delete"/>
 		                    </my:a>
