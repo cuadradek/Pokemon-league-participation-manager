@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
+/**
+ * @author: Veronika Loukotova
+ */
 @Service
 public class UserSecurity implements UserDetailsService {
 

@@ -1,9 +1,9 @@
+<%--@author Veronika Loukotova--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="my" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core_1_1" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%--TODO: this will be change once page template is created --%>
 
 <fmt:message key="navigation.pokemon" var="title"/>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
