@@ -16,3 +16,11 @@ Website will be available at `http://localhost:8080/pa165/`
 ### Rest
 
 ### Default users
+```
+nickname: admin
+password: admin
+```
+```
+nickname: user
+password: user
+```
