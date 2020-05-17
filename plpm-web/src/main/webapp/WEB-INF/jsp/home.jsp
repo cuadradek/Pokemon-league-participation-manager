@@ -6,7 +6,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 
-
 <%--
   Created by IntelliJ IDEA.
   User: radoslav
@@ -18,6 +17,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <my:pagetemplate title="Welcome to PLPM">
     <jsp:attribute name="body">
-        Hello world!
-</jsp:attribute>
+    </jsp:attribute>
 </my:pagetemplate>
