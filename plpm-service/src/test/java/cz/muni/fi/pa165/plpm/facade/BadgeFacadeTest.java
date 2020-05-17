@@ -8,7 +8,6 @@ import cz.muni.fi.pa165.plpm.entity.Badge;
 import cz.muni.fi.pa165.plpm.entity.Gym;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 import cz.muni.fi.pa165.plpm.enums.PokemonType;
-import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import cz.muni.fi.pa165.plpm.service.BadgeService;
 import cz.muni.fi.pa165.plpm.service.BeanMappingService;
 import cz.muni.fi.pa165.plpm.service.GymService;
@@ -16,6 +15,7 @@ import cz.muni.fi.pa165.plpm.service.TrainerService;
 import cz.muni.fi.pa165.plpm.service.config.ServiceConfiguration;
 import cz.muni.fi.pa165.plpm.service.facade.BadgeFacade;
 import cz.muni.fi.pa165.plpm.service.facade.BadgeFacadeImpl;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -33,8 +33,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 /**
  * @author Radoslav Cerhak
@@ -164,7 +164,7 @@ public class BadgeFacadeTest extends AbstractTestNGSpringContextTests {
     @Test
     public void createBadge() {
         BadgeCreateDTO badgeCreateDTO = new BadgeCreateDTO();
-        badgeCreateDTO.setGym(1L);
+        badgeCreateDTO.setGymId(1L);
         badgeCreateDTO.setTrainerId(1L);
 
         Badge badge = new Badge();
@@ -180,6 +180,15 @@ public class BadgeFacadeTest extends AbstractTestNGSpringContextTests {
         Long id = badgeFacade.createBadge(badgeCreateDTO);
 
         Assert.assertEquals((long) id, 2L);
+    }
+
+    @Test
+    public void deleteBadge() {
+        ArgumentCaptor<Badge> badgeCaptor = ArgumentCaptor.forClass(Badge.class);
+        badgeFacade.deleteBadge(7L);
+
+        verify(badgeService, times(1)).deleteBadge(badgeCaptor.capture());
+        Assert.assertEquals(badgeCaptor.getValue().getId().intValue(), 7);
     }
 
     @Test

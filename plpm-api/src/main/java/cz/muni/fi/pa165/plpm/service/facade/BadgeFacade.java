@@ -15,6 +15,8 @@ public interface BadgeFacade {
 
     Long createBadge(BadgeCreateDTO badgeCreateDTO);
 
+    void deleteBadge(Long id);
+
     BadgeDTO getBadgeById(Long id);
 
     List<BadgeDTO> getBadgesByTrainerId(Long trainerId);

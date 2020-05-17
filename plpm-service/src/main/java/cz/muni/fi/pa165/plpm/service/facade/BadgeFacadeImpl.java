@@ -43,13 +43,13 @@ public class BadgeFacadeImpl implements BadgeFacade {
     public Long createBadge(BadgeCreateDTO badgeCreateDTO) {
         Trainer trainer = trainerService.findTrainerById(badgeCreateDTO.getTrainerId());
         if (trainer == null) {
-            throw new IllegalStateException("Failed to create badge: did not find trainer with id " +
+            throw new PlpmServiceException("Failed to create badge: did not find trainer with id " +
                     badgeCreateDTO.getTrainerId().toString());
         }
 
         Gym gym = gymService.findGymById(badgeCreateDTO.getGymId());
         if (gym == null) {
-            throw new IllegalStateException("Failed to create badge: did not find gym with id " +
+            throw new PlpmServiceException("Failed to create badge: did not find gym with id " +
                     badgeCreateDTO.getGymId().toString());
         }
 
@@ -57,13 +57,20 @@ public class BadgeFacadeImpl implements BadgeFacade {
         badge.setTrainer(trainer);
         badge.setGym(gym);
 
-        try {
-            badgeService.createBadge(badge);
-        } catch (PlpmServiceException serviceException) {
-            throw new IllegalArgumentException("Failed to create badge " + badge.toString(), serviceException);
+        if (badgeService.getBadgesByTrainer(trainer).contains(badge)) {
+            throw new PlpmServiceException("Failed to create badge: badge already exists");
         }
 
+        badgeService.createBadge(badge);
+
         return badge.getId();
+    }
+
+    @Override
+    public void deleteBadge(Long id) {
+        Badge badge = new Badge();
+        badge.setId(id);
+        badgeService.deleteBadge(badge);
     }
 
     @Override
@@ -77,7 +84,7 @@ public class BadgeFacadeImpl implements BadgeFacade {
         Trainer trainer = trainerService.findTrainerById(trainerId);
 
         if (trainer == null) {
-            throw new IllegalArgumentException("Cannot get badges of trainer that does not exits. Provided id: "
+            throw new PlpmServiceException("Cannot get badges of trainer that does not exits. Provided id: "
                 + trainerId.toString());
         }
 
@@ -91,16 +98,11 @@ public class BadgeFacadeImpl implements BadgeFacade {
         Trainer trainer = trainerService.findTrainerById(trainerId);
 
         if (trainer == null) {
-            throw new IllegalArgumentException("Cannot get beaten gyms for trainer that does not exits. Provided id: "
+            throw new PlpmServiceException("Cannot get beaten gyms for trainer that does not exits. Provided id: "
                     + trainerId.toString());
         }
 
-        Set<Gym> gyms;
-        try {
-            gyms = badgeService.getBeatenGyms(trainer);
-        } catch (PlpmServiceException serviceException) {
-           throw new IllegalArgumentException("Badge service failed to find beaten gyms", serviceException);
-        }
+        Set<Gym> gyms = badgeService.getBeatenGyms(trainer);
 
         return beanMappingService.mapTo(gyms,
                 GymDTO.class);
@@ -111,7 +113,7 @@ public class BadgeFacadeImpl implements BadgeFacade {
         Gym gym = gymService.findGymById(gymId);
 
         if (gym == null) {
-            throw new IllegalArgumentException("Cannot get badges of gym that does not exits. Provided id: "
+            throw new PlpmServiceException("Cannot get badges of gym that does not exits. Provided id: "
                     + gymId.toString());
         }
 

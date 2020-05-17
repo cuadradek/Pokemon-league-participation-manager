@@ -27,7 +27,7 @@ public class BadgeCreateDTO {
         return gymId;
     }
 
-    public void setGym(Long gymId) {
+    public void setGymId(Long gymId) {
         this.gymId = gymId;
     }
 
