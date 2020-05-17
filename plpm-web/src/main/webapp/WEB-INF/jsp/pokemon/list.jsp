@@ -5,26 +5,27 @@
 <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%--TODO: this will be change once page template is created --%>
 
-<fmt:message key="navigation.badges" var="title"/>
+<fmt:message key="navigation.pokemon" var="title"/>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <my:pagetemplate title="Pokemons">
     <jsp:attribute name="body">
         <p>
-		<my:a href="/pokemon/create" class="btn btn-success">
+		<my:a href="/pokemon/create" class="btn create-button">
 			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-			<fmt:message key="badge.create"/>
+			<fmt:message key="pokemon.create"/>
 		</my:a>
         </p>
 
 <table class="table">
     <thead>
     <tr>
-        <th>Id</th>
-        <th>Nickname</th>
-        <th>Name</th>
-        <th>Level</th>
-        <th>Type</th>
-        <th>Trainer</th>
+        <th><f:message key="pokemon.id"/></th>
+                        <th><f:message key="pokemon.nickname"/></th>
+                        <th><f:message key="pokemon.name"/></th>
+                        <th><f:message key="pokemon.level"/></th>
+                        <th><f:message key="pokemon.type"/></th>
+                        <th><f:message key="pokemon.trainer"/></th>
+                        <th><f:message key="pokemon.actions"/></th>
     </tr>
     </thead>
     <tbody>
@@ -38,9 +39,20 @@
             <td><my:a href="/trainer/view/${pokemon.trainer.id}">${pokemon.trainer.nickname}</my:a></td>
             <td>
                 <div class="btn-group" role="group" aria-label="Basic example">
-                    <my:a href="/pokemon/view/${pokemon.id}" class="btn btn-primary">Detail</my:a>
+                    <my:a href="/pokemon/view/${pokemon.id}" class="btn details-button">
+                    			                    <span class="fa fa-eye" aria-hidden="true"></span>
+                    			                    <fmt:message key="action.detail"/>
+                    		                    </my:a>
+                    <sec:authorize access="hasRole('ROLE_ADMIN')">
+                        <form method="post" action="${pageContext.request.contextPath}/pokemon/delete/${pokemon.id}">
+                            <button class="btn delete-button"><i class="fa fa-eye"> <fmt:message key="action.delete"/></i></button>
+                        </form>
+                    </sec:authorize>
                     <c:if test="${pokemon.trainer == null}">
-                        <my:a href="/pokemon/catch/${pokemon.id}" class="btn btn-primary">Catch</my:a>
+                        <form method="post" action="${pageContext.request.contextPath}/pokemon/catch/${pokemon.id}">
+                            <button class="btn details-button"><i class="glyphicon glyphicon-camera">
+                            <fmt:message key="action.catch"/></i></button>
+                        </form>
                     </c:if>
                 </div>
             </td>
