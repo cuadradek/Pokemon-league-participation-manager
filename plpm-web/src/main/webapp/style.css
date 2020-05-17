@@ -14,3 +14,38 @@ body {
     font-family: Helvetica, sans-serif;
     background-color: azure;
 }
+
+.details-button {
+    background-color: white;
+    color: #008CBA;/* Blue */
+    transition-duration: 0.4s;
+}
+
+.details-button:hover {
+    background-color: #008CBA;
+    color: white;
+}
+
+.delete-button {
+    background-color: white;
+    color: #f44336;/* Red */
+    transition-duration: 0.4s;
+}
+
+.delete-button:hover {
+
+    background-color: #f44336;
+    color: white;
+}
+
+.create-button {
+    background-color: white;
+    color: #4CAF50; /* Green */
+    transition-duration: 0.4s;
+}
+
+.create-button:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+
