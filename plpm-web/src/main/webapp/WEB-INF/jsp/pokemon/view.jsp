@@ -2,14 +2,12 @@
 <%@ taglib tagdir="/WEB-INF/tags" prefix="my" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Pokemon</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
-</head>
-<body>
+<fmt:message key="pokemon.info.title" var="title"/>
+<my:pagetemplate title="${title}">
+    <jsp:attribute name="body">
+        <table style="width: 50%" class="table">
+            <tbody>
 <table class="table">
     <caption>Pokemon info</caption>
     <tbody>
@@ -20,9 +18,19 @@
         <tr><th>Type</th><td><c:out value="${pokemon.type}"/></td></tr>
         <tr><th>Trainer</th><td><my:a href="/trainer/view/${pokemon.trainer.id}">${pokemon.trainer.nickname}</my:a></td></tr>
         <c:if test="${pokemon.trainer == null}">
-            <tr><th><btn class="btn btn-primary">Catch</btn></th></tr>
-        </c:if>
+            <form method="post" action="${pageContext.request.contextPath}/pokemon/catch/${pokemon.id}">
+                <button class="btn btn-primary"><i class="glyphicon glyphicon-camera">
+                <fmt:message key="action.catch"/></i></button>
+            </form>
+         </c:if>
+         <sec:authorize access="hasRole('ROLE_ADMIN')">
+             <my:a href="/pokemon/edit/${pokemon.id}" class="btn btn-primary">
+                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                <fmt:message key="action.edit"/>
+             </my:a>
+         </sec:authorize>
     </tbody>
-</table>
-</body>
-</html>
+            </table>
+        </jsp:attribute>
+    </my:pagetemplate>
+

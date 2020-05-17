@@ -14,6 +14,8 @@ public interface PokemonFacade {
 
     void changeLevel(PokemonChangeLevelDTO pokemonChangeLevelDTO);
 
+    void updatePokemon(PokemonDTO pokemonDTO);
+
     void deletePokemon(Long id);
 
     PokemonDTO getPokemonById(Long id);
