@@ -33,6 +33,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,12 +70,16 @@ public class TrainerController {
     }
 
     @GetMapping("/view/{id}")
-    public String view(@PathVariable long id, Model model) {
+    public String view(@PathVariable long id, Model model, Principal principal) {
         TrainerDTO trainerDTO = trainerFacade.findTrainerById(id);
+
         model.addAttribute("trainer", trainerDTO);
         model.addAttribute("gym", gymFacade.findGymByTrainer(id));
         model.addAttribute("pokemons", pokemonFacade.getPokemonByTrainer(trainerDTO));
         model.addAttribute("badges", badgeFacade.getBadgesByTrainerId(id));
+
+        if (principal.getName().equals(trainerDTO.getNickname()))
+            model.addAttribute("viewSelf", true);
 
         return "trainer/view";
     }
@@ -170,12 +175,13 @@ public class TrainerController {
     }
 
     @GetMapping("/edit")
-    public String editSelf(Model model) {
+    public String editSelf(Model model, Principal principal) {
         TrainerChangePasswordDTO passwordForm = new TrainerChangePasswordDTO();
-        passwordForm.setId(1L); //TODO
+        Long id = trainerFacade.findTrainerByNickname(principal.getName()).getId();
+        passwordForm.setId(id);
         model.addAttribute("passwordForm", passwordForm);
 
-        return edit(model, 1L); //TODO get id of logged in user
+        return edit(model, id);
     }
 
     @GetMapping("/edit/{id}")
@@ -228,9 +234,9 @@ public class TrainerController {
 
 
     @GetMapping("/change-password")
-    public String changePassword(Model model) {
+    public String changePassword(Model model, Principal principal) {
         TrainerChangePasswordDTO passwordForm = new TrainerChangePasswordDTO();
-        passwordForm.setId(1L); //TODO
+        passwordForm.setId(trainerFacade.findTrainerByNickname(principal.getName()).getId());
         model.addAttribute("passwordForm", passwordForm);
         return "trainer/change-password";
     }
