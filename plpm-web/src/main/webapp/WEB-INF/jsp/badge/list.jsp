@@ -4,6 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 
 
@@ -12,13 +13,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <my:pagetemplate title="${title}">
     <jsp:attribute name="body">
-        <!-- TODO: hide button for not logged in user -->
-        <p>
-		<my:a href="/badge/create" class="btn create-button">
-			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-			<fmt:message key="badge.create"/>
-		</my:a>
-        </p>
+        <!-- Display button only for admin or gym leader -->
+        <!-- Gym leader can only award badges from his own gym (and can't take them back) -->
+        <c:if test="${not empty creator}">
+            <p>
+                <form method="get" action="${pageContext.request.contextPath}/badge/create">
+                    <button class="btn create-button"><i class="glyphicon glyphicon-plus"> <fmt:message key="action.create"/></i></button>
+                </form>
+            </p>
+        </c:if>
 
 	<table class="table table-align-left table-striped">
         <thead>
@@ -26,8 +29,6 @@
             <th class="col-xs-1 col-md-1 col-lg-1"><fmt:message key="badge.id"/></th>
             <th><fmt:message key="badge.trainer"/></th>
             <th><fmt:message key="badge.gym"/></th>
-
-            <!-- TODO: try to hide from non admin -->
             <th><fmt:message key="badge.actions"/></th>
         </tr>
         </thead>
@@ -44,11 +45,12 @@
 			                    <span class="fa fa-eye" aria-hidden="true"></span>
 			                    <fmt:message key="action.detail"/>
 		                    </my:a>
-                            <!-- TODO: try to hide from non admin -->
-                            <my:a href="/badge/delete/${badge.id}" class="btn delete-button" type="submit">
-			                    <span class="fa fa-trash" aria-hidden="true"></span>
-			                    <fmt:message key="action.delete"/>
-		                    </my:a>
+                            <!-- Hide delete from non admins -->
+                            <sec:authorize access="hasRole('ROLE_ADMIN')">
+                                <form method="post" action="${pageContext.request.contextPath}/badge/delete/${badge.id}">
+                                    <button class="btn delete-button"><i class="fa fa-trash"> <fmt:message key="action.delete"/></i></button>
+                                </form>
+                            </sec:authorize>
                         </div>
                     </td>
                 </tr>
