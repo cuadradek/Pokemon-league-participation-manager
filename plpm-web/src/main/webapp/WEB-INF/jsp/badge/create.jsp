@@ -40,7 +40,7 @@
 		    <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <button class="btn btn-primary" type="submit">
-                        <fmt:message key="badge.create"/>
+                        <fmt:message key="action.create"/>
                     </button>
                 </div>
             </div>
