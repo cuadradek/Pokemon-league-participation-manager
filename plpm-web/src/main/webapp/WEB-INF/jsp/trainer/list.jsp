@@ -6,6 +6,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 
 <my:pagetemplate title="Trainers">
@@ -14,12 +15,12 @@
         <table class="table table-align-left table-striped">
             <thead>
             <tr>
-                <th>Id</th>
-                <th>Nickname</th>
-                <th>First name</th>
-                <th>Last name</th>
-                <th>Birth date</th>
-                <th>Detail</th>
+                <th><f:message key="trainer.id"/></th>
+                <th><f:message key="trainer.nickname"/></th>
+                <th><f:message key="trainer.firstname"/></th>
+                <th><f:message key="trainer.lastname"/></th>
+                <th><f:message key="trainer.birthdate"/></th>
+                <th><f:message key="trainer.detail"/></th>
             </tr>
             </thead>
             <tbody>

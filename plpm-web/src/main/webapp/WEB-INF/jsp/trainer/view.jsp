@@ -4,23 +4,23 @@
 <%@ taglib tagdir="/WEB-INF/tags" prefix="my" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <my:pagetemplate title="Trainer info">
     <jsp:attribute name="body">
         <c:choose>
             <c:when test="${not empty viewSelf}">
-<%--               <my:a href="/trainer/edit" class="btn btn-primary">Edit</my:a>--%>
                 <p>
                     <my:a href="/trainer/edit" class="btn btn-success">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                        Edit
+                        <f:message key="trainer.edit"/>
                     </my:a>
                 </p>
                 <p>
                     <my:a href="/trainer/change-password" class="btn btn-success">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                        Change password
+                        <f:message key="trainer.changepassword"/>
                     </my:a>
                 </p>
 <%--               <my:a href="/trainer/change-password" class="btn btn-primary">Change password</my:a>--%>
@@ -30,7 +30,7 @@
                     <p>
                     <my:a href="/trainer/edit/${trainer.id}" class="btn btn-success">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                        Edit
+                        <f:message key="trainer.edit"/>
                     </my:a>
                     </p>
 <%--                    <my:a href="/trainer/edit/${trainer.id}" class="btn btn-primary">Edit</my:a>--%>
@@ -40,25 +40,25 @@
 
         <table style="width: 50%" class="table">
             <tbody>
-                <tr><th>Id</th><td>${trainer.id}</td></tr>
-                <tr><th>Nickname</th><td><c:out value="${trainer.nickname}"/></td></tr>
-                <tr><th>First name</th><td><c:out value="${trainer.firstName}"/></td></tr>
-                <tr><th>Last name</th><td><c:out value="${trainer.lastName}"/></td></tr>
-                <tr><th>Birth date</th><td><fmt:formatDate value="${trainer.birthDate}" pattern="yyyy-MM-dd"/></td></tr>
-                <tr><th>Gym</th><td><my:a href="/gym/view/${gym.id}">${gym.city}</my:a></td></tr>
+                <tr><th><f:message key="trainer.id"/></th><td>${trainer.id}</td></tr>
+                <tr><th><f:message key="trainer.nickname"/></th><td><c:out value="${trainer.nickname}"/></td></tr>
+                <tr><th><f:message key="trainer.firstname"/></th><td><c:out value="${trainer.firstName}"/></td></tr>
+                <tr><th><f:message key="trainer.lastname"/></th><td><c:out value="${trainer.lastName}"/></td></tr>
+                <tr><th><f:message key="trainer.birthdate"/></th><td><fmt:formatDate value="${trainer.birthDate}" pattern="yyyy-MM-dd"/></td></tr>
+                <tr><th><f:message key="trainer.gym"/></th><td><my:a href="/gym/view/${gym.id}">${gym.city}</my:a></td></tr>
             </tbody>
         </table>
 
-        <h2>Pokemons</h2>
+        <h2><f:message key="navigation.pokemons"/></h2>
         <table class="table">
             <thead>
             <tr>
-                <th>Id</th>
-                <th>Nickname</th>
-                <th>Name</th>
-                <th>Level</th>
-                <th>Type</th>
-                <th>Detail</th>
+                <th><f:message key="pokemon.id"/></th>
+                <th><f:message key="pokemon.nickname"/></th>
+                <th><f:message key="pokemon.name"/></th>
+                <th><f:message key="pokemon.level"/></th>
+                <th><f:message key="pokemon.type"/></th>
+                <th><f:message key="pokemon.detail"/></th>
             </tr>
             </thead>
             <tbody>
@@ -80,12 +80,12 @@
             </tbody>
         </table>
 
-        <h2>Badges</h2>
+        <h2><f:message key="navigation.badges"/></h2>
         <table style="width: 50%" class="table">
             <thead>
             <tr>
-                <th>Badge id</th>
-                <th>Gym</th>
+                <th><f:message key="trainer.badgeid"/></th>
+                <th><f:message key="trainer.gym"/></th>
             </tr>
             </thead>
             <tbody>
