@@ -1,3 +1,4 @@
+<%--@author Veronika Loukotova--%>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="utf-8" trimDirectiveWhitespaces="false" session="false" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="my" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -45,18 +46,6 @@
                 <form:errors path="name" cssClass="help-block"/>
             </div>
         </div>
-
-         <sec:authorize access="hasRole('ROLE_ADMIN')">
-        <c:if test="${not empty editForm.id}">
-        <div class="form-group">
-            <form:label path="level" cssClass="col-sm-2 control-label">Level</form:label>
-                    <div class="col-sm-10">
-                        <form:input path="level" cssClass="form-control"/>
-                        <form:errors path="level" cssClass="help-block"/>
-                    </div>
-                </div>
-              </c:if>
-              </sec:authorize>
 
         <div class="form-group">
             <form:label path="type" cssClass="col-sm-2 control-label">Type</form:label>

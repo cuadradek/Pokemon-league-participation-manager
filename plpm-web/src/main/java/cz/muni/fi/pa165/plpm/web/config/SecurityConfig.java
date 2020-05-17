@@ -11,6 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+/**
+ * @author: Veronika Loukotova
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -33,15 +36,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/trainer/edit/*").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/pokemon/edit/*").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/badge/edit/**").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/badge/delete/**").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/gym/delete/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/*").authenticated()
+                .antMatchers("/**/edit/*").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/**/delete/*").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/gym/create/**").access("hasRole('ROLE_ADMIN')")
                 .and().formLogin()
                 .and().logout().logoutUrl("/logout").logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
+                .and().exceptionHandling().accessDeniedPage("/Access_Denied")
                 .and().csrf().disable();
     }
 }
