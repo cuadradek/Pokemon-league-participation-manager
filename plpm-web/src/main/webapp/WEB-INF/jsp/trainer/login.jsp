@@ -1,3 +1,5 @@
+<%--@author Radoslav Cerhak--%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="my" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
