@@ -33,10 +33,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/").authenticated()
+//                .antMatchers("/").authenticated()
                 .antMatchers("/trainer/edit/**").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/badge/delete/**").access("hasRole('ROLE_ADMIN')")
                 .and().formLogin()
+                .and().logout().logoutUrl("/logout").logoutSuccessUrl("/")
                 .and().csrf().disable();
     }
 }

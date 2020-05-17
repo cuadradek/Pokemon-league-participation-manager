@@ -51,3 +51,11 @@ curl --request GET --url http://localhost:8080/pa165/rest/pokemons/get-by-traine
 curl --request GET --url http://localhost:8080/pa165/rest/pokemons
 ```
 ### Default users
+```
+nickname: admin
+password: admin
+```
+```
+nickname: user
+password: user
+```

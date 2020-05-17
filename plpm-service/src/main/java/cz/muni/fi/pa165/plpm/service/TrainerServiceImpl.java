@@ -92,7 +92,7 @@ public class TrainerServiceImpl implements TrainerService {
     @Override
     public void deleteTrainer(Trainer trainer) {
         Gym gym = gymService.findGymByTrainer(trainer);
-        gymService.removeGym(gym);
+        if (gym != null) gymService.removeGym(gym);
 
         List<Badge> badges = badgeService.getBadgesByTrainer(trainer);
         for (Badge badge : badges) {
@@ -103,7 +103,6 @@ public class TrainerServiceImpl implements TrainerService {
         for (Pokemon pokemon : pokemons) {
             pokemon.setTrainer(null);
         }
-
 
         trainerDao.deleteTrainer(trainer);
     }

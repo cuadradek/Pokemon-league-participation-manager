@@ -1,14 +1,11 @@
 package cz.muni.fi.pa165.plpm.web.controllers;
 
-import cz.muni.fi.pa165.plpm.dto.BadgeDTO;
 import cz.muni.fi.pa165.plpm.dto.TrainerAuthenticateDTO;
 import cz.muni.fi.pa165.plpm.dto.TrainerChangePasswordDTO;
 import cz.muni.fi.pa165.plpm.dto.TrainerCreateDTO;
 import cz.muni.fi.pa165.plpm.dto.TrainerDTO;
 import cz.muni.fi.pa165.plpm.dto.TrainerUpdateInfoDTO;
-import cz.muni.fi.pa165.plpm.entity.Trainer;
 import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
-import cz.muni.fi.pa165.plpm.service.config.ServiceConfiguration;
 import cz.muni.fi.pa165.plpm.service.facade.BadgeFacade;
 import cz.muni.fi.pa165.plpm.service.facade.GymFacade;
 import cz.muni.fi.pa165.plpm.service.facade.PokemonFacade;
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -27,18 +23,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.ServletRequest;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
+/**
+ * @author Radoslav Cerhak
+ */
 @Controller
 @RequestMapping("/trainer")
 public class TrainerController {
@@ -68,74 +63,70 @@ public class TrainerController {
         return "trainer/list";
     }
 
+    @GetMapping("/view")
+    public String view(Model model, Principal principal) {
+        TrainerDTO trainerDTO = trainerFacade.findTrainerByNickname(principal.getName());
+
+        model.addAttribute("viewSelf", true);
+
+        return view(trainerDTO, model);
+    }
+
     @GetMapping("/view/{id}")
-    public String view(@PathVariable long id, Model model) {
+    public String view(@PathVariable long id, Model model, Principal principal) {
         TrainerDTO trainerDTO = trainerFacade.findTrainerById(id);
+
+        if (principal.getName().equals(trainerDTO.getNickname()))
+            model.addAttribute("viewSelf", true);
+
+        return view(trainerDTO, model);
+    }
+
+    private String view(TrainerDTO trainerDTO, Model model) {
         model.addAttribute("trainer", trainerDTO);
-        model.addAttribute("gym", gymFacade.findGymByTrainer(id));
+        model.addAttribute("gym", gymFacade.findGymByTrainer(trainerDTO.getId()));
         model.addAttribute("pokemons", pokemonFacade.getPokemonByTrainer(trainerDTO));
-        model.addAttribute("badges", badgeFacade.getBadgesByTrainerId(id));
+        model.addAttribute("badges", badgeFacade.getBadgesByTrainerId(trainerDTO.getId()));
 
         return "trainer/view";
     }
-
-//    @GetMapping("/list/filter")
-//    public String listByNickname(@RequestParam(required = false) String nickname,
-//                                 @RequestParam(required = false) String firstName,
-//                                 @RequestParam(required = false) String lastName,
-//                                 Model model) {
-//        List<TrainerDTO> trainers = new ArrayList<>();
-//        if (nickname != null) trainers.add(trainerFacade.findTrainerByNickname(nickname));
-//        if (firstName != null) trainers
-//        TrainerDTO trainerDTO = trainerFacade.findTrainerByNickname(nickname);
-//        if (trainerDTO != null) trainers.add(trainerDTO);
-//
-//        model.addAttribute("trainers", trainers);
-//        return "trainer/list";
-//    }
-
-//    @GetMapping("/listt")
-//    public String listByFirstName(@RequestParam String firstName, Model model) {
-//        model.addAttribute("trainers", trainerFacade.findTrainerByFirstName(firstName));
-//        return "trainer/list";
-//    }
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable long id, UriComponentsBuilder uriBuilder, RedirectAttributes redirectAttributes) {
         trainerFacade.deleteTrainer(id);
         redirectAttributes.addFlashAttribute("alert_success", "Trainer was deleted.");
 
-        return "redirect:" + uriBuilder.path("/trainer/view").toUriString();
+        return "redirect:" + uriBuilder.path("/trainer/list").toUriString();
     }
 
-    @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("loginForm", new TrainerAuthenticateDTO());
-        return "trainer/login";
-    }
-
-    @PostMapping("/login")
-    public String login(@Valid @ModelAttribute("loginForm") TrainerAuthenticateDTO loginForm,
-                        BindingResult bindingResult,
-                        Model model,
-                        UriComponentsBuilder uriBuilder,
-                        RedirectAttributes redirectAttributes) {
-        model.addAttribute("loginForm", new TrainerAuthenticateDTO());
-        if (bindingResult.hasErrors()) {
-            for (FieldError fe : bindingResult.getFieldErrors()) {
-                model.addAttribute(fe.getField() + "_error", true);
-            }
-            return "trainer/login";
-        }
-
-        if (trainerFacade.authenticate(loginForm)) {
-            redirectAttributes.addFlashAttribute("alert_success", "Successful login.");
-            return "redirect:" + uriBuilder.path("/").toUriString();
-        } else {
-            model.addAttribute("alert_warning", "Unsuccessful login.");
-            return "trainer/login";
-        }
-    }
+//    @GetMapping("/login")
+//    public String login(Model model) {
+//        model.addAttribute("loginForm", new TrainerAuthenticateDTO());
+//        return "trainer/login";
+//    }
+//
+//    @PostMapping("/login")
+//    public String login(@Valid @ModelAttribute("loginForm") TrainerAuthenticateDTO loginForm,
+//                        BindingResult bindingResult,
+//                        Model model,
+//                        UriComponentsBuilder uriBuilder,
+//                        RedirectAttributes redirectAttributes) {
+//        model.addAttribute("loginForm", new TrainerAuthenticateDTO());
+//        if (bindingResult.hasErrors()) {
+//            for (FieldError fe : bindingResult.getFieldErrors()) {
+//                model.addAttribute(fe.getField() + "_error", true);
+//            }
+//            return "trainer/login";
+//        }
+//
+//        if (trainerFacade.authenticate(loginForm)) {
+//            redirectAttributes.addFlashAttribute("alert_success", "Successful login.");
+//            return "redirect:" + uriBuilder.path("/").toUriString();
+//        } else {
+//            model.addAttribute("alert_warning", "Unsuccessful login.");
+//            return "trainer/login";
+//        }
+//    }
 
     @GetMapping("/register")
     public String register(Model model) {
@@ -166,16 +157,17 @@ public class TrainerController {
         }
 
         redirectAttributes.addFlashAttribute("alert_success", "Successful registration. You can login now.");
-        return "redirect:" + uriBuilder.path("/trainer/login").toUriString();
+        return "redirect:" + uriBuilder.path("/login").toUriString();
     }
 
     @GetMapping("/edit")
-    public String editSelf(Model model) {
+    public String editSelf(Model model, Principal principal) {
         TrainerChangePasswordDTO passwordForm = new TrainerChangePasswordDTO();
-        passwordForm.setId(1L); //TODO
+        Long id = trainerFacade.findTrainerByNickname(principal.getName()).getId();
+        passwordForm.setId(id);
         model.addAttribute("passwordForm", passwordForm);
 
-        return edit(model, 1L); //TODO get id of logged in user
+        return edit(model, id);
     }
 
     @GetMapping("/edit/{id}")
@@ -228,9 +220,9 @@ public class TrainerController {
 
 
     @GetMapping("/change-password")
-    public String changePassword(Model model) {
+    public String changePassword(Model model, Principal principal) {
         TrainerChangePasswordDTO passwordForm = new TrainerChangePasswordDTO();
-        passwordForm.setId(1L); //TODO
+        passwordForm.setId(trainerFacade.findTrainerByNickname(principal.getName()).getId());
         model.addAttribute("passwordForm", passwordForm);
         return "trainer/change-password";
     }

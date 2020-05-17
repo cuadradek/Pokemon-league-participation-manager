@@ -6,6 +6,7 @@
 <%@ taglib tagdir="/WEB-INF/tags" prefix="my" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 
 <!DOCTYPE html>
@@ -45,18 +46,7 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <c:choose>
-                    <c:when test="${empty authenticatedUser}">
-                        <li>
-                            <my:a href="/"><f:message key="navigation.login"/></my:a>
-                        </li>
-                    </c:when>
-                    <c:otherwise>
-                        <li>
-                            <my:a href="/trainer"><f:message key="navigation.personalpage"/></my:a>
-                        </li>
-                    </c:otherwise>
-                </c:choose>
+
                 <li class="${trainer_section ? 'active' : ''}">
                     <my:a href="/trainer/list"><f:message key="navigation.trainers"/></my:a>
                 </li>
@@ -72,20 +62,23 @@
 
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <c:choose>
-                    <c:when test="${not empty authenticatedUser}">
-                        <li>
-                            <p class="navbar-text">
-                                <f:message key="navigation.loggedas"/>
-                                <c:out value=" "/>
-                                <strong><c:out value="${authenticatedUser.nickname}"/></strong>
-                            </p>
-                        </li>
-                        <li>
-                            <my:a href="/logout"><f:message key="navigation.logout"/></my:a>
-                        </li>
-                    </c:when>
-                </c:choose>
+                <sec:authorize access="isAnonymous()">
+                    <li>
+                        <my:a href="/login"><f:message key="navigation.login"/></my:a>
+                    </li>
+                    <li>
+                        <my:a href="/trainer/register"><f:message key="navigation.register"/></my:a>
+                    </li>
+                </sec:authorize>
+
+                <sec:authorize access="isAuthenticated()">
+                    <li>
+                        <my:a href="/trainer/view"><f:message key="navigation.myaccount"/></my:a>
+                    </li>
+                    <li>
+                        <my:a href="/logout"><f:message key="navigation.logout"/></my:a>
+                    </li>
+                </sec:authorize>
             </ul>
         </div><!--/.nav-collapse -->
     </div>

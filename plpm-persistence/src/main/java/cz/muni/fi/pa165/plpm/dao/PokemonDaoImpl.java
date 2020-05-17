@@ -68,7 +68,7 @@ public class PokemonDaoImpl implements PokemonDao {
 
     @Override
     public void remove(Pokemon pokemon) {
-        em.remove(pokemon);
+        em.remove(em.merge(pokemon));
     }
 
     @Override
