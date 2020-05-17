@@ -37,6 +37,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/pokemon/edit/*").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/badge/edit/**").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/badge/delete/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/gym/delete/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/gym/create/**").access("hasRole('ROLE_ADMIN')")
                 .and().formLogin()
                 .and().logout().logoutUrl("/logout").logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
