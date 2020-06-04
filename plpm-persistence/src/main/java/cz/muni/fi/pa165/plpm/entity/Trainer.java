@@ -124,7 +124,7 @@ public class Trainer {
             return false;
         Trainer trainer = (Trainer) o;
 
-       return nickname == null ? trainer.getNickname() == null : nickname.equals(trainer.getNickname());
+        return Objects.equals(nickname, trainer.getNickname());
     }
 
     @Override
