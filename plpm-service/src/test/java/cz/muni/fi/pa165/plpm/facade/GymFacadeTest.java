@@ -68,6 +68,7 @@ public class GymFacadeTest extends AbstractTestNGSpringContextTests {
         trainerDTO.setLastName("Lennon");
         trainerDTO.setNickname("Johny");
         trainerDTO.setPassword("1-z-5");
+        trainerDTO.setActionPoints(5);
 
         gymDTO = new GymDTO();
         gymDTO.setId(1L);
@@ -83,6 +84,7 @@ public class GymFacadeTest extends AbstractTestNGSpringContextTests {
         trainer.setLastName("Lennon");
         trainer.setNickname("Johny");
         trainer.setPassword("1-z-5");
+        trainer.setActionPoints(5);
 
         gym = new Gym();
         gym.setId(1L);

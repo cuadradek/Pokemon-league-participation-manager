@@ -22,6 +22,9 @@ import java.util.List;
 @Service
 public class TrainerServiceImpl implements TrainerService {
 
+    private static final int INITIAL_ACTION_POINTS = 5;
+    private static final int NEW_ACTION_POINTS_PER_SCHEDULING = 2;
+
     @Autowired
     private TrainerDao trainerDao;
 
@@ -42,6 +45,8 @@ public class TrainerServiceImpl implements TrainerService {
         }
 
         trainer.setPassword(new BCryptPasswordEncoder().encode(trainer.getPassword()));
+        if (trainer.getActionPoints() == null) trainer.setActionPoints(INITIAL_ACTION_POINTS);
+
         try {
             trainerDao.createTrainer(trainer);
         } catch (ConstraintViolationException ex) {
@@ -68,9 +73,10 @@ public class TrainerServiceImpl implements TrainerService {
             throw new PlpmServiceException("Nickname already exists.");
         }
 
-        //isAdmin and password must be set from storedTrainer, because it wasn't updated
+        //isAdmin, password and action points must be set from storedTrainer, because it wasn't updated
         trainer.setAdmin(storedTrainer.isAdmin());
         trainer.setPassword(storedTrainer.getPassword());
+        trainer.setActionPoints(storedTrainer.getActionPoints());
 
         try {
             trainerDao.updateTrainer(trainer);
@@ -78,6 +84,8 @@ public class TrainerServiceImpl implements TrainerService {
             throw new PlpmServiceException("Constraint violation.");
         }
     }
+
+
 
     @Override
     public boolean changePassword(Trainer trainer, String oldPassword, String newPassword) {
@@ -87,6 +95,16 @@ public class TrainerServiceImpl implements TrainerService {
         trainerDao.updateTrainer(trainer);
 
         return true;
+    }
+
+    @Override
+    public void addActionPoints(Trainer trainer, int actionPoints) {
+        int newValueOfActionPoints = trainer.getActionPoints() + actionPoints;
+        if (newValueOfActionPoints < 0)
+            throw new PlpmServiceException("You don't have enough points.");
+
+        trainer.setActionPoints(newValueOfActionPoints);
+        trainerDao.updateTrainer(trainer);
     }
 
     @Override
@@ -135,6 +153,13 @@ public class TrainerServiceImpl implements TrainerService {
     @Override
     public boolean isAdmin(Trainer trainer) {
         return findTrainerById(trainer.getId()).isAdmin();
+    }
+
+    @Override
+    public void addActionPointsToEveryTrainer() {
+        for (Trainer trainer : findAllTrainers()) {
+            addActionPoints(trainer, NEW_ACTION_POINTS_PER_SCHEDULING);
+        }
     }
 
 }

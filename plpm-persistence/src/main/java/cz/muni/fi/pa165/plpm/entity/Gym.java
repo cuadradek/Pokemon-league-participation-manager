@@ -72,13 +72,13 @@ public class Gym {
         if (o == null) return false;
         if (!(o instanceof Gym)) return false;
         Gym gym = (Gym) o;
-        return city.equals(gym.city) &&
-                type == gym.type;
+        return Objects.equals(leader, gym.getLeader()) && Objects.equals(city, gym.getCity())
+                && type == gym.getType();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(city, type);
+        return Objects.hash(leader, city, type);
     }
 
     public static class Builder {

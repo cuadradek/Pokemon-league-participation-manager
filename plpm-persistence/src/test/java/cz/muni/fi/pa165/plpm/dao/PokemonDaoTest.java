@@ -5,6 +5,7 @@ import cz.muni.fi.pa165.plpm.entity.Pokemon;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 import cz.muni.fi.pa165.plpm.enums.PokemonType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -28,6 +29,7 @@ import java.util.List;
 @ContextConfiguration(classes = PersistenceSampleApplicationContext.class)
 @TestExecutionListeners(TransactionalTestExecutionListener.class)
 @Transactional
+@Rollback
 public class PokemonDaoTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
@@ -49,6 +51,7 @@ public class PokemonDaoTest extends AbstractTestNGSpringContextTests {
         t1.setLastName("Novy");
         t1.setPassword("123");
         t1.setBirthDate(new Date());
+        t1.setActionPoints(5);
 
         t2 = new Trainer();
         t2.setFirstName("Andrej");
@@ -56,6 +59,7 @@ public class PokemonDaoTest extends AbstractTestNGSpringContextTests {
         t2.setLastName("Stary");
         t2.setPassword("123");
         t2.setBirthDate(new Date());
+        t2.setActionPoints(5);
 
         p1 = new Pokemon();
         p1.setName("Pikachu");

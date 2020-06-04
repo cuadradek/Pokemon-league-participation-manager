@@ -84,6 +84,7 @@ public class BadgeServiceTest extends AbstractTestNGSpringContextTests {
         trainer1.setLastName("Tsutsuji");
         trainer1.setBirthDate(new Date());
         trainer1.setPassword("123");
+        trainer1.setActionPoints(5);
 
         trainer2 = new Trainer();
         trainer2.setId(2L);
@@ -92,6 +93,7 @@ public class BadgeServiceTest extends AbstractTestNGSpringContextTests {
         trainer2.setLastName("Senri");
         trainer2.setPassword("123");
         trainer2.setBirthDate(new Date());
+        trainer2.setActionPoints(5);
 
         trainer3 = new Trainer();
         trainer1.setId(3L);
@@ -100,6 +102,7 @@ public class BadgeServiceTest extends AbstractTestNGSpringContextTests {
         trainer3.setLastName("Satoshi");
         trainer3.setBirthDate(new Date());
         trainer3.setPassword("123");
+        trainer3.setActionPoints(5);
 
         gym1 = new Gym();
         gym1.setId(1L);

@@ -89,12 +89,12 @@ public class Pokemon {
         if (!(o instanceof Pokemon)) return false;
         Pokemon pokemon = (Pokemon) o;
 
-        return nickname.equals(pokemon.getNickname());
+        return Objects.equals(nickname, pokemon.getNickname());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, nickname, trainer, level, type);
+        return Objects.hash(nickname);
     }
 
     public static class Builder {

@@ -41,8 +41,7 @@ public class PokemonFacadeImpl implements PokemonFacade {
         if (pokemon == null) {
             throw new PlpmServiceException("Pokemon with id " + pokemonChangeTrainerDTO.getId() + " doesn't exist.");
         }
-        pokemon.setTrainer(beanMappingService.mapTo(pokemonChangeTrainerDTO.getTrainer(), Trainer.class));
-        pokemonService.updatePokemonInfo(pokemon);
+        pokemonService.changeTrainer(pokemon, beanMappingService.mapTo(pokemonChangeTrainerDTO.getTrainer(), Trainer.class));
     }
 
     @Override
@@ -53,6 +52,15 @@ public class PokemonFacadeImpl implements PokemonFacade {
         }
         pokemon.setLevel(pokemonChangeLevelDTO.getLevel());
         pokemonService.updatePokemonInfo(pokemon);
+    }
+
+    @Override
+    public void trainPokemon(Long id, String trainerNickname) {
+        Pokemon pokemon = pokemonService.findPokemonById(id);
+        if (pokemon == null) {
+            throw new PlpmServiceException("Pokemon with id " + id + " doesn't exist.");
+        }
+        pokemonService.trainPokemon(pokemon, trainerService.findTrainerByNickname(trainerNickname));
     }
 
     @Override

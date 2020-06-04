@@ -14,6 +14,8 @@ public interface PokemonFacade {
 
     void changeLevel(PokemonChangeLevelDTO pokemonChangeLevelDTO);
 
+    void trainPokemon(Long id, String trainerNickname);
+
     void updatePokemon(PokemonDTO pokemonDTO);
 
     void deletePokemon(Long id);

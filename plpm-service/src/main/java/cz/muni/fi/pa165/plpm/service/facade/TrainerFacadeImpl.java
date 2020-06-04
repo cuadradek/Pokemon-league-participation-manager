@@ -93,4 +93,9 @@ public class TrainerFacadeImpl implements TrainerFacade {
     public boolean isAdmin(TrainerDTO trainerDTO) {
         return trainerService.isAdmin(beanMappingService.mapTo(trainerDTO, Trainer.class));
     }
+
+    @Override
+    public void addActionPointsToEveryTrainer() {
+        trainerService.addActionPointsToEveryTrainer();
+    }
 }

@@ -70,6 +70,7 @@ public class TrainerFacadeTest extends AbstractTestNGSpringContextTests {
         trainerAshDTO.setLastName(trainerAsh.getLastName());
         trainerAshDTO.setBirthDate(trainerAsh.getBirthDate());
         trainerAshDTO.setPassword(trainerAsh.getPassword());
+        trainerAshDTO.setActionPoints(trainerAsh.getActionPoints());
 
         trainerAshCreateDTO = new TrainerCreateDTO();
         trainerAshCreateDTO.setNickname(trainerAsh.getNickname());

@@ -63,6 +63,7 @@ public class GymServiceTest extends AbstractTestNGSpringContextTests {
         trainer1.setId(1L);
         trainer1.setAdmin(true);
         trainer1.setPassword("1ab");
+        trainer1.setActionPoints(5);
 
         trainer2 = new Trainer();
         trainer2.setBirthDate(new Date(10, 2, 1955));
@@ -71,6 +72,7 @@ public class GymServiceTest extends AbstractTestNGSpringContextTests {
         trainer2.setNickname("Dingo");
         trainer2.setPassword("ab1");
         trainer2.setId(2L);
+        trainer2.setActionPoints(5);
 
         gym1 = new Gym();
         gym1.setId(1L);

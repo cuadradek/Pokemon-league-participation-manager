@@ -36,4 +36,6 @@ public interface TrainerFacade {
     boolean authenticate(TrainerAuthenticateDTO trainerAuthenticateDTO);
 
     boolean isAdmin(TrainerDTO trainerDTO);
+
+    void addActionPointsToEveryTrainer();
 }

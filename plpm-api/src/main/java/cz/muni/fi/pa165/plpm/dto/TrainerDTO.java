@@ -21,6 +21,8 @@ public class TrainerDTO {
 
     private Date birthDate;
 
+    private Integer actionPoints;
+
     private boolean isAdmin;
 
     public Long getId() {
@@ -71,6 +73,14 @@ public class TrainerDTO {
         this.birthDate = birthDate;
     }
 
+    public Integer getActionPoints() {
+        return actionPoints;
+    }
+
+    public void setActionPoints(Integer actionPoints) {
+        this.actionPoints = actionPoints;
+    }
+
     public boolean isAdmin() {
         return isAdmin;
     }
@@ -90,18 +100,5 @@ public class TrainerDTO {
     @Override
     public int hashCode() {
         return Objects.hash(nickname);
-    }
-
-    @Override
-    public String toString() {
-        return "TrainerDTO{" +
-                "id=" + id +
-                ", nickname='" + nickname + '\'' +
-                ", password='" + password + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", birthDate=" + birthDate +
-                ", isAdmin=" + isAdmin +
-                '}';
     }
 }

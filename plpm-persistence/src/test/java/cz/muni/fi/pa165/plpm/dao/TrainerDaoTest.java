@@ -4,6 +4,7 @@ import cz.muni.fi.pa165.plpm.PersistenceSampleApplicationContext;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -25,6 +26,7 @@ author: Veronika Loukotová
 @ContextConfiguration(classes = PersistenceSampleApplicationContext.class)
 @TestExecutionListeners(TransactionalTestExecutionListener.class)
 @Transactional
+@Rollback
 public class TrainerDaoTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
@@ -42,6 +44,7 @@ public class TrainerDaoTest extends AbstractTestNGSpringContextTests {
         trainerJohn.setLastName("Lennon");
         trainerJohn.setPassword("123");
         trainerJohn.setBirthDate(new Date(1940, 10, 9));
+        trainerJohn.setActionPoints(5);
 
         trainerPaul = new Trainer();
         trainerPaul.setFirstName("Paul");
@@ -49,6 +52,7 @@ public class TrainerDaoTest extends AbstractTestNGSpringContextTests {
         trainerPaul.setLastName("McCartney");
         trainerPaul.setPassword("123");
         trainerPaul.setBirthDate(new Date(1942, 6, 4));
+        trainerPaul.setActionPoints(5);
 
         trainerRingo = new Trainer();
         trainerRingo.setFirstName("Ringo");
@@ -56,6 +60,7 @@ public class TrainerDaoTest extends AbstractTestNGSpringContextTests {
         trainerRingo.setLastName("Starr");
         trainerRingo.setPassword("123");
         trainerRingo.setBirthDate(new Date(1940, 7, 7));
+        trainerRingo.setActionPoints(5);
 
         trainerDao.createTrainer(trainerJohn);
         trainerDao.createTrainer(trainerPaul);
@@ -70,6 +75,7 @@ public class TrainerDaoTest extends AbstractTestNGSpringContextTests {
         trainerGeorge.setLastName("Harrison");
         trainerGeorge.setPassword("123");
         trainerGeorge.setBirthDate(new Date(1943, 2, 25));
+        trainerGeorge.setActionPoints(5);
 
         trainerDao.createTrainer(trainerGeorge);
         Trainer trainerFromDb = trainerDao.findTrainerById(trainerGeorge.getId());

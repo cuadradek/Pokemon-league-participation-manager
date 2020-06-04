@@ -57,6 +57,9 @@ public class PokemonController {
         model.addAttribute("pokemon", pokemonDTO);
         model.addAttribute("trainer", principal.getName());
 
+        if (principal.getName().equals(pokemonDTO.getTrainer().getNickname()))
+            model.addAttribute("viewOwnPokemon", true);
+
         return "pokemon/view";
     }
 
@@ -114,10 +117,31 @@ public class PokemonController {
         PokemonChangeTrainerDTO pokemonChangeTrainerDTO = new PokemonChangeTrainerDTO();
         pokemonChangeTrainerDTO.setId(id);
         pokemonChangeTrainerDTO.setTrainer(trainerFacade.findTrainerByNickname(principal.getName()));
-        pokemonFacade.changeTrainer(pokemonChangeTrainerDTO);
+        try {
+            pokemonFacade.changeTrainer(pokemonChangeTrainerDTO);
+        } catch (PlpmServiceException ex) {
+            redirectAttributes.addFlashAttribute("alert_danger", ex.getMessage());
+            return "redirect:" + uriBuilder.path("/pokemon/list").toUriString();
+        }
 
         redirectAttributes.addFlashAttribute("alert_success", "Congratulations! You've catched a Pokemon.");
         return "redirect:" + uriBuilder.path("/pokemon/list").toUriString();
+    }
+
+    @PostMapping("/train/{id}")
+    public String trainPokemon(@PathVariable long id,
+                               UriComponentsBuilder uriBuilder,
+                               RedirectAttributes redirectAttributes,
+                               Principal principal) {
+        try {
+            pokemonFacade.trainPokemon(id, principal.getName());
+        } catch (PlpmServiceException ex) {
+            redirectAttributes.addFlashAttribute("alert_danger", ex.getMessage());
+            return "redirect:" + uriBuilder.path("/pokemon/view/" + id).toUriString();
+        }
+
+        redirectAttributes.addFlashAttribute("alert_success", "Pokemon successfully trained!");
+        return "redirect:" + uriBuilder.path("/pokemon/view/" + id).toUriString();
     }
 
     @PostMapping("/delete/{id}")

@@ -46,6 +46,7 @@
                 <tr><th><f:message key="trainer.lastname"/></th><td><c:out value="${trainer.lastName}"/></td></tr>
                 <tr><th><f:message key="trainer.birthdate"/></th><td><fmt:formatDate value="${trainer.birthDate}" pattern="yyyy-MM-dd"/></td></tr>
                 <tr><th><f:message key="trainer.gym"/></th><td><my:a href="/gym/view/${gym.id}">${gym.city}</my:a></td></tr>
+                <tr><th><f:message key="trainer.actionpoints"/></th><td><c:out value="${trainer.actionPoints}"/><span class="glyphicon glyphicon-star-empty"></td></tr>
             </tbody>
         </table>
 
