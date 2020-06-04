@@ -44,17 +44,17 @@ public class SampleDataLoadingFacadeImpl implements SampleDataLoadingFacade {
     public void loadData() {
         GregorianCalendar.Builder dateBuilder = new GregorianCalendar.Builder();
         Trainer ash = trainer("ash", "Ash", "Ketchum",
-                dateBuilder.setDate(1993, 10, 5).build(), "nbusr123", false);
+                dateBuilder.setDate(1993, 10, 5).build(), "nbusr123", false, 5);
         Trainer misty = trainer("mist", "Misty", "Kasumi",
-                dateBuilder.setDate(1994, 12, 24).build(), "hunter2", false);
+                dateBuilder.setDate(1994, 12, 24).build(), "hunter2", false, 6);
         Trainer brock = trainer("brock", "Brock", "Takeshi",
-                dateBuilder.setDate(1992, 9, 5).build(), "password1", false);
+                dateBuilder.setDate(1992, 9, 5).build(), "password1", false, 1);
         Trainer jessie = trainer("jess", "Jessica", "Musashi",
-                dateBuilder.setDate(1985, 2, 5).build(), "jess", false);
+                dateBuilder.setDate(1985, 2, 5).build(), "jess", false, 6);
         Trainer user = trainer("user", "Us", "Er",
-                dateBuilder.setDate(1995, 1, 1).build(), "user", false);
+                dateBuilder.setDate(1995, 1, 1).build(), "user", false, 2);
         Trainer admin = trainer("admin", "Ad", "Min",
-                dateBuilder.setDate(1995, 1, 1).build(), "admin", true);
+                dateBuilder.setDate(1995, 1, 1).build(), "admin", true, 3);
         log.info("Loaded trainers.");
 
         Pokemon bulbasaur1 = pokemon("Bulbasaur", "Bulba", PokemonType.GRASS, 1, admin);
@@ -104,9 +104,10 @@ public class SampleDataLoadingFacadeImpl implements SampleDataLoadingFacade {
         return pokemon;
     }
 
-    private Trainer trainer(String nickname, String firstName, String lastName, Calendar birthDate, String password, boolean admin) {
+    private Trainer trainer(String nickname, String firstName, String lastName, Calendar birthDate,
+                            String password, boolean admin, int actionPoints) {
         Trainer trainer = new Trainer.Builder().nickname(nickname).firstName(firstName).lastName(lastName)
-                .birthDate(birthDate.getTime()).password(password).isAdmin(admin).build();
+                .birthDate(birthDate.getTime()).password(password).isAdmin(admin).actionPoints(actionPoints).build();
         trainer = trainerService.createTrainer(trainer);
         return trainer;
     }

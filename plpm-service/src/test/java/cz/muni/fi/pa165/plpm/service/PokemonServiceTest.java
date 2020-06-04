@@ -57,6 +57,7 @@ public class PokemonServiceTest extends AbstractTestNGSpringContextTests {
         trainer1.setLastName("Satoshi");
         trainer1.setBirthDate(new Date());
         trainer1.setPassword("p455w0rd");
+        trainer1.setActionPoints(5);
 
         trainer2 = new Trainer();
         trainer2.setId(2L);
@@ -65,6 +66,7 @@ public class PokemonServiceTest extends AbstractTestNGSpringContextTests {
         trainer2.setLastName("Senri");
         trainer2.setPassword("123");
         trainer2.setBirthDate(new Date());
+        trainer2.setActionPoints(5);
 
         pokemon1 = new Pokemon();
         pokemon1.setName("Pikachu");

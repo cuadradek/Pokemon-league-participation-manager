@@ -14,6 +14,7 @@ public class DefaultTrainers {
         trainerAsh.setNickname("Satoshi");
         trainerAsh.setBirthDate(new Date(0));
         trainerAsh.setAdmin(true);
+        trainerAsh.setActionPoints(6);
         // the most secure password in history: nbusr123
         trainerAsh.setPassword("$2a$10$lw9RnJkD51y3wpPX.rL.9uJqDJx3UtIbGBqWYFUFdpQmV8JJJxrVW");
         return trainerAsh;
@@ -27,6 +28,7 @@ public class DefaultTrainers {
         trainerGary.setNickname("Shigeru");
         trainerGary.setBirthDate(new Date(0));
         trainerGary.setAdmin(false);
+        trainerGary.setActionPoints(3);
         //password: Correct horse battery staple
         trainerGary.setPassword("$2a$10$mf/1ajQPmo/3iST48OcsNOSNV/jaWJ4VKVkK1lTtfg4L9hhanXmI6");
         return trainerGary;
@@ -40,6 +42,7 @@ public class DefaultTrainers {
         trainerTracey.setNickname("Kenji");
         trainerTracey.setBirthDate(new Date(0));
         trainerTracey.setAdmin(false);
+        trainerTracey.setActionPoints(3);
         // password hunter2
         trainerTracey.setPassword("$2a$10$SFRU65wn5y3Iao3Cpo19Fua2g6yJ3NaYl52VolohwvcsliKGUvPFK");
         return trainerTracey;

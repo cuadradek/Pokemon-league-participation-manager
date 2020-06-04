@@ -7,6 +7,7 @@ import cz.muni.fi.pa165.plpm.enums.PokemonType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.orm.jpa.JpaSystemException;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -28,6 +29,7 @@ import java.util.Date;
 @ContextConfiguration(classes=PersistenceSampleApplicationContext.class)
 @TestExecutionListeners(TransactionalTestExecutionListener.class)
 @Transactional
+@Rollback
 public class GymDaoTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private GymDao gymDao;
@@ -52,6 +54,7 @@ public class GymDaoTest extends AbstractTestNGSpringContextTests {
         pewterLeader.setLastName("Takeshi");
         pewterLeader.setPassword("123");
         pewterLeader.setBirthDate(new Date());
+        pewterLeader.setActionPoints(5);
 
         pewterGym = new Gym();
         pewterGym.setLeader(pewterLeader);
@@ -64,6 +67,7 @@ public class GymDaoTest extends AbstractTestNGSpringContextTests {
         kazLeader.setLastName("Otsuka");
         kazLeader.setPassword("123");
         kazLeader.setBirthDate(new Date());
+        kazLeader.setActionPoints(5);
 
         kazGym = new Gym();
         kazGym.setLeader(kazLeader);
@@ -76,6 +80,7 @@ public class GymDaoTest extends AbstractTestNGSpringContextTests {
         yasLeader.setLastName("Otsuka");
         yasLeader.setPassword("123");
         yasLeader.setBirthDate(new Date());
+        yasLeader.setActionPoints(5);
 
         yasGym = new Gym();
         yasGym.setLeader(yasLeader);
@@ -88,6 +93,7 @@ public class GymDaoTest extends AbstractTestNGSpringContextTests {
         unassignedTrainer.setLastName("Kasumi");
         unassignedTrainer.setPassword("123");
         unassignedTrainer.setBirthDate(new Date());
+        unassignedTrainer.setActionPoints(5);
 
         trainerDao.createTrainer(pewterLeader);
         trainerDao.createTrainer(yasLeader);

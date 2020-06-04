@@ -23,6 +23,8 @@ public interface TrainerService {
 
     boolean changePassword(Trainer trainer, String oldPassword, String newPassword);
 
+    void addActionPoints(Trainer trainer, int actionPoints);
+
     void deleteTrainer(Trainer trainer);
 
     Trainer findTrainerById(Long id);
@@ -36,5 +38,7 @@ public interface TrainerService {
     List<Trainer> findAllTrainers();
 
     boolean isAdmin(Trainer trainer);
+
+    void addActionPointsToEveryTrainer();
 
 }

@@ -81,6 +81,7 @@ public class BadgeFacadeTest extends AbstractTestNGSpringContextTests {
         trainerDTO.setLastName("Tsutsuji");
         trainerDTO.setBirthDate(new Date());
         trainerDTO.setPassword("123");
+        trainerDTO.setActionPoints(5);
 
         trainer = new Trainer();
         trainer.setId(1L);
@@ -89,6 +90,7 @@ public class BadgeFacadeTest extends AbstractTestNGSpringContextTests {
         trainer.setLastName("Tsutsuji");
         trainer.setBirthDate(new Date());
         trainer.setPassword("123");
+        trainerDTO.setActionPoints(5);
 
         gym = new Gym();
         gym.setId(1L);

@@ -13,6 +13,10 @@ public interface PokemonService {
 
     void updatePokemonInfo(Pokemon pokemon);
 
+    void changeTrainer(Pokemon pokemon, Trainer trainer);
+
+    void trainPokemon(Pokemon pokemon, Trainer trainer);
+
     void deletePokemon(Pokemon pokemon);
 
     Pokemon findPokemonById(Long id);

@@ -9,6 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
@@ -23,6 +24,7 @@ import javax.validation.Validator;
 @Configuration
 @Import({SecurityConfig.class, SampleDataConfiguration.class})
 @ComponentScan(basePackages = "cz.muni.fi.pa165.plpm.web.controllers")
+@EnableScheduling
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
     private final static Logger log = LoggerFactory.getLogger(WebMvcConfiguration.class);

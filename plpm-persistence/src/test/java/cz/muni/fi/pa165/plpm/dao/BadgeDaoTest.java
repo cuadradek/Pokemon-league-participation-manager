@@ -7,6 +7,7 @@ import cz.muni.fi.pa165.plpm.entity.Trainer;
 import cz.muni.fi.pa165.plpm.enums.PokemonType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -26,6 +27,7 @@ import java.util.Date;
 @ContextConfiguration(classes= PersistenceSampleApplicationContext.class)
 @TestExecutionListeners(TransactionalTestExecutionListener.class)
 @Transactional
+@Rollback
 public class BadgeDaoTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
@@ -56,6 +58,7 @@ public class BadgeDaoTest extends AbstractTestNGSpringContextTests {
         trainer1.setLastName("Tsutsuji");
         trainer1.setBirthDate(new Date());
         trainer1.setPassword("123");
+        trainer1.setActionPoints(5);
         trainerDao.createTrainer(trainer1);
 
         trainer2 = new Trainer();
@@ -64,6 +67,7 @@ public class BadgeDaoTest extends AbstractTestNGSpringContextTests {
         trainer2.setLastName("Senri");
         trainer2.setPassword("123");
         trainer2.setBirthDate(new Date());
+        trainer2.setActionPoints(5);
         trainerDao.createTrainer(trainer2);
 
         trainer3 = new Trainer();
@@ -72,6 +76,7 @@ public class BadgeDaoTest extends AbstractTestNGSpringContextTests {
         trainer3.setLastName("Satoshi");
         trainer3.setBirthDate(new Date());
         trainer3.setPassword("123");
+        trainer3.setActionPoints(5);
         trainerDao.createTrainer(trainer3);
 
         gym1 = new Gym();

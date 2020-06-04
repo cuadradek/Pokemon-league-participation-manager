@@ -84,6 +84,7 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
         newTrainer.setAdmin(false);
         newTrainer.setNickname("Johny");
         newTrainer.setBirthDate(new Date());
+        newTrainer.setActionPoints(5);
 
         pewterGym = new Gym();
         pewterGym.setId(1L);

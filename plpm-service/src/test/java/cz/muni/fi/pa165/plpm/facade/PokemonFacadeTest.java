@@ -72,6 +72,7 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
         trainer1.setLastName("Satoshi");
         trainer1.setBirthDate(new Date());
         trainer1.setPassword("p455w0rd");
+        trainer1.setActionPoints(5);
 
         trainer2 = new Trainer();
         trainer2.setId(2L);
@@ -80,6 +81,7 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
         trainer2.setLastName("Senri");
         trainer2.setPassword("123");
         trainer2.setBirthDate(new Date());
+        trainer2.setActionPoints(5);
 
         pokemon1 = new Pokemon();
         pokemon1.setName("Pikachu");
@@ -114,6 +116,7 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
         trainer1DTO.setLastName("Satoshi");
         trainer1DTO.setBirthDate(new Date());
         trainer1DTO.setPassword("p455w0rd");
+        trainer1DTO.setActionPoints(5);
 
         trainer2DTO = new TrainerDTO();
         trainer2DTO.setId(2L);
@@ -122,6 +125,7 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
         trainer2DTO.setLastName("Senri");
         trainer2DTO.setPassword("123");
         trainer2DTO.setBirthDate(new Date());
+        trainer2DTO.setActionPoints(5);
 
         pokemon1ChangeTrainer = new PokemonChangeTrainerDTO();
         pokemon1ChangeTrainer.setTrainer(trainer1DTO);
@@ -162,7 +166,7 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
 
         pokemonFacade.changeTrainer(pokemon1ChangeTrainer);
 
-        verify(pokemonServiceMock).updatePokemonInfo(updatedPokemon);
+        verify(pokemonServiceMock).changeTrainer(updatedPokemon, trainer1);
     }
 
     @Test

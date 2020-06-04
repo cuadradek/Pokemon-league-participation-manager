@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.Date;
 import java.util.Objects;
 
@@ -39,6 +40,11 @@ public class Trainer {
     @Temporal(TemporalType.DATE)
     private Date birthDate;
 
+    @NotNull
+    @PositiveOrZero
+    private Integer actionPoints;
+
+    @Column(nullable = false)
     private boolean isAdmin;
 
     public Trainer() {
@@ -100,6 +106,13 @@ public class Trainer {
         this.birthDate = dateOfBirth;
     }
 
+    public Integer getActionPoints() {
+        return actionPoints;
+    }
+
+    public void setActionPoints(Integer actionPoints) {
+        this.actionPoints = actionPoints;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -126,6 +139,7 @@ public class Trainer {
         private String lastName;
         private Date birthDate;
         private boolean isAdmin;
+        private Integer actionPoints;
 
         public Builder nickname(String nickname) {
             this.nickname = nickname;
@@ -157,6 +171,11 @@ public class Trainer {
             return this;
         }
 
+        public Builder actionPoints(Integer actionPoints) {
+            this.actionPoints = actionPoints;
+            return this;
+        }
+
         public Trainer build() {
             return new Trainer(this);
         }
@@ -174,5 +193,6 @@ public class Trainer {
         this.lastName = builder.lastName;
         this.birthDate = builder.birthDate;
         this.isAdmin = builder.isAdmin;
+        this.actionPoints = builder.actionPoints;
     }
 }

@@ -73,7 +73,9 @@
 
                 <sec:authorize access="isAuthenticated()">
                     <li>
-                        <my:a href="/trainer/view"><f:message key="navigation.myaccount"/></my:a>
+                        <my:a href="/trainer/view">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <f:message key="navigation.myaccount"/></my:a>
                     </li>
                     <li>
                         <my:a href="/logout"><f:message key="navigation.logout"/></my:a>
