@@ -78,7 +78,7 @@ public class PokemonServiceImpl implements PokemonService {
 
     @Override
     public void trainPokemon(Pokemon pokemon, Trainer trainer) {
-        if (pokemon.getTrainer().equals(trainer))
+        if (!pokemon.getTrainer().equals(trainer))
             throw new PlpmServiceException("You can train only your own pokemons!");
 
         trainerService.addActionPoints(pokemon.getTrainer(), TRAIN_POKEMON_ACTION_POINTS);
