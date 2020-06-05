@@ -3,6 +3,7 @@ package cz.muni.fi.pa165.plpm.service;
 import cz.muni.fi.pa165.plpm.entity.Pokemon;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -28,4 +29,6 @@ public interface PokemonService {
     List<Pokemon> findPokemonByTrainer(Trainer trainer);
 
     List<Pokemon> findAllPokemons();
+
+    BattleResults fight(List<Pokemon> attackersPokemons, List<Pokemon> defendersPokemons);
 }

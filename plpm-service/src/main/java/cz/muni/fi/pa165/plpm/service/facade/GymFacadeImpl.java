@@ -3,14 +3,15 @@ package cz.muni.fi.pa165.plpm.service.facade;
 import cz.muni.fi.pa165.plpm.dto.GymCreateDTO;
 import cz.muni.fi.pa165.plpm.dto.GymDTO;
 import cz.muni.fi.pa165.plpm.entity.Gym;
+import cz.muni.fi.pa165.plpm.entity.Pokemon;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
-import cz.muni.fi.pa165.plpm.service.BeanMappingService;
-import cz.muni.fi.pa165.plpm.service.GymService;
-import cz.muni.fi.pa165.plpm.service.TrainerService;
+import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
+import cz.muni.fi.pa165.plpm.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +26,12 @@ public class GymFacadeImpl implements GymFacade {
 
     @Autowired
     private TrainerService trainerService;
+
+    @Autowired
+    private PokemonService pokemonService;
+
+    @Autowired
+    private BadgeService badgeService;
 
     @Autowired
     private BeanMappingService beanMappingService;
@@ -78,4 +85,36 @@ public class GymFacadeImpl implements GymFacade {
         List<Gym> gyms = gymService.findAllGyms();
         return gyms != null ? beanMappingService.mapTo(gyms, GymDTO.class) : null;
     }
+
+    @Override
+    public boolean attackGym(long trainerId, long[] selectedPokemonIds, long gymId) {
+        int attackCost = 1;
+        Trainer trainer = trainerService.findTrainerById(trainerId);
+
+        if (trainer.getActionPoints() < attackCost) {
+            throw new PlpmServiceException("Trainer has not enough actions points to perform attack. Trainers points: "
+                    + trainer.getActionPoints() + "; required points: " + attackCost);
+        }
+
+        trainer.setActionPoints(trainer.getActionPoints() - 1);
+        trainerService.updateTrainerInfo(trainer);
+
+        Gym attackedGym = gymService.findGymById(gymId);
+        List<Pokemon> defendingPokemons = pokemonService.findPokemonByTrainer(attackedGym.getLeader());
+
+        while (defendingPokemons.size() > 5) {
+            // Theoretically we should remove pokemons with lowest level (or random ones) but this is simpler
+            defendingPokemons.remove(defendingPokemons.size() - 1);
+        }
+
+        List<Pokemon> attackingPokemons = new ArrayList<>();
+
+        for (long attackingPokemonId : selectedPokemonIds) {
+            attackingPokemons.add(pokemonService.findPokemonById(attackingPokemonId));
+        }
+
+        return pokemonService.fight(attackingPokemons, defendingPokemons) == BattleResults.ATTACKER_WINS;
+    }
+
+
 }
