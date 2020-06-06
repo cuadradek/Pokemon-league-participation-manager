@@ -57,7 +57,7 @@ public class PokemonController {
         model.addAttribute("pokemon", pokemonDTO);
         model.addAttribute("trainer", principal.getName());
 
-        if (principal.getName().equals(pokemonDTO.getTrainer().getNickname()))
+        if (pokemonDTO.getTrainer() != null && principal.getName().equals(pokemonDTO.getTrainer().getNickname()))
             model.addAttribute("viewOwnPokemon", true);
 
         return "pokemon/view";
