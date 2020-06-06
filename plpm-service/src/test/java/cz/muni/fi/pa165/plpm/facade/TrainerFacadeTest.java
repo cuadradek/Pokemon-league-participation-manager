@@ -146,6 +146,12 @@ public class TrainerFacadeTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
+    public void addActionPointsToEveryTrainer() {
+        trainerFacade.addActionPointsToEveryTrainer();
+        verify(trainerService).addActionPointsToEveryTrainer();
+    }
+
+    @Test
     public void findTrainerById() {
         when(trainerService.findTrainerById(trainerAsh.getId())).thenReturn(trainerAsh);
 

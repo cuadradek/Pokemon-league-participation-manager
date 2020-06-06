@@ -26,6 +26,7 @@ import org.testng.annotations.Test;
 
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -402,6 +403,31 @@ public class TrainerServiceTest extends AbstractTestNGSpringContextTests {
         when(trainerService.findTrainerById(trainerGary.getId())).thenReturn(trainerGary);
 
         Assert.assertFalse(trainerService.isAdmin(garyCopy));
+    }
+
+    @Test
+    public void addActionPoints() {
+        int points = trainerAsh.getActionPoints();
+        trainerService.addActionPoints(trainerAsh, 1);
+        verify(trainerDao).updateTrainer(trainerAsh);
+        Assert.assertEquals(points + 1, (int) trainerAsh.getActionPoints());
+    }
+
+    @Test(expectedExceptions = PlpmServiceException.class)
+    public void addActionPointsNotEnough() {
+        trainerAsh.setActionPoints(0);
+        trainerService.addActionPoints(trainerAsh, -1);
+    }
+
+    @Test
+    public void addActionPointsToEveryTrainer() {
+        int ash = trainerAsh.getActionPoints();
+        int gary = trainerGary.getActionPoints();
+        when(trainerDao.findAllTrainers()).thenReturn(Arrays.asList(trainerAsh, trainerGary));
+        trainerService.addActionPointsToEveryTrainer();
+
+        Assert.assertTrue(ash < trainerAsh.getActionPoints());
+        Assert.assertTrue(gary < trainerGary.getActionPoints());
     }
 
 }

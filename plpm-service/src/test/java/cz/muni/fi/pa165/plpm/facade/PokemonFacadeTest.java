@@ -1,12 +1,14 @@
 package cz.muni.fi.pa165.plpm.facade;
 
 import cz.muni.fi.pa165.plpm.dto.*;
+import cz.muni.fi.pa165.plpm.entity.Badge;
 import cz.muni.fi.pa165.plpm.entity.Pokemon;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 import cz.muni.fi.pa165.plpm.enums.PokemonType;
 import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import cz.muni.fi.pa165.plpm.service.BeanMappingService;
 import cz.muni.fi.pa165.plpm.service.PokemonService;
+import cz.muni.fi.pa165.plpm.service.TrainerService;
 import cz.muni.fi.pa165.plpm.service.config.ServiceConfiguration;
 import cz.muni.fi.pa165.plpm.service.facade.PokemonFacade;
 import cz.muni.fi.pa165.plpm.service.facade.PokemonFacadeImpl;
@@ -33,6 +35,9 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
 
     @Mock
     private PokemonService pokemonServiceMock;
+
+    @Mock
+    private TrainerService trainerServiceMock;
 
     @Mock
     private BeanMappingService beanMappingService;
@@ -167,6 +172,22 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
         pokemonFacade.changeTrainer(pokemon1ChangeTrainer);
 
         verify(pokemonServiceMock).changeTrainer(updatedPokemon, trainer1);
+    }
+
+    @Test
+    public void trainPokemon() {
+        pokemon2.setId(13L);
+        when(pokemonServiceMock.findPokemonById(pokemon2.getId())).thenReturn(pokemon2);
+        when(trainerServiceMock.findTrainerByNickname(pokemon2.getTrainer().getNickname())).thenReturn(pokemon2.getTrainer());
+        doAnswer(invocation -> {
+            Pokemon p = invocation.getArgument(0);
+            p.setLevel(p.getLevel() + 1);
+            return null;
+        }).when(pokemonServiceMock).trainPokemon(pokemon2, pokemon2.getTrainer());
+        int level = pokemon2.getLevel();
+
+        pokemonFacade.trainPokemon(pokemon2.getId(), pokemon2.getTrainer().getNickname());
+        Assert.assertEquals(level + 1, pokemon2.getLevel());
     }
 
     @Test
