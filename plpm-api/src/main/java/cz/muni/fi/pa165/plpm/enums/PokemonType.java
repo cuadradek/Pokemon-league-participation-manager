@@ -6,7 +6,7 @@ package cz.muni.fi.pa165.plpm.enums;
 public enum PokemonType {
     NORMAL,
     FIGHTING,
-    PLYING,
+    FLYING,
     POISON,
     GROUND,
     ROCK,
