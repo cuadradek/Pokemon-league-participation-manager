@@ -12,14 +12,21 @@
 <my:pagetemplate title="${title}">
     <jsp:attribute name="body">
         <%-- Only admin or gym leader can edit--%>
-        <c:if test="${not empty canEdit}">
+
         <p>
-		<my:a href="/gym/edit/${gym.id}" class="btn details-button">
-            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-			<fmt:message key="action.edit"/>
-		</my:a>
-        </p>
+        <c:if test="${not empty canEdit}">
+		    <my:a href="/gym/edit/${gym.id}" class="btn details-button">
+                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+			    <fmt:message key="action.edit"/>
+		    </my:a>
         </c:if>
+        <c:if test="${not empty canAttack}">
+            <my:a href="/gym/battle/${gym.id}" class="btn details-button">
+                <span class="fa fa-bolt" aria-hidden="true"></span>
+			    <fmt:message key="action.attack"/>
+		    </my:a>
+        </c:if>
+        </p>
 
 	    <table class="table table-align-left" style="width: 50%">
             <tbody>
@@ -31,18 +38,20 @@
 
         <h2><fmt:message key="gym.leader"/></h2>
 
+        <p>
         <my:a href="/trainer/view/${gym.leader.id}" class="btn details-button">
 		    <span class="fa fa-eye" aria-hidden="true"></span>
 			<fmt:message key="action.detail"/>
         </my:a>
+        </p>
 
         <table class="table" style="width: 50%">
             <tbody>
             <tr><th class="col-xs-2 col-md-1 col-lg-1"><fmt:message key="trainer.id"/></th><td>${gym.leader.id}</td></tr>
             <tr><th class="col-xs-2 col-md-1 col-lg-1"><fmt:message key="trainer.nickname"/></th><td class="col-xs-3 col-md-3 col-lg-2">${gym.leader.nickname}</td></tr>
-            <tr><th class="col-xs-2 col-md-1 col-lg-1"><fmt:message key="trainer.firstName"/></th><td class="col-xs-3 col-md-3 col-lg-2">${gym.leader.firstName}</td></tr>
-            <tr><th class="col-xs-2 col-md-1 col-lg-1"><fmt:message key="trainer.lastName"/></th><td class="col-xs-3 col-md-3 col-lg-2">${gym.leader.lastName}</td></tr>
-            <tr><th class="col-xs-2 col-md-1 col-lg-1"><fmt:message key="trainer.birthDate"/></th><td class="col-xs-3 col-md-3 col-lg-2"><fmt:formatDate value="${gym.leader.birthDate}" pattern="yyyy-MM-dd"/></td></tr>
+            <tr><th class="col-xs-2 col-md-1 col-lg-1"><fmt:message key="trainer.firstname"/></th><td class="col-xs-3 col-md-3 col-lg-2">${gym.leader.firstName}</td></tr>
+            <tr><th class="col-xs-2 col-md-1 col-lg-1"><fmt:message key="trainer.lastname"/></th><td class="col-xs-3 col-md-3 col-lg-2">${gym.leader.lastName}</td></tr>
+            <tr><th class="col-xs-2 col-md-1 col-lg-1"><fmt:message key="trainer.birthdate"/></th><td class="col-xs-3 col-md-3 col-lg-2"><fmt:formatDate value="${gym.leader.birthDate}" pattern="yyyy-MM-dd"/></td></tr>
             </tbody>
         </table>
 

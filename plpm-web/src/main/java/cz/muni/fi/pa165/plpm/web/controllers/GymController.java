@@ -8,10 +8,6 @@ import cz.muni.fi.pa165.plpm.service.facade.PokemonFacade;
 import cz.muni.fi.pa165.plpm.service.facade.TrainerFacade;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Collection;
+import java.util.List;
 
 import static java.util.Collections.emptyList;
 
@@ -62,10 +59,61 @@ public class GymController {
             model.addAttribute("canEdit", true);
         }
 
+        List<GymDTO> beatenGyms = trainer == null ? emptyList(): badgeFacade.getBeatenGyms(trainer.getId());
+        if (trainer != null && !trainer.getId().equals(gym.getLeader().getId()) && !beatenGyms.contains(gym)) {
+            model.addAttribute("canAttack", true);
+        }
+
         model.addAttribute("gym", gym);
         model.addAttribute("badges", badgeFacade.getBadgesByGymId(id));
 
         return "gym/view";
+    }
+
+    @GetMapping("/create")
+    public String getForCreate(Model model,
+                               UriComponentsBuilder uriBuilder,
+                               RedirectAttributes redirectAttribute,
+                               Principal principal) {
+        TrainerDTO trainer = principal == null ? null : trainerFacade.findTrainerByNickname(principal.getName());
+
+        if (trainer == null || !trainer.isAdmin()) {
+            redirectAttribute.addFlashAttribute("alert_warning", "Only admin can create gym.");
+            return "redirect:" + uriBuilder.path("/gym/list").toUriString();
+        }
+
+        GymDTO gym = new GymDTO();
+        model.addAttribute("editForm", gym);
+        model.addAttribute("types", PokemonType.values());
+        return "gym/create";
+    }
+
+    @PostMapping("/create")
+    public String create(@Valid @ModelAttribute("editForm") GymDTO gymForm,
+                         BindingResult bindingResult,
+                         Model model,
+                         RedirectAttributes redirectAttributes,
+                         UriComponentsBuilder uriBuilder) {
+        if (StringUtils.isBlank(gymForm.getCity())) {
+            bindingResult.addError(new FieldError("gym", "city", "City cannot be empty."));
+            model.addAttribute("city_error", true);
+            return "gym/edit";
+        }
+
+        GymCreateDTO create = new GymCreateDTO();
+        create.setCity(gymForm.getCity());
+        create.setTrainerId(gymForm.getLeader().getId());
+        create.setType(gymForm.getType());
+        Long id;
+        try {
+            id = gymFacade.createGym(create);
+        } catch (Exception ex) {
+            bindingResult.addError(new FieldError("gym", "leader.id", ex.getMessage()));
+            model.addAttribute("leader_error", true);
+            return "gym/create";
+        }
+        redirectAttributes.addFlashAttribute("alert_success", "Successfully saved.");
+        return "redirect:" + uriBuilder.path("/gym/edit/" + id).toUriString();
     }
 
     @GetMapping("/edit/{id}")
@@ -76,6 +124,11 @@ public class GymController {
                              Principal principal) {
         TrainerDTO trainer = principal == null ? null : trainerFacade.findTrainerByNickname(principal.getName());
         GymDTO gymForm = gymFacade.findGymById(id);
+
+        if (gymForm == null) {
+            redirectAttribute.addFlashAttribute("alert_warning", "Requested gym doesn't exist.");
+            return "redirect:" + uriBuilder.path("/gym/list").toUriString();
+        }
 
         if (trainer == null || (!trainer.isAdmin() && !trainer.getId().equals(gymForm.getLeader().getId()))) {
             redirectAttribute.addFlashAttribute("alert_warning", "Only admin and gym leader can edit gym.");
@@ -102,22 +155,18 @@ public class GymController {
 
         Long id = gymForm.getId();
         try {
-            if (gymForm.getId() == null) {
-                GymCreateDTO create = new GymCreateDTO();
-                create.setCity(gymForm.getCity());
-                create.setTrainerId(gymForm.getLeader().getId());
-                create.setType(gymForm.getType());
-                id = gymFacade.createGym(create);
-            } else {
-                gymFacade.updateGym(gymForm);
+            if (id == null) {
+                redirectAttributes.addFlashAttribute("alert_warning", "Cannot edit non-existent gym.");
+                return "redirect:" + uriBuilder.path("/gym/view/" + id).toUriString();
             }
+            gymFacade.updateGym(gymForm);
         } catch (Exception ex) {
             bindingResult.addError(new FieldError("gym", "leader.id", ex.getMessage()));
             model.addAttribute("leader_error", true);
             return "gym/edit";
         }
         redirectAttributes.addFlashAttribute("alert_success", "Successfully saved.");
-        return "redirect:" + uriBuilder.path("/gym/edit" + (id == null ? "" : ("/" + id))).toUriString();
+        return "redirect:" + uriBuilder.path("/gym/edit/" + id).toUriString();
     }
 
     @PostMapping("/delete/{id}")
@@ -128,14 +177,6 @@ public class GymController {
         gymFacade.removeGym(gym);
         redirectAttributes.addFlashAttribute("alert_success", "Successfully deleted.");
         return "redirect:" + uriBuilder.path("/gym/list").toUriString();
-    }
-
-    @GetMapping("/create")
-    public String create(Model model) {
-        GymDTO gymForm = new GymDTO();
-        model.addAttribute("editForm", gymForm);
-        model.addAttribute("types", PokemonType.values());
-        return "gym/edit";
     }
 
     @GetMapping("/battle/{attackedGymId}")

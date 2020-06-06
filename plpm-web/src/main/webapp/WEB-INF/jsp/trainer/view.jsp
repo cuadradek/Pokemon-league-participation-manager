@@ -12,13 +12,13 @@
         <c:choose>
             <c:when test="${not empty viewSelf}">
                 <p>
-                    <my:a href="/trainer/edit" class="btn detail-button">
+                    <my:a href="/trainer/edit" class="btn details-button">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                         <f:message key="action.edit"/>
                     </my:a>
                 </p>
                 <p>
-                    <my:a href="/trainer/change-password" class="btn detail-button">
+                    <my:a href="/trainer/change-password" class="btn details-button">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                         <f:message key="trainer.changepassword"/>
                     </my:a>
@@ -28,7 +28,7 @@
             <c:otherwise>
                 <sec:authorize access="hasRole('ROLE_ADMIN')">
                     <p>
-                    <my:a href="/trainer/edit/${trainer.id}" class="btn detail-button">
+                    <my:a href="/trainer/edit/${trainer.id}" class="btn details-button">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                         <f:message key="action.edit"/>
                     </my:a>
