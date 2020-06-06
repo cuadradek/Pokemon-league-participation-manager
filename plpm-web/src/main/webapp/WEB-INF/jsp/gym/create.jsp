@@ -6,7 +6,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 
-<fmt:message key="navigation.gym.edit" var="title"/>
+<fmt:message key="navigation.gym.create" var="title"/>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <my:pagetemplate title="${title}">
     <jsp:attribute name="body">
@@ -15,14 +15,10 @@
 			    <span class="fa fa-undo" aria-hidden="true"></span>
                 <fmt:message key="gym.tolist"/>
             </my:a>
-            <my:a href="/gym/view/${editForm.id}" class="btn details-button" role="button">
-			    <span class="fa fa-eye" aria-hidden="true"></span>
-                <fmt:message key="action.detail"/>
-            </my:a>
         </p>
 
-    <form:form method="post" action="${pageContext.request.contextPath}/gym/edit"
-           modelAttribute="editForm" cssClass="form-horizontal">
+    <form:form method="post" action="${pageContext.request.contextPath}/gym/create"
+               modelAttribute="editForm" cssClass="form-horizontal">
 
         <form:hidden path="id"/>
 
