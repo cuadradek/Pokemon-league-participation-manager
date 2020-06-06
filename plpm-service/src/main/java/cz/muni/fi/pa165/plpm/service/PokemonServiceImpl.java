@@ -9,14 +9,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 /**
  * @author: Veronika Loukotova
  */
 @Service
 public class PokemonServiceImpl implements PokemonService {
+
+    private static Random random = new Random(0);
 
     private static final int CATCH_POKEMON_ACTION_POINTS = -1;
     private static final int TRAIN_POKEMON_ACTION_POINTS = -1;
@@ -115,4 +119,29 @@ public class PokemonServiceImpl implements PokemonService {
     public List<Pokemon> findAllPokemons() {
         return pokemonDao.findAll();
     }
+
+
+    @Override
+    public BattleResults fight(List<Pokemon> attackersPokemons, List<Pokemon> defendersPokemons) {
+        int attackersFightingPokemonIndex = 0;
+        int defendersFightingPokemonIndex = 0;
+
+        while (attackersFightingPokemonIndex < attackersPokemons.size() && defendersFightingPokemonIndex < defendersPokemons.size()) {
+            long attackersAttack = attackersPokemons.get(attackersFightingPokemonIndex).getLevel();
+            long defendersAttack = defendersPokemons.get(defendersFightingPokemonIndex).getLevel();
+            long randomChance = random.nextInt() % 81 - 40;
+
+            if (attackersAttack > defendersAttack + randomChance) {
+                defendersFightingPokemonIndex++;
+            } else {
+                attackersFightingPokemonIndex++;
+            }
+        }
+
+        if (attackersFightingPokemonIndex >= attackersPokemons.size()) {
+            return BattleResults.DEFENDER_WINS;
+        }
+        return BattleResults.ATTACKER_WINS;
+    }
+
 }

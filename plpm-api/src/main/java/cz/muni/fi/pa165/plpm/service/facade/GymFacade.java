@@ -25,4 +25,6 @@ public interface GymFacade {
     List<GymDTO> findGymsByCity(String city);
 
     List<GymDTO> findAllGyms();
+
+    boolean attackGym(long trainerId, long[] selectedPokemonIds, long gymId);
 }

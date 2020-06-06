@@ -1,11 +1,10 @@
 package cz.muni.fi.pa165.plpm.web.controllers;
 
-import cz.muni.fi.pa165.plpm.dto.GymCreateDTO;
-import cz.muni.fi.pa165.plpm.dto.GymDTO;
-import cz.muni.fi.pa165.plpm.dto.TrainerDTO;
+import cz.muni.fi.pa165.plpm.dto.*;
 import cz.muni.fi.pa165.plpm.enums.PokemonType;
 import cz.muni.fi.pa165.plpm.service.facade.BadgeFacade;
 import cz.muni.fi.pa165.plpm.service.facade.GymFacade;
+import cz.muni.fi.pa165.plpm.service.facade.PokemonFacade;
 import cz.muni.fi.pa165.plpm.service.facade.TrainerFacade;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +20,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Collection;
+
+import static java.util.Collections.emptyList;
 
 /**
  * @author Karolína Kolouchová
@@ -36,6 +39,9 @@ public class GymController {
 
     @Autowired
     private BadgeFacade badgeFacade;
+
+    @Autowired
+    private PokemonFacade pokemonFacade;
 
     @Autowired
     private TrainerFacade trainerFacade;
@@ -131,4 +137,92 @@ public class GymController {
         model.addAttribute("types", PokemonType.values());
         return "gym/edit";
     }
+
+    @GetMapping("/battle/{attackedGymId}")
+    public String battle(@PathVariable long attackedGymId, Model model, RedirectAttributes redirectAttributes,
+                       UriComponentsBuilder uriBuilder, Principal principal) {
+        TrainerDTO trainerDTO = (principal != null) ? trainerFacade.findTrainerByNickname(principal.getName()) : null;
+        GymDTO ownedGym = (trainerDTO != null && !trainerDTO.isAdmin()) ? gymFacade.findGymByTrainer(trainerDTO.getId()) : null;
+
+        if (trainerDTO == null) {
+            redirectAttributes.addFlashAttribute("alert_warning", "Only registered trainer can attack gym.");
+            return "redirect:" + uriBuilder.path("/gym/list").toUriString();
+        }
+
+        if (ownedGym != null && ownedGym.getId() == attackedGymId) {
+            redirectAttributes.addFlashAttribute("alert_warning", "Gym leader cannot attack his/her own gym.");
+            return "redirect:" + uriBuilder.path("/gym/list").toUriString();
+        }
+
+        Collection<GymDTO> beatenGyms = badgeFacade.getBeatenGyms(trainerDTO.getId());
+
+        if (beatenGyms.contains(gymFacade.findGymById(attackedGymId))) {
+            redirectAttributes.addFlashAttribute("alert_warning", "Trainer has already received badge from this gym.");
+            return "redirect:" + uriBuilder.path("/gym/list").toUriString();
+        }
+
+        model.addAttribute("trainersPokemons", pokemonFacade.getPokemonByTrainer(trainerDTO));
+
+        return "gym/battle";
+    }
+
+    @PostMapping("/battle/{attackedGymId}")
+    public String attack(@PathVariable long attackedGymId, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes,
+                             UriComponentsBuilder uriBuilder, Principal principal) {
+        TrainerDTO trainerDTO = (principal != null) ? trainerFacade.findTrainerByNickname(principal.getName()) : null;
+
+        if (trainerDTO == null) {
+            redirectAttributes.addFlashAttribute("alert_danger", "Login error.");
+            return "redirect:" + uriBuilder.path("/gym/battle/" + attackedGymId).toUriString();
+        }
+
+        if (trainerDTO.getActionPoints() <= 0) {
+            redirectAttributes.addFlashAttribute("alert_warning", "Trainer has not enough points to attack gym.");
+            return "redirect:" + uriBuilder.path("/gym/list/" + attackedGymId).toUriString();
+        }
+
+        String[] selectedPokemonIdsStr = request.getParameterValues("selected");
+
+        if (selectedPokemonIdsStr == null || selectedPokemonIdsStr.length < 2 || selectedPokemonIdsStr.length > 5) {
+            redirectAttributes.addFlashAttribute("alert_warning", "Please select 2 to 5 pokemons.");
+            return "redirect:" + uriBuilder.path("/gym/battle/" + attackedGymId).toUriString();
+        }
+
+        long[] selectedPokemonIds = new long[selectedPokemonIdsStr.length];
+        for (int i = 0; i < selectedPokemonIdsStr.length; i++) {
+            try {
+                selectedPokemonIds[i] = Long.parseLong(selectedPokemonIdsStr[i]);
+            } catch (NumberFormatException e) {
+                redirectAttributes.addFlashAttribute("alert_danger", "Internal error occurred!");
+                return "redirect:" + uriBuilder.path("/gym/battle/" + attackedGymId).toUriString();
+            }
+        }
+
+        if (gymFacade.attackGym(trainerDTO.getId(), selectedPokemonIds, attackedGymId)) {
+            BadgeCreateDTO badgeCreateDTO = new BadgeCreateDTO();
+            badgeCreateDTO.setGymId(attackedGymId);
+            badgeCreateDTO.setTrainerId(trainerDTO.getId());
+            Long newBadgeId = badgeFacade.createBadge(badgeCreateDTO);
+
+            model.addAttribute("badgeId", newBadgeId);
+            return "/gym/victory";
+        }
+
+        return "gym/loss";
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
