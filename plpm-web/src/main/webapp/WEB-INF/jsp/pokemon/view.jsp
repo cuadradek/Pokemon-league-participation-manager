@@ -15,12 +15,14 @@
                             <fmt:message key="action.catch"/></i></button>
                         </form>
                     </c:if>
-                    <sec:authorize access="hasRole('ROLE_ADMIN')">
+                        <sec:authentication var="user" property="principal.username"/>
+                        <sec:authorize var="isAdmin" access="hasRole('ROLE_ADMIN')"/>
+                        <c:if test="${pokemon.trainer.nickname.equals(user) or isAdmin}">
                         <my:a href="/pokemon/edit/${pokemon.id}" class="btn btn-detail">
                             <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                         	<fmt:message key="action.edit"/>
                         </my:a>
-                    </sec:authorize>
+                        </c:if>
                     <c:if test="${not empty viewOwnPokemon}">
                         <form method="post" action="${pageContext.request.contextPath}/pokemon/train/${pokemon.id}">
                             <button class="btn btn-detail">
