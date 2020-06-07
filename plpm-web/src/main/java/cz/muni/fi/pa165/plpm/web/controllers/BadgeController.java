@@ -140,7 +140,7 @@ public class BadgeController {
 
         badgeFacade.deleteBadge(id);
         redirectAttributes.addFlashAttribute("alert_success", "Badge of trainer " + badgeDTO.getTrainer().getNickname() +
-                " from " + badgeDTO.getGym().getCity() + "was successfully deleted.");
+                " from " + badgeDTO.getGym().getCity() + " was successfully deleted.");
         return "redirect:" + uriBuilder.path("/badge/list").toUriString();
     }
 
