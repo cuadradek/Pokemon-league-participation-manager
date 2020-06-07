@@ -59,8 +59,15 @@ public class BadgeController {
     }
 
     @GetMapping("/view/{id}")
-    public String view(@PathVariable long id, Model model) {
+    public String view(@PathVariable long id, RedirectAttributes redirectAttributes,
+                       UriComponentsBuilder uriBuilder, Model model) {
         BadgeDTO badgeDTO = badgeFacade.getBadgeById(id);
+
+        if (badgeDTO == null) {
+            redirectAttributes.addFlashAttribute("alert_warning", "Requested badge does not exist.");
+            return "redirect:" + uriBuilder.path("/badge/list").toUriString();
+        }
+
         model.addAttribute("badge", badgeDTO);
         model.addAttribute("trainersGym", gymFacade.findGymByTrainer(badgeDTO.getTrainer().getId()));
 
@@ -130,6 +137,7 @@ public class BadgeController {
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
     public String delete(@PathVariable long id, UriComponentsBuilder uriBuilder, RedirectAttributes redirectAttributes) {
         BadgeDTO badgeDTO = badgeFacade.getBadgeById(id);
+
         badgeFacade.deleteBadge(id);
         redirectAttributes.addFlashAttribute("alert_success", "Badge of trainer " + badgeDTO.getTrainer().getNickname() +
                 " from " + badgeDTO.getGym().getCity() + "was successfully deleted.");
