@@ -21,8 +21,7 @@
                         	<fmt:message key="action.edit"/>
                         </my:a>
                     </sec:authorize>
-                    <c:set var="username"><sec:authentication property="principal.username"/></c:set>
-                    <c:if test="${pokemon.trainer != null && pokemon.trainer.nickname.equals(username)}">
+                    <c:if test="${not empty viewOwnPokemon}">
                         <form method="post" action="${pageContext.request.contextPath}/pokemon/train/${pokemon.id}">
                             <button class="btn btn-detail">
                                 <span class="glyphicon glyphicon-circle-arrow-up"/>
