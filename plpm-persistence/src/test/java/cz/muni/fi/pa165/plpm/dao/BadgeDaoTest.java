@@ -159,36 +159,6 @@ public class BadgeDaoTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void updateBadgeGym() {
-        badge2.setGym(gym2);
-        badgeDao.update(badge2);
-
-        Badge updated = badgeDao.findById(badge2.getId());
-        Assert.assertEquals(badge2, updated);
-    }
-
-    @Test(expectedExceptions = InvalidDataAccessApiUsageException.class)
-    public void updateBadgeNullGym() {
-        badge2.setGym(null);
-        badgeDao.update(badge2);
-    }
-
-    @Test
-    public void updateBadgeTrainer() {
-        badge2.setTrainer(trainer2);
-        badgeDao.update(badge2);
-
-        Badge updated = badgeDao.findById(badge2.getId());
-        Assert.assertEquals(badge2, updated);
-    }
-
-    @Test(expectedExceptions = InvalidDataAccessApiUsageException.class)
-    public void updateBadgeNullTrainer() {
-        badge2.setTrainer(null);
-        badgeDao.update(badge2);
-    }
-
-    @Test
     public void findById() {
         Badge found = badgeDao.findById(badge2.getId());
 
