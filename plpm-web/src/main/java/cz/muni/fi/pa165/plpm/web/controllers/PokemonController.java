@@ -92,11 +92,11 @@ public class PokemonController {
             pokemonCreateDTO.setNickname(pokemonForm.getNickname());
             pokemonCreateDTO.setType(pokemonForm.getType());
             id = pokemonFacade.createPokemon(pokemonCreateDTO);
+            redirectAttributes.addFlashAttribute("alert_success", "Pokemon was successfully created.");
         } else {
             pokemonFacade.updatePokemon(pokemonForm);
+            redirectAttributes.addFlashAttribute("alert_success", "Successful update.");
         }
-
-        redirectAttributes.addFlashAttribute("alert_success", "Successful update.");
         return "redirect:" + uriBuilder.path("/pokemon/edit" + (id == null ? "" : ("/" + id))).toUriString();
     }
 

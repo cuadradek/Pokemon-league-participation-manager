@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+/**
+ * Scheduler that adds points to every trainer every day at 12pm.
+ */
 @Component
 public class ActionPointsScheduler {
 
@@ -15,9 +18,9 @@ public class ActionPointsScheduler {
         this.trainerFacade = trainerFacade;
     }
 
-//    @Scheduled(cron = "0 0 12 * * ?") //every day at 12pm
+    @Scheduled(cron = "0 0 12 * * ?") //every day at 12pm
 //    @Scheduled(cron = "0 0/2 * * * ?") //every 2 minutes
-    @Scheduled(cron = "0/10 0/2 * * * ?") //every 10 sec
+//    @Scheduled(cron = "0/10 0/2 * * * ?") //every 10 sec
     public void addActionPointsToEveryTrainer() {
         trainerFacade.addActionPointsToEveryTrainer();
     }
