@@ -32,18 +32,6 @@ public class BadgeDaoImpl implements BadgeDao {
     }
 
     @Override
-    public void update(Badge badge) {
-        if (badge.getId() == null || badge.getTrainer() == null || badge.getGym() == null) {
-            throw new IllegalArgumentException("Invalid badge.");
-        }
-        if (badge.getTrainer().equals(badge.getGym().getLeader())) {
-            throw new IllegalArgumentException("Leader cannot obtain badge from his own gym.");
-        }
-
-        em.merge(badge);
-    }
-
-    @Override
     public Badge findById(Long id) {
         return em.find(Badge.class, id);
     }

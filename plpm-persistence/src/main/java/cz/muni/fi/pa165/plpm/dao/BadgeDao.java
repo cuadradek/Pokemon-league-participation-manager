@@ -29,13 +29,6 @@ public interface BadgeDao {
     void remove(Badge badge);
 
     /**
-     * Updates badge in database.
-     *
-     * @param badge - Gym badge that we want to update.
-     */
-    void update(Badge badge);
-
-    /**
      * Finds gym badge with specified id.
      *
      * @param id -  Primary key of the badge we want to obtain.
