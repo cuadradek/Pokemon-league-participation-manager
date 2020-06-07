@@ -19,13 +19,13 @@
 <table class="table">
     <thead>
     <tr>
-        <th><f:message key="pokemon.id"/></th>
-                        <th><f:message key="pokemon.nickname"/></th>
-                        <th><f:message key="pokemon.name"/></th>
-                        <th><f:message key="pokemon.level"/></th>
-                        <th><f:message key="pokemon.type"/></th>
-                        <th><f:message key="pokemon.trainer"/></th>
-                        <th><f:message key="pokemon.actions"/></th>
+        <th><fmt:message key="pokemon.id"/></th>
+        <th><fmt:message key="pokemon.nickname"/></th>
+                        <th><fmt:message key="pokemon.name"/></th>
+                        <th><fmt:message key="pokemon.level"/></th>
+                        <th><fmt:message key="pokemon.type"/></th>
+                        <th><fmt:message key="pokemon.trainer"/></th>
+                        <th><fmt:message key="pokemon.actions"/></th>
     </tr>
     </thead>
     <tbody>
