@@ -67,7 +67,7 @@
         <c:forEach items="${badges}" var="badge">
 				<tr>
                     <td>${badge.id}</td>
-                    <td>${badge.trainer.firstName} ${badge.trainer.lastName}</td>
+                    <td><my:a href="/trainer/view/${badge.trainer.id}">${badge.trainer.nickname}</my:a></td>
                     <td>
                         <my:a href="/badge/view/${badge.id}" class="btn details-button">
 		                    <span class="fa fa-eye" aria-hidden="true"></span>

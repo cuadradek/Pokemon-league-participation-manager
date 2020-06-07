@@ -33,7 +33,7 @@
 				<tr>
                     <td>${gym.id}</td>
                     <td>${gym.city}</td>
-                    <td>${gym.leader.firstName} ${gym.leader.lastName}</td>
+                    <td><my:a href="/trainer/view/${gym.leader.id}">${gym.leader.nickname}</my:a></td>
                     <td>${gym.type}</td>
                     <td>
                         <div class="btn-group" role="group">
