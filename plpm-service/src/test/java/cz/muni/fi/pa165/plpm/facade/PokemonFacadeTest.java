@@ -1,11 +1,9 @@
 package cz.muni.fi.pa165.plpm.facade;
 
 import cz.muni.fi.pa165.plpm.dto.*;
-import cz.muni.fi.pa165.plpm.entity.Badge;
 import cz.muni.fi.pa165.plpm.entity.Pokemon;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 import cz.muni.fi.pa165.plpm.enums.PokemonType;
-import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import cz.muni.fi.pa165.plpm.service.BeanMappingService;
 import cz.muni.fi.pa165.plpm.service.PokemonService;
 import cz.muni.fi.pa165.plpm.service.TrainerService;
@@ -21,6 +19,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -57,7 +56,9 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
 
     private PokemonChangeTrainerDTO pokemon1ChangeTrainer;
 
-    private PokemonDTO pokemonDTO;
+    private PokemonDTO pokemon1DTO;
+
+    private PokemonDTO pokemon2DTO;
 
     private TrainerDTO trainer1DTO;
 
@@ -106,13 +107,21 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
         pokemonCreate1.setNickname("Pikapika");
         pokemonCreate1.setType(PokemonType.ELECTRIC);
 
-        pokemonDTO = new PokemonDTO();
-        pokemonDTO.setId(2L);
-        pokemonDTO.setName("Caterpie");
-        pokemonDTO.setNickname("Cat");
-        pokemonDTO.setType(PokemonType.BUG);
-        pokemonDTO.setTrainer(trainer2DTO);
-        pokemonDTO.setLevel(1);
+        pokemon1DTO = new PokemonDTO();
+        pokemon1DTO.setId(1L);
+        pokemon1DTO.setName("Pikachu");
+        pokemon1DTO.setNickname("Pikapika");
+        pokemon1DTO.setType(PokemonType.ELECTRIC);
+        pokemon1DTO.setTrainer(trainer1DTO);
+        pokemon1DTO.setLevel(1);
+
+        pokemon2DTO = new PokemonDTO();
+        pokemon2DTO.setId(2L);
+        pokemon2DTO.setName("Caterpie");
+        pokemon2DTO.setNickname("Cat");
+        pokemon2DTO.setType(PokemonType.BUG);
+        pokemon2DTO.setTrainer(trainer2DTO);
+        pokemon2DTO.setLevel(1);
 
         trainer1DTO = new TrainerDTO();
         trainer1DTO.setId(1L);
@@ -217,44 +226,64 @@ public class PokemonFacadeTest extends AbstractTestNGSpringContextTests {
     @Test
     public void findPokemonById() {
         when(pokemonServiceMock.findPokemonById(pokemon2.getId())).thenReturn(pokemon2);
-        when(beanMappingService.mapTo(pokemon2, PokemonDTO.class)).thenReturn(pokemonDTO);
+        when(beanMappingService.mapTo(pokemon2, PokemonDTO.class)).thenReturn(pokemon1DTO);
 
         PokemonDTO found = pokemonFacade.getPokemonById(pokemon2.getId());
 
-        Assert.assertEquals(pokemonDTO, found);
+        Assert.assertEquals(pokemon1DTO, found);
     }
 
     @Test
     public void findPokemonsByName() {
         when(pokemonServiceMock.findPokemonByName(pokemon2.getName())).thenReturn(Collections.singletonList(pokemon2));
-        when(beanMappingService.mapTo(Collections.singletonList(pokemon2), PokemonDTO.class)).thenReturn(Collections.singletonList(pokemonDTO));
+        when(beanMappingService.mapTo(Collections.singletonList(pokemon2), PokemonDTO.class)).thenReturn(Collections.singletonList(pokemon1DTO));
 
         List<PokemonDTO> found = pokemonFacade.getPokemonByName(pokemon2.getName());
 
         Assert.assertEquals(1, found.size());
-        Assert.assertTrue(found.contains(pokemonDTO));
+        Assert.assertTrue(found.contains(pokemon1DTO));
     }
 
     @Test
     public void findPokemonsByNickname() {
         when(pokemonServiceMock.findPokemonByNickname(pokemon2.getNickname())).thenReturn(Collections.singletonList(pokemon2));
-        when(beanMappingService.mapTo(Collections.singletonList(pokemon2), PokemonDTO.class)).thenReturn(Collections.singletonList(pokemonDTO));
+        when(beanMappingService.mapTo(Collections.singletonList(pokemon2), PokemonDTO.class)).thenReturn(Collections.singletonList(pokemon1DTO));
 
         List<PokemonDTO> found = pokemonFacade.getPokemonByNickname(pokemon2.getNickname());
 
         Assert.assertEquals(1, found.size());
-        Assert.assertTrue(found.contains(pokemonDTO));
+        Assert.assertTrue(found.contains(pokemon1DTO));
     }
 
     @Test
     public void findPokemonsByTrainer() {
         when(pokemonServiceMock.findPokemonByTrainer(trainer2)).thenReturn(Collections.singletonList(pokemon2));
-        when(beanMappingService.mapTo(Collections.singletonList(pokemon2), PokemonDTO.class)).thenReturn(Collections.singletonList(pokemonDTO));
+        when(beanMappingService.mapTo(Collections.singletonList(pokemon2), PokemonDTO.class)).thenReturn(Collections.singletonList(pokemon1DTO));
         when(beanMappingService.mapTo(trainer2DTO, Trainer.class)).thenReturn(trainer2);
 
         List<PokemonDTO> found = pokemonFacade.getPokemonByTrainer(trainer2DTO);
 
         Assert.assertEquals(1, found.size());
-        Assert.assertTrue(found.contains(pokemonDTO));
+        Assert.assertTrue(found.contains(pokemon1DTO));
+    }
+
+    @Test
+    public void getAllPokemons() {
+        pokemon1.setId(1L);
+        pokemon1.setTrainer(trainer1);
+        pokemon1.setLevel(1);
+        List<Pokemon> all = new ArrayList<>();
+        all.add(pokemon1);
+        all.add(pokemon2);
+        List<PokemonDTO> allDtos = new ArrayList<>();
+        allDtos.add(pokemon1DTO);
+        allDtos.add(pokemon2DTO);
+        when(pokemonServiceMock.findAllPokemons()).thenReturn(all);
+        when(beanMappingService.mapTo(all, PokemonDTO.class)).thenReturn(allDtos);
+
+        List<PokemonDTO> found = pokemonFacade.getAllPokemons();
+        Assert.assertEquals(2, found.size());
+        Assert.assertTrue(found.contains(pokemon1DTO));
+        Assert.assertTrue(found.contains(pokemon2DTO));
     }
 }
