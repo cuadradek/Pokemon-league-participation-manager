@@ -1,6 +1,7 @@
 package cz.muni.fi.pa165.plpm.service;
 
 import cz.muni.fi.pa165.plpm.dao.PokemonDao;
+import cz.muni.fi.pa165.plpm.entity.Badge;
 import cz.muni.fi.pa165.plpm.entity.Pokemon;
 import cz.muni.fi.pa165.plpm.entity.Trainer;
 import cz.muni.fi.pa165.plpm.enums.PokemonType;
@@ -8,11 +9,13 @@ import cz.muni.fi.pa165.plpm.exceptions.PlpmServiceException;
 import cz.muni.fi.pa165.plpm.service.config.ServiceConfiguration;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -30,6 +33,9 @@ public class PokemonServiceTest extends AbstractTestNGSpringContextTests {
 
     @Mock
     private PokemonDao pokemonDaoMock;
+
+    @Mock
+    private TrainerService trainerService;
 
     @Autowired
     @InjectMocks
@@ -81,6 +87,12 @@ public class PokemonServiceTest extends AbstractTestNGSpringContextTests {
         pokemon2.setType(PokemonType.BUG);
         pokemon2.setTrainer(trainer2);
         pokemon2.setLevel(1);
+    }
+
+    @AfterMethod
+    public void reset() {
+        Mockito.reset(pokemonDaoMock);
+        Mockito.reset(trainerService);
     }
 
     @Test
@@ -166,6 +178,49 @@ public class PokemonServiceTest extends AbstractTestNGSpringContextTests {
         pokemonService.updatePokemonInfo(updatePokemon);
 
         Assert.assertEquals(pokemon1, updatePokemon);
+    }
+
+    @Test()
+    public void changeTrainer() {
+        pokemon1.setTrainer(null);
+        doAnswer(invocation -> {
+            Trainer t = invocation.getArgument(0);
+            t.setActionPoints(trainer1.getActionPoints() - 1);
+            return null;
+        }).when(trainerService).addActionPoints(trainer1, -1);
+
+        pokemonService.changeTrainer(pokemon1, trainer1);
+
+        verify(pokemonDaoMock).update(pokemon1);
+        Assert.assertEquals(trainer1, pokemon1.getTrainer());
+    }
+
+    @Test(expectedExceptions = PlpmServiceException.class)
+    public void changeTrainerNotEnoughPoints() {
+        pokemon1.setTrainer(null);
+        doThrow(PlpmServiceException.class).when(trainerService).addActionPoints(trainer1, -1);
+        pokemonService.changeTrainer(pokemon1, trainer1);
+    }
+
+    @Test()
+    public void trainPokemon() {
+        doAnswer(invocation -> {
+            Trainer t = invocation.getArgument(0);
+            t.setActionPoints(trainer1.getActionPoints() - 1);
+            return null;
+        }).when(trainerService).addActionPoints(trainer1, -1);
+        when(pokemonDaoMock.findById(pokemon1.getId())).thenReturn(pokemon1);
+        int level = pokemon1.getLevel();
+        pokemonService.trainPokemon(pokemon1, trainer1);
+        verify(pokemonDaoMock).update(pokemon1);
+
+        Assert.assertEquals(pokemon1.getLevel(), level + 1);
+    }
+
+    @Test(expectedExceptions = PlpmServiceException.class)
+    public void trainPokemonNotEnoughPoints() {
+        doThrow(PlpmServiceException.class).when(trainerService).addActionPoints(trainer1, -1);
+        pokemonService.trainPokemon(pokemon1, pokemon1.getTrainer());
     }
 
     @Test

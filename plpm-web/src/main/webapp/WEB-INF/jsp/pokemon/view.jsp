@@ -21,14 +21,14 @@
                         	<fmt:message key="action.edit"/>
                         </my:a>
                     </sec:authorize>
-                        <c:if test="${not empty viewOwnPokemon}">
-                            <form method="post" action="${pageContext.request.contextPath}/pokemon/train/${pokemon.id}">
-                                <button class="btn btn-detail">
-                                    <span class="glyphicon glyphicon-circle-arrow-up"/>
-                                    <fmt:message key="action.train"/>
-                                </button>
-                            </form>
-                        </c:if>
+                    <c:if test="${not empty viewOwnPokemon}">
+                        <form method="post" action="${pageContext.request.contextPath}/pokemon/train/${pokemon.id}">
+                            <button class="btn btn-detail">
+                                <span class="glyphicon glyphicon-circle-arrow-up"/>
+                                <fmt:message key="action.train"/>
+                            </button>
+                        </form>
+                    </c:if>
                     </div>
 <table class="table" style="width: 50%">
     <tbody>
